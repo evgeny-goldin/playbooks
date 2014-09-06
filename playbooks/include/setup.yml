@@ -1,0 +1,20 @@
+---
+- apt:  update_cache=yes upgrade=dist
+- apt:  name={{item}}
+  with_items:
+       - wget
+       - curl
+       - htop
+       - unzip
+       - git
+       - build-essential
+       - python-pip
+       - python-dev
+- pip:     name=awscli extra_args='--upgrade'
+
+- command: service chef-client stop
+  register: chef_client_service
+  ignore_errors: yes
+
+- service: name=chef-client state=stopped enabled=no
+  when: chef_client_service|success

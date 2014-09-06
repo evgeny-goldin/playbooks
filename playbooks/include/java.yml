@@ -1,0 +1,42 @@
+---
+
+# https://coderwall.com/p/zzdapg
+
+- set_fact:
+    java_home: '/usr/lib/jvm/java-7-oracle'
+
+- command: java -version
+  register: java_version
+  ignore_errors: yes
+
+- set_fact: java_installed={{ java_version|success }}
+- debug: var=java_installed
+
+- apt_repository: repo=ppa:webupd8team/java state=present
+  when: ( not java_installed|bool )
+
+- shell: echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections
+  when: ( not java_installed|bool )
+
+- apt: pkg=oracle-java7-installer state=latest update-cache=yes force=yes
+  when: ( not java_installed|bool )
+
+- lineinfile:
+    dest: /etc/environment
+    line: JAVA_HOME="{{ java_home }}"
+
+- shell: java -version 2>&1
+  register: java_version_1
+
+- shell: "{{ java_home }}/bin/java -version 2>&1"
+  register: java_version_2
+
+- debug: var=java_version_1.stdout_lines
+
+- debug: var=java_version_2.stdout_lines
+
+- assert:
+    that:
+      - java_version_1.stdout == java_version_2.stdout
+      - "{{ '1.7.0' in java_version_1.stdout }}"
+      - "{{ 'Java(TM) SE Runtime Environment' in java_version_1.stdout }}"

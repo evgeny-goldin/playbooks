@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<hudson.plugins.s3.S3BucketPublisher_-DescriptorImpl plugin="s3@0.6">
+  <profiles>
+
+    {% if ( jenkins.s3 is defined ) and ( jenkins.s3 ) %}
+    {% for name, value in jenkins.s3.iteritems() %}
+
+    <hudson.plugins.s3.S3Profile>
+      <name>{{ name }}</name>
+      <accessKey>{{ value[0] }}</accessKey>
+      <secretKey>{{ value[1] }}</secretKey>
+      <proxyHost></proxyHost>
+      <proxyPort></proxyPort>
+      <useRole>false</useRole>
+    </hudson.plugins.s3.S3Profile>
+
+    {% endfor %}
+    {% endif %}
+
+  </profiles>
+</hudson.plugins.s3.S3BucketPublisher_-DescriptorImpl>

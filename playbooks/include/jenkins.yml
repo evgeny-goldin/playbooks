@@ -1,0 +1,83 @@
+---
+# https://wiki.jenkins-ci.org/display/JENKINS/Installing+Jenkins+on+Ubuntu
+- set_fact:
+    home:      /var/lib/jenkins
+    plugins:   https://updates.jenkins-ci.org
+    files:     /playbooks/files/jenkins
+    templates: templates/jenkins
+- stat: path={{ home }}
+  register: home_stat
+- set_fact:
+    install_jenkins: "{{ ( not home_stat.stat.exists ) or ( once_a_day|bool ) }}"
+- debug: var=install_jenkins
+
+- apt_key: file="{{ files }}/jenkins-ci.org.key"
+  when: install_jenkins
+- apt_repository: repo='deb http://pkg.jenkins-ci.org/debian binary/'
+  when: install_jenkins
+- apt:  update_cache=yes name=jenkins
+  when: install_jenkins
+
+- name: Write Jenkins files
+  template:
+    src:   "{{ item }}"
+    dest:  "{{ home }}"
+    owner: jenkins
+    group: jenkins
+    mode:  0644
+  with_items:
+    - "{{ templates }}/config.xml"
+    - "{{ templates }}/hudson.plugins.s3.S3BucketPublisher.xml"
+
+- name: Jenkins jobs - create directories
+  file:
+    path: "{{ home }}/jobs/{{ ( item | basename ).split('.')[0] }}"
+    state: directory
+    owner: jenkins
+    group: jenkins
+    mode:  0755
+  with_items: jenkins.jobs
+  when: ( jenkins.jobs | default([]))
+
+- name: Jenkins jobs - create XML configs
+  copy:
+    src:  "{{ item }}"
+    dest: "{{ home }}/jobs/{{ ( item | basename ).split('.')[0] }}/config.xml"
+  with_items: jenkins.jobs
+  when: ( jenkins.jobs | default([]))
+
+- name: Jenkins plugins - create directories
+  file:
+    path: "{{ home }}/plugins"
+    state: directory
+    owner: jenkins
+    group: jenkins
+    mode:  0755
+
+- name: Jenkins plugins - install latest version
+  with_dict: jenkins.plugins | default({})
+  when: item.value == '*'
+  get_url:
+    # https://updates.jenkins-ci.org/latest/s3.hpi
+    url:   "{{ plugins }}/latest/{{ item.key }}.hpi"
+    dest:  "{{ home }}/plugins/{{ item.key }}.hpi"
+    force: "{{ jenkins.redownload_plugins }}"
+
+- name: Jenkins plugins - install explicit version
+  with_dict: jenkins.plugins | default({})
+  when: ( item.value != '*' ) and ( not item.value.startswith( 'http' ))
+  get_url:
+    # https://updates.jenkins-ci.org/download/plugins/s3/0.6/s3.hpi
+    url:   "{{ plugins }}/download/plugins/{{ item.key }}/{{ item.value }}/{{ item.key }}.hpi"
+    dest:  "{{ home }}/plugins/{{ item.key }}.hpi"
+    force: "{{ jenkins.redownload_plugins }}"
+
+- name: Jenkins plugins - install custom version
+  with_dict: jenkins.plugins | default({})
+  when: item.value.startswith( 'http' )
+  get_url:
+    url:   "{{ item.value }}"
+    dest:  "{{ home }}/plugins/{{ item.key }}.hpi"
+    force: "{{ jenkins.redownload_plugins }}"
+
+- service: name=jenkins state=restarted

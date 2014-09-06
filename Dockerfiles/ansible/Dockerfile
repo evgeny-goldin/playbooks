@@ -1,0 +1,15 @@
+# https://registry.hub.docker.com/u/evgenyg/ansible/
+
+FROM ubuntu
+
+RUN apt-get update  -y
+RUN apt-get upgrade -y
+RUN apt-get install -y vim python-pip python-dev
+RUN pip install ansible
+RUN apt-get purge   -y python-dev
+
+RUN mkdir -p /etc/ansible
+RUN echo localhost > /etc/ansible/hosts
+
+RUN ansible --version
+RUN ansible-playbook --version

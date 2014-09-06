@@ -1,0 +1,12 @@
+---
+- apt: name=npm
+- stat: path=/usr/bin/node
+  register: node
+- command: ln -s /usr/bin/nodejs /usr/bin/node
+  when:    ( not node.stat.exists )
+- npm:  name={{item}} global=yes production=yes
+  when: once_a_day
+  with_items:
+       - grunt
+       - grunt-cli
+       - bower
