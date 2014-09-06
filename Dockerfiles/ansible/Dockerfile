@@ -4,7 +4,7 @@ FROM ubuntu
 
 RUN apt-get update  -y
 RUN apt-get upgrade -y
-RUN apt-get install -y vim python-pip python-dev
+RUN apt-get install -y vim htop python-pip python-dev
 RUN pip install ansible
 RUN apt-get purge   -y python-dev
 
