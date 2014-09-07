@@ -15,7 +15,7 @@
         <com.tikal.hudson.plugins.notification.Endpoint>
           <protocol>HTTP</protocol>
           <format>JSON</format>
-          <url>http://requestb.in/1mbujye1</url>
+          <url>http://evgenyg.ngrok.com/hooks/jenkins/pjdt33j2n</url>
           <event>finalized</event>
           <timeout>30000</timeout>
         </com.tikal.hudson.plugins.notification.Endpoint>
