@@ -1,0 +1,3 @@
+---
+- command: touch {{ touch_file }}
+  when:    periodic

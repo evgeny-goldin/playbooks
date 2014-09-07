@@ -1,22 +1,15 @@
 ---
-- hosts: all
-  sudo: yes
-  vars_files:
-    - vars.yml
+# Jenkins playbook for Ubuntu
+# http://jenkins-ci.org/
 
-  pre_tasks:
-    - stat: path={{ touch_file }}
-      register: touch
-    - set_fact:
-        once_a_day: "{{( not touch.stat.exists ) or (( ansible_date_time.epoch|int - touch.stat.atime|int ) > ( 3600 * 24 )) }}"
-    - debug: var=once_a_day
+- name:  Jenkins
+  hosts: all
+  sudo:  yes
 
   roles:
-    - { role: base, when: once_a_day }
-    - { role: npm,  when: once_a_day }
-    - { role: java    }
-    - { role: jenkins }
-
-  tasks:
-    - command: touch {{ touch_file }}
-      when:    once_a_day
+    - { role: periodic-before, period: ( 24 * 3600 ) }
+    - { role: base, when: periodic }
+    - { role: npm,  when: periodic }
+    - java
+    - jenkins
+    - periodic-after

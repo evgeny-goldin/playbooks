@@ -1,2 +1,3 @@
 ---
-  asgard_war_url: https://github.com/Netflix/asgard/releases/download/asgard-1.5/asgard.war
+
+asgard_jar_url: https://s3-eu-west-1.amazonaws.com/evgenyg-bakery/asgard/asgard-standalone.jar

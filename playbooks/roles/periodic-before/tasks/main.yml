@@ -1,0 +1,9 @@
+---
+
+- stat: path={{ touch_file }}
+  register: touch
+
+- set_fact:
+    periodic: "{{ ( not touch.stat.exists ) or (( ansible_date_time.epoch|int - touch.stat.atime|int ) > period ) }}"
+
+- debug: var=periodic

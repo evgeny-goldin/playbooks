@@ -1,0 +1,22 @@
+---
+# Asgard playbook for Ubuntu
+# https://github.com/Netflix/asgard
+
+- name:  Asgard
+  hosts: all
+  sudo:  yes
+
+  vars_prompt:
+    - name:   AWS_ACCOUNT_ID
+      prompt: AWS_ACCOUNT_ID
+    - name:   AWS_ACCESS_KEY_ID
+      prompt: AWS_ACCESS_KEY_ID
+    - name:   AWS_SECRET_ACCESS_KEY
+      prompt: AWS_SECRET_ACCESS_KEY
+
+  roles:
+    - { role: periodic-before, period: ( 24 * 3600 ) }
+    - { role: base, when: periodic }
+    - java
+    - asgard
+    - periodic-after

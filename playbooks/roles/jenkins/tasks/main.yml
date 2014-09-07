@@ -4,7 +4,7 @@
 - stat: path="{{ jenkins.home }}"
   register: home_stat
 - set_fact:
-    install_jenkins: "{{ ( not home_stat.stat.exists ) or ( once_a_day|bool ) }}"
+    install_jenkins: "{{ ( not home_stat.stat.exists ) or ( periodic|bool ) }}"
 - debug: var=install_jenkins
 
 - apt_key: file="{{ jenkins.files }}/jenkins-ci.org.key"

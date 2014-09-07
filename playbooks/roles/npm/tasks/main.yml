@@ -7,7 +7,7 @@
   when:    ( not node.stat.exists )
 
 - npm:  name={{item}} global=yes production=yes
-  when: once_a_day
+  when: periodic
   with_items:
        - grunt-cli
        - bower
