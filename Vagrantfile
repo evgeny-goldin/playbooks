@@ -20,6 +20,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.provision 'ansible' do |ansible|
     # ansible.verbose  = 'vv'
-    ansible.playbook = 'playbooks/jenkins-ubuntu.yml'
+    ansible.playbook   = 'playbooks/jenkins-ubuntu.yml'
+    ansible.extra_vars = {
+      # Uncomment to forcefully update all packages (otherwise, they're updated automatically once a day)
+      once_a_day: true
+    }
   end
 end

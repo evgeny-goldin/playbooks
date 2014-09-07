@@ -1,6 +1,3 @@
 ---
 
-# Uncomment to forcefully update all packages (otherwise, they're updated automatically once a day)
-# once_a_day: true
-
 touch_file: /opt/setup.touch
