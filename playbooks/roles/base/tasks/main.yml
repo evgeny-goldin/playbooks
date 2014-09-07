@@ -1,16 +1,13 @@
 ---
 - apt:  update_cache=yes upgrade=dist
-- apt:  name={{item}}
+
+- apt:  name={{item}} state=latest
   with_items:
-       - wget
-       - curl
-       - htop
-       - unzip
-       - git
-       - build-essential
-       - python-pip
-       - python-dev
-- pip:     name=awscli extra_args='--upgrade'
+    - vim
+    - htop
+    - wget
+    - curl
+    - git
 
 - command: service chef-client stop
   register: chef_client_service

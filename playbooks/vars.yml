@@ -1,40 +1,6 @@
 ---
+
 # Uncomment to forcefully update all packages (otherwise, they're updated automatically once a day)
-once_a_day: true
+# once_a_day: true
 
-jenkins: {
-
-  # github_auth: {
-  #   # https://wiki.jenkins-ci.org/display/JENKINS/Github+OAuth+Plugin#GithubOAuthPlugin-Setup
-  #   admins:       [ '...' ],
-  #   clientID:     '...',
-  #   clientSecret: '...'
-  # },
-  #
-  # s3: {
-  #   name: [ '...', '...' ]
-  # },
-
-  # Set to true to re-download all plugins
-  redownload_plugins: false,
-
-  plugins: {
-    # https://wiki.jenkins-ci.org/display/JENKINS/S3+Plugin
-    s3:            '0.6',
-    copyartifact:  '*',
-    # https://wiki.jenkins-ci.org/display/JENKINS/GitHub+Plugin
-    github:        '*',
-    git:           '*',
-    github-api:    '*',
-    git-client:    '*',
-    multiple-scms: '*',
-    scm-api:       '*',
-    ssh-agent:     '*',
-    # https://wiki.jenkins-ci.org/display/JENKINS/Github+OAuth+Plugin
-    github-oauth:  '*',
-    # https://wiki.jenkins-ci.org/display/JENKINS/Notification+Plugin
-    notification:  'https://www.dropbox.com/s/vh3ifzcqxw7aqa2/notification.hpi?dl=1'
-  },
-
-  jobs: [ 'files/jenkins/jobs/asgard.xml' ]
-}
+touch_file: /opt/setup.touch

@@ -20,6 +20,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.provision 'ansible' do |ansible|
     # ansible.verbose  = 'vv'
-    ansible.playbook = 'playbooks/jenkins.yml'
+    ansible.playbook = 'playbooks/jenkins-ubuntu.yml'
   end
 end

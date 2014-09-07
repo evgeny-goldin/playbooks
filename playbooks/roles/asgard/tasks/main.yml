@@ -1,0 +1,59 @@
+---
+# Asgard role
+- name: Copy tomcat server.xml file
+  copy: src=server.xml dest=/usr/local/tomcat/conf/server.xml owner=root group=root mode=0644
+  tags: auth
+  notify: restart tomcat
+
+- name: Remove default root webapp
+  file: path=/usr/local/tomcat/webapps/ROOT state=absent
+  
+- name: Create Asgard Home at /usr/share/tomcat7/.asgard
+  file: path=/usr/share/tomcat7/.asgard state=directory owner={{ tomcat_user }}  group={{ tomcat_user }}  mode=0755
+
+- name: Copy local Asgard WAR file {{ local_war }}
+  copy: src={{ local_war }} dest=/usr/local/tomcat/webapps/asgard.war
+  when: local_war != ""
+  tags: deploy
+  
+- name: Download Asgard WAR file
+  get_url: url={{ asgard_war_url }} dest=/usr/local/tomcat/webapps/asgard.war
+  when: local_war == ""
+  tags: deploy
+  
+- name: Remove any old version
+  file: path=/usr/local/tomcat/webapps/ROOT state=absent
+  notify: restart tomcat
+  tags: deploy
+  
+- name: Create asgard deployment directory
+  file: path=/usr/local/tomcat/webapps/ROOT state=directory
+  tags: deploy
+
+- name: Decompress asgard WAR file
+  command: chdir=/usr/local/tomcat/webapps/ROOT unzip ../asgard.war
+  notify: restart tomcat
+  tags: deploy
+  
+- name: Remove source WAR file
+  file: path=/usr/local/tomcat/webapps/asgard.war state=absent
+  tags: deploy
+   
+- name: Add BASIC auth requirements to web.xml
+  lineinfile: dest=/usr/local/tomcat/webapps/ROOT/WEB-INF/web.xml regexp="security-constraint" line="<security-constraint><web-resource-collection><web-resource-name></web-resource-name><url-pattern>/*</url-pattern></web-resource-collection><auth-constraint><role-name>asgard</role-name></auth-constraint></security-constraint><login-config><auth-method>BASIC</auth-method><realm-name>asgard</realm-name></login-config>" insertbefore="</web-app>"
+  when: asgard_enable_basic_auth == "yes"
+  notify: restart tomcat
+  tags: auth
+
+- name: Remove BASIC auth from web.xml
+  lineinfile: dest=/usr/local/tomcat/webapps/ROOT/WEB-INF/web.xml regexp="security-constraint" state=absent
+  when: asgard_enable_basic_auth != "yes"
+  notify: restart tomcat
+  tags: auth
+
+- name: Copy over tomcat-users.xml file
+  template: src=tomcat-users.xml.j2 dest=/usr/local/tomcat/conf/tomcat-users.xml owner=root group=root mode=0644
+  when: asgard_enable_basic_auth == "yes"
+  notify: restart tomcat
+  tags: auth
+ 

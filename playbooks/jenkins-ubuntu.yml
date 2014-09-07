@@ -1,26 +1,22 @@
 ---
 - hosts: all
   sudo: yes
-  vars:
-    touch_file: /opt/setup.touch
   vars_files:
     - vars.yml
-  tasks:
-    # http://stackoverflow.com/questions/19878066/ansible-define-when-a-command-doesnt-have-to-run-building-ruby-from-source
+
+  pre_tasks:
     - stat: path={{ touch_file }}
       register: touch
     - set_fact:
         once_a_day: "{{( not touch.stat.exists ) or (( ansible_date_time.epoch|int - touch.stat.atime|int ) > ( 3600 * 24 )) }}"
     - debug: var=once_a_day
 
-    - include: include/setup.yml
-      when:    once_a_day
+  roles:
+    - { role: base, when: once_a_day }
+    - { role: npm,  when: once_a_day }
+    - { role: java    }
+    - { role: jenkins }
 
-    - include: include/npm.yml
-
-    - include: include/java.yml
-
-    - include: include/jenkins.yml
-
+  tasks:
     - command: touch {{ touch_file }}
       when:    once_a_day
