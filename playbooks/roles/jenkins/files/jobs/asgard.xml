@@ -67,7 +67,7 @@
           <selectedRegion>EU_WEST_1</selectedRegion>
           <noUploadOnFailure>false</noUploadOnFailure>
           <uploadFromSlave>false</uploadFromSlave>
-          <managedArtifacts>true</managedArtifacts>
+          <managedArtifacts>false</managedArtifacts>
         </hudson.plugins.s3.Entry>
       </entries>
       <userMetadata/>
