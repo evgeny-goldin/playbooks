@@ -25,6 +25,8 @@ jenkins: {
     redownload: false,
     root:       'https://updates.jenkins-ci.org',
     install: {
+      # https://wiki.jenkins-ci.org/display/JENKINS/Rebuild+Plugin
+      rebuild:       '*',
       # https://wiki.jenkins-ci.org/display/JENKINS/S3+Plugin
       s3:            '*',
       copyartifact:  '*',
