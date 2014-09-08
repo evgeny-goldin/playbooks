@@ -11,7 +11,7 @@
     - vars/{{ ansible_distribution }}.yml
 
   roles:
-    - { role: periodic-before, period: ( 24 * 3600 ) }
+    - { role: periodic-before, period: "{{ 24 * 3600 }}" }
     - { role: base, when: periodic }
     - { role: npm,  when: periodic }
     - java
