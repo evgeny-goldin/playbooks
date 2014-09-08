@@ -65,4 +65,8 @@
     url:  "{{ asgard.jar_url }}"
     dest: "{{ asgard.jar }}"
 
-- command: "{{ asgard.java }} -version"
+- name: Check Asgard java
+  command: "{{ asgard.java }} -version"
+
+- name: Restart Asgard service
+  service: name=asgard state=restarted
