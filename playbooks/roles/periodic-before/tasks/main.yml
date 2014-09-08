@@ -1,6 +1,6 @@
 ---
 
-- stat: path={{ touch_file }}
+- stat: path={{ periodic.touch_file }}
   register: touch
 
 - set_fact:

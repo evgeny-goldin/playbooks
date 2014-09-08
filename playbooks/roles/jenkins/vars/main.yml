@@ -6,9 +6,6 @@ jenkins: {
   # Full path starting from project root
   files:        /playbooks/roles/jenkins/files,
 
-  # Relative path starting from root yml
-  templates:    roles/jenkins/templates,
-
 #  github_auth: {
 #     # https://wiki.jenkins-ci.org/display/JENKINS/Github+OAuth+Plugin#GithubOAuthPlugin-Setup
 #     admins:       [ '...' ],

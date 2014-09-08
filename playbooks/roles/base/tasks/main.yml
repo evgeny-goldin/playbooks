@@ -8,6 +8,7 @@
     - wget
     - curl
     - git
+    - daemon
 
 - command: service chef-client stop
   register: chef_client_service

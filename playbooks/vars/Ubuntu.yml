@@ -1,0 +1,8 @@
+---
+ubuntu: {
+  home_dir: /home,
+  env_file: /etc/environment,
+  init_dir: /etc/init.d,
+  log_dir:  /var/log,
+  pid_dir:  /var/run,
+}

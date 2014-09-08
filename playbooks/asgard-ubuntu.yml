@@ -6,6 +6,10 @@
   hosts: all
   sudo:  yes
 
+  vars_files:
+    - vars/common.yml
+    - vars/{{ ansible_distribution }}.yml
+
   vars_prompt:
     - name:   AWS_ACCOUNT_ID
       prompt: AWS_ACCOUNT_ID

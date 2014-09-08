@@ -1,3 +1,13 @@
 ---
-
-asgard_jar_url: https://s3-eu-west-1.amazonaws.com/evgenyg-bakery/asgard/asgard-standalone.jar
+asgard: {
+  user:       asgard,
+  group:      asgard,
+  user_home:  "{{ ubuntu.home_dir }}/asgard",
+  home:       "{{ ubuntu.home_dir }}/asgard/.asgard",
+  jar:        "{{ ubuntu.home_dir }}/asgard/.asgard/asgard-standalone.jar",
+  log:        "{{ ubuntu.log_dir }}/asgard/asgard.log",
+  pid:        "{{ ubuntu.pid_dir }}/asgard.pid",
+  java:       "{{ java.home }}/bin/java",
+  java_args:  -Xms256m -Xmx1024m,
+  jar_url:    'https://s3-eu-west-1.amazonaws.com/evgenyg-bakery/asgard/asgard-standalone.jar'
+}

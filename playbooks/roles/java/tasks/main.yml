@@ -2,9 +2,6 @@
 
 # https://coderwall.com/p/zzdapg
 
-- set_fact:
-    java_home: '/usr/lib/jvm/java-7-oracle'
-
 - command: java -version
   register: java_version
   ignore_errors: yes
@@ -22,13 +19,13 @@
   when: ( not java_installed|bool )
 
 - lineinfile:
-    dest: /etc/environment
-    line: JAVA_HOME="{{ java_home }}"
+    dest: "{{ ubuntu.env_file }}"
+    line: JAVA_HOME="{{ java.home }}"
 
 - shell: java -version 2>&1
   register: java_version_1
 
-- shell: "{{ java_home }}/bin/java -version 2>&1"
+- shell: "{{ java.home }}/bin/java -version 2>&1"
   register: java_version_2
 
 - assert:

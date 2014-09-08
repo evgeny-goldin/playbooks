@@ -1,33 +1,68 @@
 ---
-- set_fact:
-    home:        "{{ ansible_env.HOME }}"
+- group:
+    name:  "{{ asgard.group }}"
 
-- set_fact:
-    asgard_home: "{{ home }}/.asgard"
-    asgard_jar:  "{{ home }}/asgard-standalone.jar"
+- user:
+    name:  "{{ asgard.user }}"
+    group: "{{ asgard.group }}"
+    home:  "{{ asgard.user_home }}"
 
-- name: Create Asgard Home
+- name: Create Asgard home dir
   file:
-    path:  "{{ asgard_home }}"
+    path:  "{{ asgard.home }}"
     state: directory
+    owner: "{{ asgard.user }}"
+    group: "{{ asgard.group }}"
+    mode:  0755
+
+- name: Create Asgard log dir
+  file:
+    path:  "{{ asgard.log | dirname }}"
+    state: directory
+    owner: "{{ asgard.user }}"
+    group: "{{ asgard.group }}"
     mode:  0755
 
 - name: Create Asgard config
   template:
-    src:  roles/asgard/templates/Config.groovy
-    dest: "{{ asgard_home }}"
+    src:   Config.groovy
+    dest:  "{{ asgard.home }}"
+    owner: "{{ asgard.user }}"
+    group: "{{ asgard.group }}"
 
-- name: Create Asgard start script
+- name: Create Asgard init script
   template:
-    src:  roles/asgard/templates/asgard.sh
-    dest: "{{ home }}"
+    src:  asgard
+    dest: "{{ ubuntu.init_dir }}"
+    owner: root
+    group: root
 
-- name: Chmod Asgard start script
+- name: Chmod Asgard init script
   file:
-    path:  "{{ home }}/asgard.sh"
+    path:  "{{ ubuntu.init_dir }}/asgard"
     mode:  0755
+
+# http://docs.aws.amazon.com/AWSSdkDocsJava/latest/DeveloperGuide/credentials.html
+# http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html
+- name: Create AWS credentials directory
+  file:
+    path:  "{{ asgard.user_home }}/.aws"
+    state: directory
+    owner: "{{ asgard.user }}"
+    group: "{{ asgard.group }}"
+    mode:  0755
+
+- name: Create AWS credentials file
+  template:
+    src:   credentials
+    dest:  "{{ asgard.user_home }}/.aws"
+    owner: "{{ asgard.user }}"
+    group: "{{ asgard.group }}"
+    mode:  0600
 
 - name: Download Asgard JAR file
   get_url:
-    url:  "{{ asgard_jar_url }}"
-    dest: "{{ asgard_jar }}"
+    url:  "{{ asgard.jar_url }}"
+    dest: "{{ asgard.jar }}"
+
+- command: "{{ asgard.java }} -version"

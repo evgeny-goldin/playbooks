@@ -16,7 +16,7 @@
 
 - name: Write Jenkins files
   template:
-    src:   "{{ jenkins.templates }}/{{ item }}"
+    src:   "{{ item }}"
     dest:  "{{ jenkins.home }}"
     owner: jenkins
     group: jenkins
