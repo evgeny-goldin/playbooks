@@ -1,3 +1,5 @@
 ---
-- command: touch {{ periodic.touch_file }}
+- include_vars: roles/periodic-before/vars/main.yml
+
+- command: touch {{ periodic_touch_file }}
   when:    periodic

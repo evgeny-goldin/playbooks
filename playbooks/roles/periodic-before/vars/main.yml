@@ -1,4 +1,2 @@
 ---
-periodic: {
-  touch_file: /opt/periodic.touch
-}
+periodic_touch_file: /opt/periodic.touch
