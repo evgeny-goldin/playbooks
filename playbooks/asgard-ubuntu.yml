@@ -9,14 +9,8 @@
   vars_files:
     - vars/common.yml
     - vars/{{ ansible_distribution }}.yml
-
-  vars_prompt:
-    - name:   AWS_ACCOUNT_ID
-      prompt: AWS_ACCOUNT_ID
-    - name:   AWS_ACCESS_KEY_ID
-      prompt: AWS_ACCESS_KEY_ID
-    - name:   AWS_SECRET_ACCESS_KEY
-      prompt: AWS_SECRET_ACCESS_KEY
+    # So we don't fail when AWS credentials are provided using --extra-vars and "aws.yml" is missing
+    - [ roles/asgard/vars/aws.yml, vars/common.yml ]
 
   roles:
     - { role: periodic-before, period: "{{ 24 * 3600 }}" }
