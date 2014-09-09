@@ -4,8 +4,7 @@
   register: touch
 
 - set_fact:
-    seconds_since_last_periodic: "{{ ansible_date_time.epoch|int - touch.stat.ctime|int }}"
-    when: touch.stat.exists
+    seconds_since_last_periodic: "{{ ansible_date_time.epoch|int - touch.stat.ctime|default(0)|int }}"
 
 - set_fact:
     periodic: "{{ ( not touch.stat.exists ) or ( seconds_since_last_periodic|int >= period|int ) }}"
@@ -15,7 +14,7 @@
 - debug: msg="Last periodic run - {{ touch.stat.ctime | strftime }}, {{ seconds_since_last_periodic | explain }} ago"
   when: touch.stat.exists
 
-- debug: msg="Next periodic run - now"
+- debug: msg="Next periodic run - now!"
   when: periodic
 
 - debug: msg="Next periodic run - in {{ ( period|int - seconds_since_last_periodic|int ) | explain }}, on {{ ( touch.stat.ctime|int + period|int ) | strftime }}"

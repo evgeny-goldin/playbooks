@@ -1,2 +1,6 @@
 ---
-- apt: name=python-mysqldb state=latest
+- apt: name={{ item }} state=latest
+  with_items:
+    - mysql-server
+    - python-mysqldb
+  when: periodic
