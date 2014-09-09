@@ -1,0 +1,9 @@
+### THIS FILE IS AUTOMATICALLY CONFIGURED ###
+# You may comment out this entry, but any other modifications may be lost.
+
+# http://dev.mysql.com/downloads/repo/apt/
+# http://dev.mysql.com/downloads/file.php?id=452447
+# http://dev.mysql.com/get/mysql-apt-config_0.2.1-1ubuntu14.04_all.deb
+
+deb http://repo.mysql.com/apt/ubuntu/ trusty mysql-5.6
+deb-src http://repo.mysql.com/apt/ubuntu/ trusty mysql-5.6

@@ -11,7 +11,7 @@
 
 - debug: var=periodic
 
-- debug: msg="Last periodic run - {{ touch.stat.ctime | strftime }}, {{ seconds_since_last_periodic | explain }} ago"
+- debug: msg="Last successful periodic run - {{ touch.stat.ctime | strftime }}, {{ seconds_since_last_periodic | explain }} ago"
   when: touch.stat.exists
 
 - debug: msg="Next periodic run - now!"

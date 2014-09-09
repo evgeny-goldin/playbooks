@@ -31,5 +31,5 @@
 - assert:
     that:
       - java_version_1.stdout == java_version_2.stdout
-      - "{{ '1.7.0' in java_version_1.stdout }}"
-      - "{{ 'Java(TM) SE Runtime Environment' in java_version_1.stdout }}"
+      - "'1.7.0'                           in java_version_1.stdout"
+      - "'Java(TM) SE Runtime Environment' in java_version_1.stdout"
