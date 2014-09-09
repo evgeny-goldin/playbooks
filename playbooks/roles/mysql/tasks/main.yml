@@ -2,18 +2,15 @@
 
 - copy:
     src:  mysql.list
-    dest: /etc/apt/sources.list.d/mysql.list
+    dest: "{{ mysql.mysql_list }}"
 
 - apt: update_cache=yes
   when: periodic
 
-- apt: name={{ item }} state=latest force=yes
-  with_items:
-    - mysql-server
-    - python-mysqldb
+- apt: name=mysql-server state=latest force=yes
   when: periodic
 
-- command: mysql --version
+- command:  mysql --version
   register: mysql_version
 
 - assert:
@@ -23,9 +20,15 @@
 
 # http://stackoverflow.com/a/21151255/472153
 - lineinfile:
-    dest: /etc/mysql/my.cnf
+    dest: "{{ mysql.my_cnf }}"
     line: '# bind-address = 127.0.0.1'
     regexp: ^bind-address\s+=
+
+- copy:
+    src:  root.sql
+    dest: "{{ mysql.root_sql }}"
+
+- shell: "mysql -u root < {{ mysql.root_sql }}"
 
 - name: Restart MySQL
   service: name=mysql state=restarted
