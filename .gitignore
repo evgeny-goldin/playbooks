@@ -1,2 +1,3 @@
 .vagrant
+*.pyc
 playbooks/roles/asgard/vars/aws.yml

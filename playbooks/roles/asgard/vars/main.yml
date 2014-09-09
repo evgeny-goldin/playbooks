@@ -8,6 +8,6 @@ asgard: {
   log:        "{{ ubuntu.log_dir }}/asgard/asgard.log",
   pid:        "{{ ubuntu.pid_dir }}/asgard.pid",
   java:       "{{ java.home }}/bin/java",
-  java_args:  -Xms256m -Xmx1024m,
+  java_args:  -Xms256m -Xmx768m,
   jar_url:    'https://s3-eu-west-1.amazonaws.com/evgenyg-bakery/asgard/asgard-standalone.jar'
 }

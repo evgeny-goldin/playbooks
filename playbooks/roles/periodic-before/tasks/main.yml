@@ -3,9 +3,20 @@
 - stat: path={{ periodic_touch_file }}
   register: touch
 
-- debug: var=period
+- set_fact:
+    seconds_since_last_periodic: "{{ ansible_date_time.epoch|int - touch.stat.ctime|int }}"
+    when: touch.stat.exists
 
 - set_fact:
-    periodic: "{{ ( not touch.stat.exists ) or (( ansible_date_time.epoch|int - touch.stat.atime|int ) > ( period|int )) }}"
+    periodic: "{{ ( not touch.stat.exists ) or ( seconds_since_last_periodic|int >= period|int ) }}"
 
 - debug: var=periodic
+
+- debug: msg="Last periodic run - {{ touch.stat.ctime | strftime }}, {{ seconds_since_last_periodic | explain }} ago"
+  when: touch.stat.exists
+
+- debug: msg="Next periodic run - now"
+  when: periodic
+
+- debug: msg="Next periodic run - in {{ ( period|int - seconds_since_last_periodic|int ) | explain }}, on {{ ( touch.stat.ctime|int + period|int ) | strftime }}"
+  when: ( not periodic|bool )
