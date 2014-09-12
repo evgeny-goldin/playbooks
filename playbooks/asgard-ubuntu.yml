@@ -9,7 +9,7 @@
   vars_files:
     - vars/common.yml
     - vars/{{ ansible_distribution }}.yml
-    # So we don't fail when AWS credentials are provided using --extra-vars and "aws.yml" is missing
+    # When "aws.yml" is missing - AWS credentials should be provided with "-e/--extra-vars"
     - [ roles/asgard/vars/aws.yml, vars/common.yml ]
 
   roles:

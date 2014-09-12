@@ -1,4 +1,22 @@
 ---
+- include_vars: aws.yml
+  when: packer_store_aws_credentials
+
+- assert:
+    that:
+      - AWS_ACCESS_KEY_ID     is defined
+      - AWS_SECRET_ACCESS_KEY is defined
+  when: packer_store_aws_credentials
+
+# http://www.packer.io/docs/builders/amazon-ebs.html#toc_2
+- lineinfile:
+    dest: "{{ ubuntu.env_file }}"
+    line: "{{ item }}"
+  with_items:
+    - AWS_ACCESS_KEY_ID={{ AWS_ACCESS_KEY_ID }}
+    - AWS_SECRET_ACCESS_KEY={{ AWS_SECRET_ACCESS_KEY }}
+  when: packer_store_aws_credentials
+
 - name: Calculate Packer latest version
   shell:    curl {{ packer.packages_url }} | grep packer | grep linux | tail -1 | cut -d_ -f5
   register: packer_latest_version

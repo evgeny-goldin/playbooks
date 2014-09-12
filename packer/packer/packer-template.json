@@ -1,0 +1,22 @@
+{
+    "builders": [
+        {
+            "type":            "amazon-ebs",
+            "region":          "eu-west-1",
+            "source_ami":      "ami-163a9f61",
+            "instance_type":   "c3.large",
+            "ssh_username":    "ubuntu",
+            "ami_name":        "packer {{ isotime | clean_ami_name }}",
+            "ami_description": "packer {{ isotime | clean_ami_name }}",
+            "tags":            { "Name" : "Packer" }
+        }
+    ],
+    "provisioners": [
+        {
+            "type":            "ansible-local",
+            "playbook_dir":    "../../playbooks",
+            "playbook_file":   "../../playbooks/packer-ubuntu.yml",
+            "extra_arguments": "-e 'packer_store_aws_credentials=false'"
+        }
+    ]
+}

@@ -9,3 +9,6 @@ packer: {
   download_url: 'https://dl.bintray.com/mitchellh/packer/<version>_linux_<platform>.zip',
   redownload:   false
 }
+
+# Ansible "--extra-vars" option doesn't get dots in variable names
+packer_store_aws_credentials: true
