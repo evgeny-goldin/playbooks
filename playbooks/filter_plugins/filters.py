@@ -2,7 +2,7 @@ import time;
 
 def strftime( epoch_time ):
   '''time.strftime wrapper'''
-  return time.strftime( '%b %d, %Y at %H:%M:%S', time.gmtime( epoch_time ))
+  return time.strftime( '%b %d, %Y at %H:%M:%S (GMT)', time.gmtime( epoch_time ))
 
 
 def explain( seconds ):

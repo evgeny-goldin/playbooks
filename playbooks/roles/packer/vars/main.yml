@@ -1,0 +1,11 @@
+---
+packer: {
+  version:      0.7.1, # or 'latest'
+#  version:      latest,
+  platform:     amd64,
+  dir:          /opt/packer,
+  bin:          /usr/bin/packer,
+  packages_url: 'https://dl.bintray.com/mitchellh/packer/',
+  download_url: 'https://dl.bintray.com/mitchellh/packer/<version>_linux_<platform>.zip',
+  redownload:   false
+}

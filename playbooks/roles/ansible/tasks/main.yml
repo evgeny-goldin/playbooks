@@ -1,0 +1,24 @@
+---
+- apt:  name={{item}} state=latest
+  with_items:
+    - python-pip
+    - python-dev
+  when: periodic
+
+- pip:  name=ansible
+  when: ( periodic|bool and ansible.version == 'latest' )
+
+- pip:  name=ansible version={{ ansible.version }}
+  when: ( periodic|bool and ansible.version != 'latest' )
+
+- command:  ansible --version
+  register: ansible_version
+
+- command:  ansible-playbook --version
+  register: ansible_playbook_version
+
+- assert:
+    that:
+      - ansible.version in ansible_version.stdout
+      - ansible.version in ansible_playbook_version.stdout
+  when: ansible.version != 'latest'

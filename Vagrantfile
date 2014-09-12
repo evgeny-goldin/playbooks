@@ -5,7 +5,14 @@
 VAGRANTFILE_API_VERSION = '2'
 CPUS                    = '2'
 MEMORY                  = '1024'
-BOXES                   = { jenkins: [ 8080 ], asgard: [ 8080 ], mysql: [ 3306 ] }
+BOXES                   = {
+  # Name of the box (and corresponding playbook): [ list of ports to forward ]
+  jenkins: [ 8080 ],
+  asgard:  [ 8080 ],
+  mysql:   [ 3306 ],
+  ansible: [],
+  packer:  []
+}
 
 Vagrant.require_version '>= 1.6.3'
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
@@ -32,7 +39,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         # ansible.verbose  = 'vv'
         ansible.playbook   = "playbooks/#{box_name}.yml"
         ansible.extra_vars = {
-          # Uncomment to forcefully update all packages (otherwise, they're updated automatically once a day)
+          # Uncomment and set to true to forcefully update all packages
+          # Uncomment and set to false to disable periodic run
+          # Otherwise (when commented out) packages are updated automatically once a day
           # periodic: true
         }
       end

@@ -8,11 +8,11 @@
     - wget
     - curl
     - git
+    - unzip
     - daemon
 
-- command: service chef-client stop
-  register: chef_client_service
+- service: name=chef-client state=stopped enabled=no
   ignore_errors: yes
 
-- service: name=chef-client state=stopped enabled=no
-  when: chef_client_service|success
+- service: name=puppet state=stopped enabled=no
+  ignore_errors: yes

@@ -18,4 +18,4 @@
   when: periodic
 
 - debug: msg="Next periodic run will be on {{ ( touch.stat.ctime|int + period|int ) | strftime }}, in {{ ( period|int - seconds_since_last_periodic|int ) | explain }}"
-  when: ( not periodic|bool )
+  when: ( touch.stat.exists and ( not periodic|bool ))

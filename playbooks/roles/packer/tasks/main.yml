@@ -1,0 +1,86 @@
+---
+- name: Calculate Packer latest version
+  shell:    curl {{ packer.packages_url }} | grep packer | grep linux | tail -1 | cut -d_ -f5
+  register: packer_latest_version
+  when:     packer.version == 'latest'
+
+- debug: var=packer_latest_version.stdout
+  when:  packer.version == 'latest'
+
+- set_fact: packer_version={{ packer_latest_version.stdout }}
+  when: packer.version == 'latest'
+
+- set_fact: packer_version={{ packer.version }}
+  when: packer.version != 'latest'
+
+- debug: var=packer_version
+
+- name: Calculate Packer download URL
+  set_fact:
+    url:      "{{ packer.download_url.replace( '<version>', packer_version ).replace( '<platform>', packer.platform ) }}"
+    local_zip: "/opt/packer-{{ packer_version }}-{{ packer.platform }}.zip"
+
+- debug: var=url
+
+- debug: var=local_zip
+
+- file: path={{ item }} state=absent
+  with_items:
+    - "{{ packer.bin }}"
+    - "{{ local_zip }}"
+  when: packer.redownload
+
+- name: Download Packer
+  get_url:
+    url:   "{{ url }}"
+    dest:  "{{ local_zip }}"
+    force: "{{ packer.redownload }}"
+
+- name: Delete Packer dir
+  file:
+    path:  "{{ packer.dir }}"
+    state: absent
+
+- name: Create Packer dir
+  file:
+    path:  "{{ packer.dir }}"
+    state: directory
+    mode:  0755
+
+- name: Unpack Packer
+  unarchive:
+    src:  "{{ local_zip }}"
+    dest: "{{ packer.dir }}"
+    copy: no
+
+- stat: path="{{ packer.dir }}/packer"
+  register: packer_src_bin
+
+- stat: path="{{ packer.dir }}/packer-packer"
+  register: packer_packer_src_bin
+
+- assert:  { that: "packer_src_bin.stat.exists or packer_packer_src_bin.stat.exists" }
+
+- file:
+    src:   "{{ packer.dir }}/packer"
+    dest:  "{{ packer.bin }}"
+    state: link
+  when:  packer_src_bin.stat.exists
+
+- file:
+    src:   "{{ packer.dir }}/packer-packer"
+    dest:  "{{ packer.bin }}"
+    state: link
+  when:  packer_packer_src_bin.stat.exists
+
+- command: "{{ packer.bin }} --version"
+  register: packer_version_1
+
+- command:  packer --version
+  register: packer_version_2
+
+- assert:
+    that:
+      - packer.version in packer_version_1.stdout
+      - packer.version in packer_version_2.stdout
+  when: packer.version != 'latest'
