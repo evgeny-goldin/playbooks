@@ -1,15 +1,18 @@
 ---
 - apt: name=npm state=latest
 
-- stat: path=/usr/bin/node
-  register: node
-- command: ln -s /usr/bin/nodejs /usr/bin/node
-  when:    ( not node.stat.exists )
+- file:
+    src:   "{{ npm.node_src  }}"
+    dest:  "{{ npm.node_dest }}"
+    state: link
 
-- npm:  name={{item}} global=yes production=yes
-  when: periodic
+- command: npm  --version
+- command: node --version
+
+- npm:  name={{ item }} global=yes production=yes
   with_items:
        - grunt-cli
        - bower
+
 - command: grunt --version
 - command: bower --version

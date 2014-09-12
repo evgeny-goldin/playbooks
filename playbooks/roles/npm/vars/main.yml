@@ -1,0 +1,5 @@
+---
+npm: {
+  node_src:  /usr/bin/nodejs,
+  node_dest: /usr/bin/node
+}
