@@ -10,5 +10,7 @@ asgard: {
   java:          "{{ java.home }}/bin/java",
   java_args:     -Xms256m -Xmx768m,
   jar_url:       'https://s3-eu-west-1.amazonaws.com/evgenyg-bakery/asgard/asgard-standalone.jar',
-  start_service: true
 }
+
+# Ansible "--extra-vars" option doesn't get dots in variable names
+asgard_start_service: true
