@@ -9,7 +9,10 @@ asgard: {
   pid:           "{{ ubuntu.pid_dir }}/asgard.pid",
   java:          "{{ java.home }}/bin/java",
   java_args:     -Xms256m -Xmx768m,
-  jar_url:       'https://s3-eu-west-1.amazonaws.com/evgenyg-bakery/asgard/asgard-standalone.jar',
+
+  # https://github.com/Netflix/asgard/releases
+  # https://netflixoss.ci.cloudbees.com/job/asgard-master/
+  jar_url:       'https://netflixoss.ci.cloudbees.com/job/asgard-master/lastSuccessfulBuild/artifact/asgard-standalone.jar',
 }
 
 # Ansible "--extra-vars" option doesn't get dots in variable names

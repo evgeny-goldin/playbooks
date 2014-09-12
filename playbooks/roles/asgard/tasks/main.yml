@@ -66,10 +66,20 @@
     group: "{{ asgard.group }}"
     mode:  0600
 
+# CloudNative Bakery bake - https://bakery.cloudnative.io/
+# 'artifacts' is sent as external variable, it contains Jenkins artifacts URL
+- name: Download Asgard JAR file
+  get_url:
+    url:   "{{ artifacts }}"
+    dest:  "{{ asgard.jar }}"
+    force: yes
+  when: artifacts is defined
+
 - name: Download Asgard JAR file
   get_url:
     url:  "{{ asgard.jar_url }}"
     dest: "{{ asgard.jar }}"
+  when: ( not ( artifacts is defined ))
 
 - name: Check Asgard java
   command: "{{ asgard.java }} -version"
