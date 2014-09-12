@@ -68,14 +68,14 @@
 
 # CloudNative Bakery bake - https://bakery.cloudnative.io/
 # 'artifacts' is sent as external variable, it contains Jenkins artifacts URL
-- name: Download Asgard JAR file
+- name: Download Asgard JAR file from '{{ artifacts }}'
   get_url:
     url:   "{{ artifacts }}"
     dest:  "{{ asgard.jar }}"
     force: yes
   when: artifacts is defined
 
-- name: Download Asgard JAR file
+- name: Download Asgard JAR file from '{{ asgard.jar_url }}'
   get_url:
     url:  "{{ asgard.jar_url }}"
     dest: "{{ asgard.jar }}"
