@@ -74,5 +74,10 @@
 - name: Check Asgard java
   command: "{{ asgard.java }} -version"
 
+- name: Stop Asgard service
+  service: name=asgard state=stopped
+  when: ( not asgard.start_service|bool )
+
 - name: Restart Asgard service
   service: name=asgard state=restarted
+  when: asgard.start_service|bool
