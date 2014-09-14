@@ -11,3 +11,17 @@
     that:
       - "'Ubuntu 14.04' in lsb_output.stdout"
       - "'trusty'       in lsb_output.stdout"
+
+- command: docker run evgenyg/ansible:1.7.1 ansible --version
+  register: ansible_output
+- assert:
+    that:
+      - "'ansible' in ansible_output.stdout"
+      - "'1.7.1'   in ansible_output.stdout"
+
+- command: docker run evgenyg/ansible:1.7.1 ansible-playbook --version
+  register: ansible_playbook_output
+- assert:
+    that:
+      - "'ansible-playbook' in ansible_playbook_output.stdout"
+      - "'1.7.1'            in ansible_playbook_output.stdout"

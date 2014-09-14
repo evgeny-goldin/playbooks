@@ -2,7 +2,7 @@
     "builders": [
       {
         "type": "docker",
-        "image": "ubuntu:14.04",
+        "image": "evgenyg/ansible:1.7.1",
         "export_path": "image.tar"
       }
     ],
