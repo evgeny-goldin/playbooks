@@ -5,23 +5,15 @@
 - apt_repository: repo='deb https://get.docker.io/ubuntu docker main'
 - apt: update_cache=yes name=lxc-docker
 
+- command:  docker --version
+  register: docker_version
+- assert:
+    that:
+      - "'Docker' in docker_version.stdout"
+
 - command: docker run ubuntu:14.04 lsb_release -a
   register: lsb_output
 - assert:
     that:
       - "'Ubuntu 14.04' in lsb_output.stdout"
       - "'trusty'       in lsb_output.stdout"
-
-- command: docker run evgenyg/ansible:1.7.1 ansible --version
-  register: ansible_output
-- assert:
-    that:
-      - "'ansible' in ansible_output.stdout"
-      - "'1.7.1'   in ansible_output.stdout"
-
-- command: docker run evgenyg/ansible:1.7.1 ansible-playbook --version
-  register: ansible_playbook_output
-- assert:
-    that:
-      - "'ansible-playbook' in ansible_playbook_output.stdout"
-      - "'1.7.1'            in ansible_playbook_output.stdout"

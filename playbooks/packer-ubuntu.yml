@@ -12,10 +12,10 @@
 
   roles:
     - { role: periodic-before, period: "{{ 24 * 3600 }}" }
-    - { role: base,    when: periodic }
-    - { role: docker,  when: periodic }
-    - { role: ansible, when: periodic }
-    - { role: vagrant, when: periodic }
-    - virtualbox
+    - { role: base,       when: periodic }
+    - { role: docker,     when: periodic }
+    - { role: ansible,    when: periodic }
+    - { role: vagrant,    when: periodic }
+    - { role: virtualbox, when: periodic }
     - packer
     - periodic-after
