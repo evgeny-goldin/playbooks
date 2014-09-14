@@ -1,0 +1,13 @@
+---
+# http://docs.docker.com/installation/ubuntulinux/
+
+- apt_key: keyserver=hkp://keyserver.ubuntu.com:80 id=36A1D7869245C8950F966E92D8576A8BA88D21E9
+- apt_repository: repo='deb https://get.docker.io/ubuntu docker main'
+- apt: update_cache=yes name=lxc-docker
+
+- command: docker run ubuntu:14.04 lsb_release -a
+  register: lsb_output
+- assert:
+    that:
+      - "'Ubuntu 14.04' in lsb_output.stdout"
+      - "'trusty'       in lsb_output.stdout"

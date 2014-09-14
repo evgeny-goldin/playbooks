@@ -1,0 +1,17 @@
+{
+    "builders": [
+      {
+        "type": "docker",
+        "image": "ubuntu:14.04",
+        "export_path": "image.tar"
+      }
+    ],
+    "provisioners": [
+      {
+          "type":            "ansible-local",
+          "playbook_dir":    "playbooks",
+          "playbook_file":   "playbooks/packer-ubuntu.yml",
+          "extra_arguments": "-e packer_store_aws_credentials=false"
+      }
+    ]
+}

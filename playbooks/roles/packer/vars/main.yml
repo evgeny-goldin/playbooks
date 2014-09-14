@@ -11,4 +11,4 @@ packer: {
 }
 
 # Ansible "--extra-vars" option doesn't get dots in variable names
-packer_store_aws_credentials: true
+packer_store_aws_credentials: false
