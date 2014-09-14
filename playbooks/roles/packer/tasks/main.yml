@@ -102,3 +102,8 @@
       - packer.version in packer_version_1.stdout
       - packer.version in packer_version_2.stdout
   when: packer.version != 'latest'
+
+- assert:
+    that:
+      - "'Packer' in packer_version_1.stdout"
+      - "'Packer' in packer_version_2.stdout"

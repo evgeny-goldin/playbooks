@@ -2,7 +2,7 @@
 packer: {
   version:      0.7.1, # or 'latest'
 #  version:      latest,
-  platform:     amd64,
+  platform:     amd64, # '386', 'amd64' or 'arm' - http://www.packer.io/downloads.html
   dir:          /opt/packer,
   bin:          /usr/bin/packer,
   packages_url: 'https://dl.bintray.com/mitchellh/packer/',

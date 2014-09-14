@@ -1,0 +1,45 @@
+---
+- name: Calculate Vagrant latest version
+  shell:    curl {{ vagrant.packages_url }} | grep vagrant | grep '.deb' | tail -1 | cut -d_ -f5
+  register: vagrant_latest_version
+  when:     vagrant.version == 'latest'
+
+- debug: var=vagrant_latest_version.stdout
+  when:  vagrant.version == 'latest'
+
+- set_fact: vagrant_version={{ vagrant_latest_version.stdout }}
+  when: vagrant.version == 'latest'
+
+- set_fact: vagrant_version={{ vagrant.version }}
+  when: vagrant.version != 'latest'
+
+- debug: var=vagrant_version
+
+- name: Calculate vagrant download URL
+  set_fact:
+    url: "{{ vagrant.download_url.replace( '<version>', vagrant_version ).replace( '<platform>', vagrant.platform ) }}"
+    local_deb: "/opt/vagrant-{{ vagrant_version }}-{{ vagrant.platform }}.deb"
+
+- debug: var=url
+
+- debug: var=local_deb
+
+- name: Download Vagrant
+  get_url:
+    url:   "{{ url }}"
+    dest:  "{{ local_deb }}"
+    force: "{{ vagrant.redownload }}"
+
+- apt: deb={{ local_deb }}
+
+- command:  vagrant --version
+  register: vagrant_version
+
+- assert:
+    that:
+      - vagrant.version in vagrant_version.stdout
+  when: vagrant.version != 'latest'
+
+- assert:
+    that:
+      - "'Vagrant' in vagrant_version.stdout"

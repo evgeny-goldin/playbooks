@@ -1,0 +1,9 @@
+---
+vagrant: {
+  version:      1.6.5, # Or 'latest'
+  # version:      latest,
+  platform:     x86_64, # 'i686' or 'x86_64' - http://www.vagrantup.com/downloads.html
+  packages_url: 'https://dl.bintray.com/mitchellh/vagrant/',
+  download_url: 'https://dl.bintray.com/mitchellh/vagrant/vagrant_<version>_<platform>.deb',
+  redownload:   false
+}

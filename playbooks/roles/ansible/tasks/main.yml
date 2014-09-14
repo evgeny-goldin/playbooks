@@ -3,13 +3,12 @@
   with_items:
     - python-pip
     - python-dev
-  when: periodic
 
 - pip:  name=ansible
-  when: ( periodic|bool and ansible.version == 'latest' )
+  when: ( ansible.version == 'latest' )
 
 - pip:  name=ansible version={{ ansible.version }}
-  when: ( periodic|bool and ansible.version != 'latest' )
+  when: ( ansible.version != 'latest' )
 
 - command:  ansible --version
   register: ansible_version
@@ -22,3 +21,8 @@
       - ansible.version in ansible_version.stdout
       - ansible.version in ansible_playbook_version.stdout
   when: ansible.version != 'latest'
+
+- assert:
+    that:
+      - "'ansible'          in ansible_version.stdout"
+      - "'ansible-playbook' in ansible_playbook_version.stdout"
