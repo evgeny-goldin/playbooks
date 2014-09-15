@@ -1,5 +1,5 @@
 
-### This repo contains [Ansible](http://www.ansible.com/) Playbooks/Roles for installing the following packages on Ubuntu:
+#### This repo contains [Ansible](http://www.ansible.com/) Playbooks/Roles for installing the following packages on Ubuntu:
 
 * [Ansible](http://www.ansible.com/)
 * [Asgard](https://github.com/Netflix/asgard)
@@ -12,14 +12,14 @@
 * [Vagrant](http://www.vagrantup.com/)
 * [VirtualBox](https://www.virtualbox.org/)
 
-### Usage:
+#### Usage:
 
-* To create VMs, if you have Vagrant and VirtualBox installed locally:
+* To create VMs, if you have **Vagrant** and **VirtualBox** installed locally:
 
-  `vagrant up jenkins / asgard / mysql / packer`
+  vagrant up [jenkins](https://github.com/evgeny-goldin/playbooks/blob/master/playbooks/jenkins-ubuntu.yml) / [asgard](https://github.com/evgeny-goldin/playbooks/blob/master/playbooks/asgard-ubuntu.yml) / [mysql](https://github.com/evgeny-goldin/playbooks/blob/master/playbooks/mysql-ubuntu.yml) / [packer](https://github.com/evgeny-goldin/playbooks/blob/master/playbooks/packer-ubuntu.yml)`
 
-  'packer' box comes with Docker, Ansible, Vagrant, Virtualbox installed
+  `"packer"` box comes with Docker, Ansible, Vagrant, Virtualbox, and Packer installed
 
-* To provision the local box, if you have ansible installed locally:
+* To provision the local box, if you have **Ansible** installed locally:
 
-  `ansible-playbook packer-ubuntu.yml -c local -i "127.0.0.1,"`
+  ansible-playbook packer-ubuntu.yml -c local -i "127.0.0.1,"
