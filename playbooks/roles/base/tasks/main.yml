@@ -1,5 +1,18 @@
 ---
+# http://stackoverflow.com/questions/20010199/determining-if-a-process-runs-inside-lxc-docker
+- shell:    grep docker /proc/1/cgroup | wc -l
+  register: grep_result
+
+- set_fact:
+    is_docker: "{{ grep_result.stdout|int > 0 }}"
+
+- debug: var=is_docker
+
+- apt:  update_cache=yes
+  when: is_docker
+
 - apt:  update_cache=yes upgrade=dist
+  when: ( not is_docker|bool )
 
 - apt:  name={{item}} state=latest
   with_items:

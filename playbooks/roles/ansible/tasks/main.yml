@@ -10,11 +10,25 @@
 - pip:  name=ansible version={{ ansible.version }}
   when: ( ansible.version != 'latest' )
 
+- name: Create Ansible inventory file
+  file:
+    path:  "{{ ansible.inventory_file|dirname }}"
+    state: directory
+- file:
+    path:  "{{ ansible.inventory_file }}"
+    state: touch
+- lineinfile:
+    dest:  "{{ ansible.inventory_file }}"
+    line:  localhost
+
 - command:  ansible --version
   register: ansible_version
 
 - command:  ansible-playbook --version
   register: ansible_playbook_version
+
+- command:  ansible localhost -c local -m setup
+  register: inventory
 
 - assert:
     that:
@@ -26,3 +40,5 @@
     that:
       - "'ansible'          in ansible_version.stdout"
       - "'ansible-playbook' in ansible_playbook_version.stdout"
+      - "'ansible_facts'    in inventory.stdout"
+      - "'Ubuntu'           in inventory.stdout"
