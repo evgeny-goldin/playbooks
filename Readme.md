@@ -17,9 +17,10 @@
 * To create VMs, if you have **Vagrant** and **VirtualBox** installed locally:
 
   * `vagrant up jenkins/asgard/mysql/packer`
-  * `"packer"` box comes with Docker, Ansible, Vagrant, Virtualbox, and Packer installed
 
 * To provision the local box, if you have **Ansible** installed locally:
 
   * `cd playbooks`
   * `ansible-playbook jenkins/asgard/mysql/packer-ubuntu.yml -c local -i "127.0.0.1,"`
+
+* `"packer"` box comes with Docker, Ansible, Vagrant, Virtualbox, and Packer installed.
