@@ -8,7 +8,6 @@ branches:
     - ship
 
 script:
- - id
- - uname -a
- - lsb_release -a
- - pwd
+ - ./shippable.sh
+
+commit_container: evgenyg/ansible:1.7.1

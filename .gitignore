@@ -3,3 +3,4 @@
 packer_cache
 *.pyc
 aws.yml
+Dockerfile
