@@ -10,7 +10,6 @@ BOXES                   = {
   jenkins: [ 8080 ],
   asgard:  [ 8080 ],
   mysql:   [ 3306 ],
-  ansible: [],
   packer:  []
 }
 
