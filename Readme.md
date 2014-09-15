@@ -1,5 +1,5 @@
 
-This repo contains ### [Ansible](http://www.ansible.com/) Roles for:
+### This repo contains [Ansible](http://www.ansible.com/) Roles for:
 
 * [Java](http://www.oracle.com/technetwork/java/index.html)
 * [Jenkins](http://jenkins-ci.org/)
