@@ -24,3 +24,5 @@
   * `ansible-playbook jenkins/asgard/mysql/packer-ubuntu.yml -c local -i "127.0.0.1,"`
 
 * `"packer"` box comes with Docker, Ansible, Vagrant, Virtualbox, and Packer installed.
+
+* Review each role's `"vars/main.yml"` for fine-tuning your installation.
