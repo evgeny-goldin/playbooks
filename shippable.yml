@@ -1,2 +1,5 @@
 ---
-  
+# http://docs.shippable.com/en/latest/config.html
+branches:
+  only:
+    - ship
