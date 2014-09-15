@@ -16,16 +16,16 @@
 
 * To create VMs, if you have **Vagrant** and **VirtualBox** installed locally:
 
-  * `vagrant up jenkins/asgard/mysql/packer`
+  * `vagrant up asgard/jenkins/mysql/packer`
 
 * To provision the local box, if you have **Ansible** installed locally:
 
   * `cd playbooks`
-  * `ansible-playbook jenkins/asgard/mysql/packer-ubuntu.yml -c local -i "127.0.0.1,"`
-
-* [`"jenkins"`](https://github.com/evgeny-goldin/playbooks/blob/master/playbooks/jenkins-ubuntu.yml) comes with Java, Node.js, Npm, Grunt, Bower. Jenkins runs as a service, plugins are [configurable](https://github.com/evgeny-goldin/playbooks/blob/master/playbooks/roles/jenkins/vars/main.yml).
+  * `ansible-playbook asgard/jenkins/mysql/packer-ubuntu.yml -c local -i "127.0.0.1,"`
 
 * [`"asgard"`](https://github.com/evgeny-goldin/playbooks/blob/master/playbooks/asgard-ubuntu.yml) comes with Java. Asgard runs as a service.
+
+* [`"jenkins"`](https://github.com/evgeny-goldin/playbooks/blob/master/playbooks/jenkins-ubuntu.yml) comes with Java, Node.js, Npm, Grunt, Bower. Jenkins runs as a service, plugins are [configurable](https://github.com/evgeny-goldin/playbooks/blob/master/playbooks/roles/jenkins/vars/main.yml).
 
 * [`"mysql"`](https://github.com/evgeny-goldin/playbooks/blob/master/playbooks/mysql-ubuntu.yml) comes with MySQL v5.6.x.
 
