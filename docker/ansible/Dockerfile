@@ -13,3 +13,4 @@ RUN echo localhost > /etc/ansible/hosts
 
 RUN ansible          --version
 RUN ansible-playbook --version
+RUN ansible localhost -c local -m setup
