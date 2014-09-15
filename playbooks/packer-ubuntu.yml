@@ -13,7 +13,7 @@
   roles:
     - { role: periodic-before, period: "{{ 24 * 3600 }}" }
     - { role: base,       when: periodic }
-    - { role: docker,     when: periodic }
+    - { role: docker,     when: "( periodic|bool and ( not is_docker|bool ))" }
     - { role: ansible,    when: periodic }
     - { role: vagrant,    when: periodic }
     - { role: virtualbox, when: periodic }
