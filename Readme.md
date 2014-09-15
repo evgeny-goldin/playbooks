@@ -16,12 +16,12 @@
 
 * To create VMs, if you have **Vagrant** and **VirtualBox** installed locally:
 
-  * `vagrant up asgard/jenkins/mysql/packer`
+  * `vagrant up asgard|jenkins|mysql|packer`
 
 * To provision the local box, if you have **Ansible** installed locally:
 
   * `cd playbooks`
-  * `ansible-playbook asgard/jenkins/mysql/packer-ubuntu.yml -c local -i "127.0.0.1,"`
+  * `ansible-playbook asgard|jenkins|mysql|packer-ubuntu.yml -c local -i "127.0.0.1,"`
 
 * [`"asgard"`](https://github.com/evgeny-goldin/playbooks/blob/master/playbooks/asgard-ubuntu.yml) comes with Java. Asgard runs as a service.
 
