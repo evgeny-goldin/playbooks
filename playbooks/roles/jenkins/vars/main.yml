@@ -19,6 +19,10 @@ jenkins: {
     redownload: false,
     root:       'https://updates.jenkins-ci.org',
     install: {
+      # -------------------------------------------------------------------
+      # Plugin name: plugin version, '*' (for latest) or plugin's *.hpi URL
+      # -------------------------------------------------------------------
+
       # https://wiki.jenkins-ci.org/display/JENKINS/Rebuild+Plugin
       rebuild:       '*',
       # https://wiki.jenkins-ci.org/display/JENKINS/S3+Plugin
