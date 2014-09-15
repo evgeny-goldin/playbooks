@@ -9,5 +9,3 @@ branches:
 
 script:
  - ./shippable.sh
-
-commit_container: evgenyg/ansible

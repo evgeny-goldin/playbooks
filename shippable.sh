@@ -2,5 +2,6 @@
 
 set -x
 
-cp docker/ansible/Dockerfile .
-docker build --rm --no-cache -t="evgenyg/ansible:1.7.1" .
+./packer/ansible/install-ansible.sh
+cd playbooks
+ansible-playbook packer-ubuntu.yml -c local -i "127.0.0.1,”
