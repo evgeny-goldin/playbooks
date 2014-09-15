@@ -1,7 +1,14 @@
 ---
 # http://docs.shippable.com/en/latest/config.html
+
+language: python
+
 branches:
   only:
     - ship
+
 script:
- - ./build.sh
+ - id
+ - uname -a
+ - lsb_release -a
+ - pwd
