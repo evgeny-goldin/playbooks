@@ -22,4 +22,5 @@
 
 * To provision the local box, if you have **Ansible** installed locally:
 
+  `cd playbooks`
   `ansible-playbook jenkins/asgard/mysql/packer-ubuntu.yml -c local -i "127.0.0.1,"`
