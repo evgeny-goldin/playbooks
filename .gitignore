@@ -1,3 +1,5 @@
+.idea
 .vagrant
+packer_cache
 *.pyc
 aws.yml
