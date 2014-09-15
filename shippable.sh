@@ -3,5 +3,5 @@
 set -x
 
 ./packer/ansible/install-ansible.sh
-cd playbooks
-ansible-playbook packer-ubuntu.yml -c local -i "127.0.0.1,”
+ansible localhost -c local -m setup
+ansible-playbook playbooks/packer-ubuntu.yml -c local
