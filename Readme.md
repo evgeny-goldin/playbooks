@@ -1,5 +1,5 @@
 
-#### This repo contains [Ansible](http://www.ansible.com/) [Roles](https://github.com/evgeny-goldin/playbooks/tree/master/playbooks/roles) and [Playbooks](https://github.com/evgeny-goldin/playbooks/tree/master/playbooks) for installing the following packages on Ubuntu:
+#### This repo contains Ansible [Playbooks](https://github.com/evgeny-goldin/playbooks/tree/master/playbooks) and [Roles](https://github.com/evgeny-goldin/playbooks/tree/master/playbooks/roles) for installing the following packages on Ubuntu:
 
 * [Ansible](http://www.ansible.com/)
 * [Asgard](https://github.com/Netflix/asgard)
