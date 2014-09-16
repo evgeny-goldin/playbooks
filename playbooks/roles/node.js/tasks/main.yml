@@ -1,11 +1,6 @@
 ---
 - apt: name={{ item }} state=latest force=yes
   with_items:
-    - nodejs-dev
-  when: is_docker
-
-- apt: name={{ item }} state=latest force=yes
-  with_items:
     - nodejs
     - npm
 
