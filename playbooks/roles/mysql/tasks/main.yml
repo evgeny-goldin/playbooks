@@ -9,7 +9,10 @@
     - deb http://repo.mysql.com/apt/ubuntu/ trusty mysql-5.6
     - deb-src http://repo.mysql.com/apt/ubuntu/ trusty mysql-5.6
 
-- apt: name=mysql-server state=latest force=yes
+- apt: name={{ item }} state=latest force=yes
+  with_items:
+    - python-mysqldb
+    - mysql-server
 
 # http://stackoverflow.com/a/21151255/472153
 - lineinfile:
@@ -37,12 +40,23 @@
     src:  root_remote_access.sql
     dest: "{{ remote_access_script }}"
 
-- shell: "mysql -u root < {{ remote_access_script }}"
+- shell: "mysql -u root -h localhost < {{ remote_access_script }}"
+
+- mysql_db: name={{ item }} state=present login_host=127.0.0.1 login_user=root login_password=''
+  with_items:
+    - mysql
+    - information_schema
+    - performance_schema
 
 - name: Stop MySQL service
   service: name=mysql state=stopped
   when: ( not mysql_start_service|bool )
 
+# If service is stopped - restart does nothing
 - name: Restart MySQL service
   service: name=mysql state=restarted
+  when: mysql_start_service
+
+- name: Start MySQL service
+  service: name=mysql state=started
   when: mysql_start_service
