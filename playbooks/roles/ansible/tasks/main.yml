@@ -1,5 +1,5 @@
 ---
-- apt:  name={{item}} state=latest
+- apt:  name={{item}} state=latest force=yes
   with_items:
     - python-pip
     - python-dev

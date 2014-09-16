@@ -7,12 +7,12 @@
     install_jenkins: "{{ ( not home_stat.stat.exists ) or ( periodic|bool ) }}"
 - debug: var=install_jenkins
 
-- apt_key: url='https://jenkins-ci.org/debian/jenkins-ci.org.key'
-  when: install_jenkins
+- apt_key:        url='https://jenkins-ci.org/debian/jenkins-ci.org.key'
+  when:           install_jenkins
 - apt_repository: repo='deb http://pkg.jenkins-ci.org/debian binary/' update_cache=yes
-  when: install_jenkins
-- apt: name=jenkins state=latest
-  when: install_jenkins
+  when:           install_jenkins
+- apt:            name=jenkins state=latest force=yes
+  when:           install_jenkins
 
 - name: Write Jenkins files
   template:

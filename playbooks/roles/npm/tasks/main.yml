@@ -1,5 +1,5 @@
 ---
-- apt: name=npm state=latest
+- apt: name=npm state=latest force=yes
 
 - file:
     src:   "{{ npm.node_src  }}"

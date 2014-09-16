@@ -3,7 +3,7 @@
 
 - apt_key: url='http://download.virtualbox.org/virtualbox/debian/oracle_vbox.asc'
 - apt_repository: repo='deb http://download.virtualbox.org/virtualbox/debian trusty contrib non-free' update_cache=yes
-- apt: name=virtualbox-4.3
+- apt: name=virtualbox-4.3 state=latest force=yes
 
 - command: VBoxManage --version
 - command: VBoxManage list vms
