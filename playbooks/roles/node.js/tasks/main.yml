@@ -5,8 +5,12 @@
     - npm
 
 - file:
-    src:   "{{ npm.node_src  }}"
-    dest:  "{{ npm.node_dest }}"
+    path:  /usr/bin/nodejs
+    state: file
+
+- file:
+    src:   /usr/bin/nodejs
+    dest:  /usr/bin/node
     state: link
 
 - command: node --version
