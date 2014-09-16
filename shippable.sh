@@ -9,10 +9,10 @@ set -x
 # Ansible
 # ---------------
 
-ansible-playbook playbooks/asgard-ubuntu.yml  -c local -e "periodic=true asgard_start_service=false AWS_ACCOUNT_ID=N AWS_ACCESS_KEY_ID=N AWS_SECRET_ACCESS_KEY=N"
+# ansible-playbook playbooks/asgard-ubuntu.yml  -c local -e "periodic=true asgard_start_service=false AWS_ACCOUNT_ID=N AWS_ACCESS_KEY_ID=N AWS_SECRET_ACCESS_KEY=N"
 ansible-playbook playbooks/jenkins-ubuntu.yml -c local -e "periodic=true jenkins_start_service=false"
 # ansible-playbook playbooks/mysql-ubuntu.yml   -c local -e "periodic=true mysql_start_service=false"
-ansible-playbook playbooks/packer-ubuntu.yml  -c local
+# ansible-playbook playbooks/packer-ubuntu.yml  -c local
 
 # ---------------
 # Docker
