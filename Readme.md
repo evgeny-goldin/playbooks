@@ -28,7 +28,7 @@
 
 * [`"jenkins"`](https://github.com/evgeny-goldin/playbooks/blob/master/playbooks/jenkins-ubuntu.yml) comes with Java, Node.js, Npm, Grunt, Bower and Ansible. Jenkins runs as a `"jenkins"` service, plugins are [configurable](https://github.com/evgeny-goldin/playbooks/blob/master/playbooks/roles/jenkins/vars/main.yml).
 
-* [`"mysql"`](https://github.com/evgeny-goldin/playbooks/blob/master/playbooks/mysql-ubuntu.yml) comes with Ansible and MySQL v5.6.x. MySQL runs as `"mysql"` service.
+* [`"mysql"`](https://github.com/evgeny-goldin/playbooks/blob/master/playbooks/mysql-ubuntu.yml) comes with Ansible and MySQL 5.6, runs as `"mysql"` service accepting any remote connections. User is "root" with an empty password.
 
 * [`"packer"`](https://github.com/evgeny-goldin/playbooks/blob/master/playbooks/packer-ubuntu.yml) comes with Docker, Ansible, Vagrant, VirtualBox, and Packer.
 
