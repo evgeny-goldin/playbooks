@@ -48,15 +48,9 @@
     - information_schema
     - performance_schema
 
+- name: Restart MySQL service
+  service: name=mysql state=restarted
+
 - name: Stop MySQL service
   service: name=mysql state=stopped
   when: ( not mysql_start_service|bool )
-
-# If service is stopped - restart does nothing
-- name: Restart MySQL service
-  service: name=mysql state=restarted
-  when: mysql_start_service
-
-- name: Start MySQL service
-  service: name=mysql state=started
-  when: mysql_start_service

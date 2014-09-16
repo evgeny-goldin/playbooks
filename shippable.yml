@@ -9,3 +9,7 @@ branches:
 
 script:
  - ./shippable.sh
+
+commit_container: evgenyg/ansible:1.7.1
+commit_container: evgenyg/jenkins
+commit_container: evgenyg/packer

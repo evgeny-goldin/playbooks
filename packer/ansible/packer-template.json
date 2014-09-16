@@ -14,7 +14,7 @@
     "provisioners": [
         {
             "type":   "shell",
-            "script": "install-ansible.sh"
+            "script": "../../docker/ansible/install-ansible.sh"
         }
     ]
 }
