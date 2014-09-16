@@ -9,16 +9,7 @@
     - deb http://repo.mysql.com/apt/ubuntu/ trusty mysql-5.6
     - deb-src http://repo.mysql.com/apt/ubuntu/ trusty mysql-5.6
 
-# Shippable containers come with their own MySQL
-- apt: name={{ item }} state=absent force=yes
-  with_items:
-    - mysql-community-server
-    - mysql-server
-
-- apt: name={{ item }} state=latest force=yes
-  with_items:
-    - mysql-community-server
-    - mysql-server
+- apt: name=mysql-server state=latest force=yes
 
 # http://stackoverflow.com/a/21151255/472153
 - lineinfile:
