@@ -15,6 +15,15 @@
     - mysql-community-server
     - mysql-server
 
+# http://stackoverflow.com/a/21151255/472153
+- lineinfile:
+    dest: "{{ mysql.my_cnf }}"
+    line: '# bind-address = 127.0.0.1'
+    regexp: ^bind-address\s+=
+
+- name: Start MySQL service
+  service: name=mysql state=started
+
 - command:  mysql --version
   register: mysql_version
 
@@ -23,17 +32,8 @@
       - "'mysql' in mysql_version.stdout"
       - "'5.6'   in mysql_version.stdout"
 
-# http://stackoverflow.com/a/21151255/472153
-- lineinfile:
-    dest: "{{ mysql.my_cnf }}"
-    line: '# bind-address = 127.0.0.1'
-    regexp: ^bind-address\s+=
-
 - set_fact:
     remote_access_script: /etc/mysql/root_remote_access.sql
-
-- name: Start MySQL service
-  service: name=mysql state=started
 
 - copy:
     src:  root_remote_access.sql
