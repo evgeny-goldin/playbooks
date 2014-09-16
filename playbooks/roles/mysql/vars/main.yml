@@ -1,6 +1,7 @@
 ---
 mysql: {
-  my_cnf:     /etc/mysql/my.cnf,
-  mysql_list: /etc/apt/sources.list.d/mysql.list,
-  root_sql:   /etc/mysql/root_access.sql
+  my_cnf: /etc/mysql/my.cnf
 }
+
+# Ansible "--extra-vars" option doesn't get dots in variable names
+mysql_start_service: true

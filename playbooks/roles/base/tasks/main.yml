@@ -1,11 +1,10 @@
 ---
 - apt:  update_cache=yes
-  when: is_docker
 
-- apt:  update_cache=yes upgrade=dist
+- apt:  upgrade=dist
   when: ( not is_docker|bool )
 
-- apt:  name={{item}} state=latest
+- apt:  name={{ item }} state=latest force=yes
   with_items:
     - vim
     - htop

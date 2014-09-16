@@ -9,9 +9,9 @@
 
 - apt_key: url='https://jenkins-ci.org/debian/jenkins-ci.org.key'
   when: install_jenkins
-- apt_repository: repo='deb http://pkg.jenkins-ci.org/debian binary/'
+- apt_repository: repo='deb http://pkg.jenkins-ci.org/debian binary/' update_cache=yes
   when: install_jenkins
-- apt:  update_cache=yes name=jenkins state=latest
+- apt: name=jenkins state=latest
   when: install_jenkins
 
 - name: Write Jenkins files
@@ -76,5 +76,10 @@
     dest:  "{{ jenkins.home }}/plugins/{{ item.key }}.hpi"
     force: "{{ jenkins.plugins.redownload }}"
 
+- name: Stop Jenkins service
+  service: name=jenkins state=stopped
+  when: ( not jenkins_start_service|bool )
+
 - name: Restart Jenkins service
   service: name=jenkins state=restarted
+  when: jenkins_start_service

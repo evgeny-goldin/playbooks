@@ -12,6 +12,7 @@
 
   roles:
     - { role: periodic-before, period: "{{ 24 * 3600 }}" }
-    - { role: base, when: periodic }
+    - { role: base,    when: periodic }
+    - { role: ansible, when: periodic }
     - mysql
     - periodic-after

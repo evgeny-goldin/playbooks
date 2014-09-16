@@ -2,8 +2,8 @@
 # http://docs.docker.com/installation/ubuntulinux/
 
 - apt_key: keyserver=hkp://keyserver.ubuntu.com:80 id=36A1D7869245C8950F966E92D8576A8BA88D21E9
-- apt_repository: repo='deb https://get.docker.io/ubuntu docker main'
-- apt: update_cache=yes name=lxc-docker
+- apt_repository: repo='deb https://get.docker.io/ubuntu docker main' update_cache=yes
+- apt: name=lxc-docker
 
 - command:  docker --version
   register: docker_version

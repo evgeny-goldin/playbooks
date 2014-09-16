@@ -9,13 +9,13 @@
 - set_fact: java_installed={{ java_version|success }}
 - debug: var=java_installed
 
-- apt_repository: repo=ppa:webupd8team/java state=present
+- apt_repository: repo=ppa:webupd8team/java state=present update-cache=yes
   when: ( not java_installed|bool )
 
 - shell: echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections
   when: ( not java_installed|bool )
 
-- apt: name=oracle-java7-installer state=latest update-cache=yes force=yes
+- apt: name=oracle-java7-installer state=latest force=yes
   when: ( not java_installed|bool )
 
 - lineinfile:
