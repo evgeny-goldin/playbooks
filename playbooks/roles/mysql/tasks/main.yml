@@ -27,6 +27,8 @@
 - command:  mysql --version
   register: mysql_version
 
+- debug: var=mysql_version
+
 - assert:
     that:
       - "'mysql' in mysql_version.stdout"
