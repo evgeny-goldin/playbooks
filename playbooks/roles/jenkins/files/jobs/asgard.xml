@@ -50,13 +50,6 @@
     </hudson.tasks.Shell>
   </builders>
   <publishers>
-    <hudson.tasks.ArtifactArchiver>
-      <artifacts>*.jar,*.war</artifacts>
-      <allowEmptyArchive>false</allowEmptyArchive>
-      <onlyIfSuccessful>false</onlyIfSuccessful>
-      <fingerprint>false</fingerprint>
-      <defaultExcludes>true</defaultExcludes>
-    </hudson.tasks.ArtifactArchiver>
     <hudson.plugins.s3.S3BucketPublisher plugin="s3@0.6">
       <profileName>bakery</profileName>
       <entries>
