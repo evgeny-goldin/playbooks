@@ -3,7 +3,7 @@
 set -e
 set -x
 
-./packer/ansible/install-ansible.sh
+./docker/ansible/install-ansible.sh
 
 # ---------------
 # Ansible
