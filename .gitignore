@@ -1,5 +1,6 @@
 .idea
 .vagrant
+.kitchen
 packer_cache
 *.pyc
 aws.yml

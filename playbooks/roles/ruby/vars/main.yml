@@ -2,7 +2,12 @@
 ruby: {
   # version:  2.1.2, # Or 'latest'
   version:  latest,
-  gems:     [ 'test-kitchen' ],
+  # Gems to installs
+  # name: command to test the gem
+  gems: {
+    pry:          'pry     --version',
+    test-kitchen: 'kitchen --version'
+  },
   latest:   "curl 'https://www.ruby-lang.org/en/downloads/' | grep 'The current stable version is' | cut -d' ' -f6 | sed 's/\\.$//'",
   rvm: {
     url:        'https://get.rvm.io',
