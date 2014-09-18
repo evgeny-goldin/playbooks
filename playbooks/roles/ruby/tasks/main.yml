@@ -11,7 +11,7 @@
 - file:
     name:  "{{ rvm_sh }}"
     state: file
-    mode:  0744
+    mode:  "{{ common.mode.script }}"
 
 - shell:   "{{ rvm_sh }}"
 - command: "{{ rvm }} --version"

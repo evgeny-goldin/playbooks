@@ -63,7 +63,7 @@
   file:
     path:  "{{ packer.dir }}"
     state: directory
-    mode:  0755
+    mode:  "{{ common.mode.directory }}"
 
 - name: Unpack Packer
   unarchive:
