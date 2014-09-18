@@ -10,6 +10,7 @@
 * [MySQL](http://www.mysql.com/)
 * [Node.js](http://nodejs.org/)
 * [Packer](http://www.packer.io/)
+* [Ruby](https://www.ruby-lang.org/en/)
 * [Vagrant](http://www.vagrantup.com/)
 * [VirtualBox](https://www.virtualbox.org/)
 
@@ -30,6 +31,6 @@
 
 * [`"mysql"`](https://github.com/evgeny-goldin/playbooks/blob/master/playbooks/mysql-ubuntu.yml) comes with Ansible and MySQL 5.6 running as `"mysql"` service accepting any remote connections. User is "root" with an empty password.
 
-* [`"packer"`](https://github.com/evgeny-goldin/playbooks/blob/master/playbooks/packer-ubuntu.yml) comes with Docker, Ansible, Vagrant, VirtualBox, and Packer.
+* [`"packer"`](https://github.com/evgeny-goldin/playbooks/blob/master/playbooks/packer-ubuntu.yml) comes with Docker, Ansible, Vagrant, VirtualBox, Ruby and Packer. Ruby gems to install are [configurable](https://github.com/evgeny-goldin/playbooks/blob/master/playbooks/roles/ruby/vars/main.yml).
 
 * Review [each role's](https://github.com/evgeny-goldin/playbooks/tree/master/playbooks/roles) `"vars/main.yml"` for fine-tuning your installation. Some roles allow explicit package versioning, such as those for [Ansible](https://github.com/evgeny-goldin/playbooks/blob/master/playbooks/roles/ansible/vars/main.yml), [Vagrant](https://github.com/evgeny-goldin/playbooks/blob/master/playbooks/roles/vagrant/vars/main.yml) or [Packer](https://github.com/evgeny-goldin/playbooks/blob/master/playbooks/roles/packer/vars/main.yml).
