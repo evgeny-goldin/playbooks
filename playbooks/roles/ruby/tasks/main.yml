@@ -29,6 +29,11 @@
 
 - name:     "Install Ruby"
   command:  "{{ rvm }} install '{{ ruby_version }}'"
+- name:     Update PATH
+  template:
+    src:  ruby.sh
+    dest: "{{ ubuntu.envs_dir }}"
+
 - command:  "{{ ruby_bin }}/gem  --version"
 - command:  "{{ ruby_bin }}/rake --version"
 - command:  "{{ ruby_bin }}/ruby --version"
@@ -40,11 +45,6 @@
     that:
       - ruby_version in ruby_version_out.stdout
       - "'ruby'      in ruby_version_out.stdout"
-
-- name: Update PATH
-  template:
-    src:  ruby.sh
-    dest: "{{ ubuntu.envs_dir }}"
 
 - name: Install Ruby gems
   gem:
