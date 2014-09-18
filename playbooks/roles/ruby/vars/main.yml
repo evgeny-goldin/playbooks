@@ -4,8 +4,9 @@ ruby: {
   version: latest,
   latest:  "curl 'https://www.ruby-lang.org/en/downloads/' | grep 'The current stable version is' | cut -d' ' -f6 | sed 's/\\.$//'",
   # Gems to installs
-  # name: [ commands to test the gem ]
   gems: {
+    # name:       [ commands to test the gem ]
+    bundler:      [ 'bundle  --version', 'bundle  --help' ],
     pry:          [ 'pry     --version', 'pry     --help' ],
     test-kitchen: [ 'kitchen --version', 'kitchen --help' ]
   },

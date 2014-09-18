@@ -13,6 +13,7 @@
     - git
     - unzip
     - daemon
+    - build-essential
 
 - service: name=chef-client state=stopped enabled=no
   ignore_errors: yes

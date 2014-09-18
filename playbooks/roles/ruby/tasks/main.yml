@@ -1,8 +1,4 @@
 ---
-- apt:  name={{ item }} state=latest force=yes
-  with_items:
-    - build-essential
-
 - set_fact:
     rvm_sh: /opt/rvm.sh
     rvm:    "{{ ruby.rvm.home }}/bin/rvm"
@@ -26,6 +22,8 @@
 - debug:    var=ruby_bin
 
 - command:  "{{ rvm }} install {{ ruby_version }}"
+- command:  "{{ ruby_bin }}/gem  --version"
+- command:  "{{ ruby_bin }}/rake --version"
 - command:  "{{ ruby_bin }}/ruby --version"
   register: ruby_version_out
 - debug:    var=ruby_version_out.stdout
@@ -38,24 +36,11 @@
     src:  ruby.sh
     dest: "{{ ubuntu.envs_dir }}"
 
-- set_fact:
-    gems: "{{ ' '.join( ruby.gems.keys()) }}"
-- debug: var=gems
-
-- template:
-    src:  install-gems.sh
-    dest: /opt
-    mode: "{{ common.mode.script }}"
-
-- file:
-    path:  "{{ item }}"
-    state: file
-  with_items:
-    - "{{ ubuntu.envs_dir }}/rvm.sh"
-    - "{{ ubuntu.envs_dir }}/ruby.sh"
-
-- command: "{{ ruby_bin }}/gem --version"
-- shell:   /opt/install-gems.sh
+- gem:
+    executable:   "{{ ruby_bin }}/gem"
+    name:         "{{ item }}"
+    user_install: no
+  with_items: ruby.gems.keys()
 
 - command:    "{{ item }}"
   with_items: ruby.gems.values()
