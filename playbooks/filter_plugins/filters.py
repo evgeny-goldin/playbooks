@@ -1,5 +1,12 @@
-import time;
-import subprocess;
+# -----------------------------------------------------------------------------------------
+# https://github.com/ansible/ansible/blob/devel/lib/ansible/runner/filter_plugins/core.py
+# -----------------------------------------------------------------------------------------
+
+import time
+import subprocess
+import re
+from ansible import errors
+
 
 def strftime( epoch_time ):
   '''time.strftime wrapper'''
@@ -14,12 +21,39 @@ def explain( seconds ):
   seconds = ( seconds - ( hours * 3600 ) - ( minutes * 60 ))
   return "{0:02d}:{1:02d}:{2:02d}".format( hours, minutes, seconds )
 
-def calculate( version, latest_version_command ):
+def calculate( version, vars_tree ):
   '''Retrieves latest version if needed by running the command specified'''
+  ( command, pattern ) = read_latest( vars_tree )
+
   if version == 'latest':
-    return subprocess.check_output( latest_version_command, shell=True ).strip()
-  else:
-    return version
+    version = subprocess.check_output( command, shell=True ).strip()
+
+  if not re.match( pattern, version ):
+    raise errors.AnsibleFilterError( "Version '{0}' doesn't match pattern '{1}'".format( version, pattern ))
+
+  return version
+
+
+def read_latest( vars_tree ):
+  if not vars_tree.has_key( 'latest' ):
+    raise errors.AnsibleFilterError( "{0} variables - 'latest' is missing".format( vars_tree ))
+
+  if not vars_tree['latest'].has_key( 'command' ):
+    raise errors.AnsibleFilterError( "{0} variables - 'latest/command' is missing".format( vars_tree ))
+
+  if not vars_tree['latest'].has_key( 'pattern' ):
+    raise errors.AnsibleFilterError( "{0} variables - 'latest/pattern' is missing".format( vars_tree ))
+
+  command = vars_tree['latest']['command']
+  pattern = vars_tree['latest']['pattern']
+
+  if not command.strip():
+    raise errors.AnsibleFilterError( "{0} variables - 'latest/command' '{1}' is empty".format( vars_tree, command ))
+
+  if not pattern.strip():
+    raise errors.AnsibleFilterError( "{0} variables - 'latest/pattern' '{1}' is empty".format( vars_tree, pattern ))
+
+  return ( command, pattern )
 
 
 class FilterModule( object ):

@@ -1,27 +1,33 @@
 ---
 - set_fact:
-    rvm_sh: /opt/rvm.sh
-    rvm:    "{{ ruby.rvm.home }}/bin/rvm"
+    ruby_version: "{{ ruby.version | calculate( ruby ) }}"
 
-- get_url:
+- set_fact:
+    rvm_sh:   /opt/rvm.sh
+    ruby_bin: "{{ ruby.rvm.home }}/rubies/ruby-{{ ruby_version }}/bin"
+    rvm:      "{{ ruby.rvm.home }}/bin/rvm"
+
+- debug: var=ruby_version
+- debug: var=ruby_bin
+
+- name: Download RVM installation script
+  get_url:
     url:   "{{ ruby.rvm.url }}"
     dest:  "{{ rvm_sh }}"
-    force: "{{ ruby.rvm.redownload }}"
+    force: true
 
-- file:
+- name: Chmod RVM installation script
+  file:
     name:  "{{ rvm_sh }}"
     state: file
     mode:  "{{ common.mode.script }}"
 
-- shell:   "{{ rvm_sh }}"
+- name:    Install RVM
+  shell:   "{{ rvm_sh }}"
 - command: "{{ rvm }} --version"
 
-- set_fact: ruby_version="{{ ruby.version | calculate( ruby.latest ) }}"
-- set_fact: ruby_bin="{{ ruby.rvm.home }}/rubies/ruby-{{ ruby_version }}/bin"
-- debug:    var=ruby_version
-- debug:    var=ruby_bin
-
-- command:  "{{ rvm }} install {{ ruby_version }}"
+- name:     "Install Ruby"
+  command:  "{{ rvm }} install '{{ ruby_version }}'"
 - command:  "{{ ruby_bin }}/gem  --version"
 - command:  "{{ ruby_bin }}/rake --version"
 - command:  "{{ ruby_bin }}/ruby --version"
@@ -32,15 +38,18 @@
       - "'ruby'               in ruby_version_out.stdout"
       - "'{{ ruby_version }}' in ruby_version_out.stdout"
 
-- template:
+- name: Update PATH
+  template:
     src:  ruby.sh
     dest: "{{ ubuntu.envs_dir }}"
 
-- gem:
+- name: Install Ruby gems
+  gem:
     executable:   "{{ ruby_bin }}/gem"
     name:         "{{ item }}"
     user_install: no
   with_items: ruby.gems.keys()
 
-- command:    "{{ item }}"
+- name:       Verify Ruby gems
+  command:    "{{ item }}"
   with_items: ruby.gems.values()

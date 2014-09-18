@@ -1,11 +1,14 @@
 ---
 packer: {
-  version:      0.7.1, # or 'latest'
-#  version:      latest,
+  # version:      0.7.1, # or 'latest'
+  version:      latest,
+  latest: {
+    command: "curl -s 'https://dl.bintray.com/mitchellh/packer/' | grep packer | grep linux | tail -1 | cut -d_ -f5",
+    pattern: '^\d+\.\d+\.\d+$'
+  },
   platform:     amd64, # '386', 'amd64' or 'arm' - http://www.packer.io/downloads.html
   dir:          /opt/packer,
   bin:          /usr/bin/packer,
-  packages_url: 'https://dl.bintray.com/mitchellh/packer/',
   download_url: 'https://dl.bintray.com/mitchellh/packer/<version>_linux_<platform>.zip',
   redownload:   false
 }

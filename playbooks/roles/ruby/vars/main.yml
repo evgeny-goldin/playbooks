@@ -2,7 +2,10 @@
 ruby: {
   # version: 2.1.2, # Or 'latest'
   version: latest,
-  latest:  "curl 'https://www.ruby-lang.org/en/downloads/' | grep 'The current stable version is' | cut -d' ' -f6 | sed 's/\\.$//'",
+  latest: {
+    command: "curl -s 'https://www.ruby-lang.org/en/downloads/' | grep 'The current stable version is' | cut -d' ' -f6 | sed 's/\\.$//'",
+    pattern: '^\d+\.\d+\.\d+$'
+  },
   # Gems to installs
   gems: {
     # name:       [ commands to test the gem ]
@@ -11,8 +14,7 @@ ruby: {
     test-kitchen: [ 'kitchen --version', 'kitchen --help' ]
   },
   rvm: {
-    url:        'https://get.rvm.io',
-    redownload: false,
-    home:       /usr/local/rvm
+    url:  'https://get.rvm.io',
+    home: /usr/local/rvm
   },
 }
