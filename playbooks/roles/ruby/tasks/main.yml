@@ -36,12 +36,10 @@
 
 - template:
     src:  ruby.sh
-    dest: /etc/profile.d
+    dest: "{{ ubuntu.envs_dir }}"
 
-- command:  "'{{ ruby_bin }}/gem' --version"
-- gem:
-    executable: "{{ ruby_bin }}/gem"
-    name:       "{{ item.key }}"
-  with_dict:    ruby.gems
-- command:      "{{ item.value }}"
-  with_dict:    ruby.gems
+- command:   "'{{ ruby_bin }}/gem' --version"
+- command:   "'{{ ruby_bin }}/gem' install '{{ item.key }}'"
+  with_dict: ruby.gems
+- command:   "{{ item.value }}"
+  with_dict: ruby.gems
