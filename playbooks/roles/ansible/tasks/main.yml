@@ -1,14 +1,17 @@
 ---
-- apt:  name={{item}} state=latest force=yes
+- name: Calculate Ansible version
+  set_fact:
+    ansible_version: "{{ ansible.version | calculate( ansible ) }}"
+- debug: var=ansible_version
+
+- name: Install Python packages
+  apt:  name={{item}} state=latest force=yes
   with_items:
     - python-pip
     - python-dev
 
-- pip:  name=ansible
-  when: ( ansible.version == 'latest' )
-
-- pip:  name=ansible version={{ ansible.version }}
-  when: ( ansible.version != 'latest' )
+- name: Install Ansible
+  pip:  name=ansible version={{ ansible_version }} extra_args="--upgrade"
 
 - name: Create Ansible inventory file
   file:
@@ -22,23 +25,20 @@
     line:  localhost
 
 - command:  ansible --version
-  register: ansible_version
+  register: ansible_version_out
 
 - command:  ansible-playbook --version
-  register: ansible_playbook_version
+  register: ansible_playbook_version_out
 
 - command:  ansible localhost -c local -m setup
   register: inventory
 
-- assert:
+- name: Verify Ansible version
+  assert:
     that:
-      - ansible.version in ansible_version.stdout
-      - ansible.version in ansible_playbook_version.stdout
-  when: ansible.version != 'latest'
-
-- assert:
-    that:
-      - "'ansible'          in ansible_version.stdout"
-      - "'ansible-playbook' in ansible_playbook_version.stdout"
+      - ansible_version     in ansible_version_out.stdout
+      - ansible_version     in ansible_playbook_version_out.stdout
+      - "'ansible'          in ansible_version_out.stdout"
+      - "'ansible-playbook' in ansible_playbook_version_out.stdout"
       - "'ansible_facts'    in inventory.stdout"
       - "'Ubuntu'           in inventory.stdout"

@@ -1,7 +1,7 @@
 ---
 packer: {
-  # version:      0.7.1, # or 'latest'
-  version:      latest,
+  # version: 0.7.1, # or 'latest'
+  version: latest,
   latest: {
     command: "curl -s 'https://dl.bintray.com/mitchellh/packer/' | grep packer | grep linux | tail -1 | cut -d_ -f5",
     pattern: '^\d+\.\d+\.\d+$'

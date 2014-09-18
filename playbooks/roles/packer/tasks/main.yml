@@ -1,5 +1,6 @@
 ---
-- set_fact:
+- name: Calculate Packer version
+  set_fact:
     packer_version: "{{ packer.version | calculate( packer ) }}"
 - debug: var=packer_version
 
@@ -81,18 +82,15 @@
   when:  packer_packer_src_bin.stat.exists
 
 - command: "{{ packer.bin }} --version"
-  register: packer_version_1
+  register: packer_version_out_1
 
 - command:  packer --version
-  register: packer_version_2
+  register: packer_version_out_2
 
-- assert:
+- name: Verify Packer version
+  assert:
     that:
-      - packer.version in packer_version_1.stdout
-      - packer.version in packer_version_2.stdout
-  when: packer.version != 'latest'
-
-- assert:
-    that:
-      - "'Packer' in packer_version_1.stdout"
-      - "'Packer' in packer_version_2.stdout"
+      - packer_version in packer_version_out_1.stdout
+      - packer_version in packer_version_out_2.stdout
+      - "'Packer'      in packer_version_out_1.stdout"
+      - "'Packer'      in packer_version_out_2.stdout"

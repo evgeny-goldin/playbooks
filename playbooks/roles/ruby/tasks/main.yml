@@ -1,5 +1,6 @@
 ---
-- set_fact:
+- name: Calculate Ruby version
+  set_fact:
     ruby_version: "{{ ruby.version | calculate( ruby ) }}"
 
 - set_fact:
@@ -14,7 +15,7 @@
   get_url:
     url:   "{{ ruby.rvm.url }}"
     dest:  "{{ rvm_sh }}"
-    force: true
+    force: yes
 
 - name: Chmod RVM installation script
   file:
@@ -33,10 +34,12 @@
 - command:  "{{ ruby_bin }}/ruby --version"
   register: ruby_version_out
 - debug:    var=ruby_version_out.stdout
-- assert:
+
+- name: Verify Ruby version
+  assert:
     that:
-      - "'ruby'               in ruby_version_out.stdout"
-      - "'{{ ruby_version }}' in ruby_version_out.stdout"
+      - ruby_version in ruby_version_out.stdout
+      - "'ruby'      in ruby_version_out.stdout"
 
 - name: Update PATH
   template:

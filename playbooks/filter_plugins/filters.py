@@ -23,10 +23,12 @@ def explain( seconds ):
 
 def calculate( version, vars_tree ):
   '''Retrieves latest version if needed by running the command specified'''
+  version = str( version )
   ( command, pattern ) = read_latest( vars_tree )
 
   if version == 'latest':
     version = subprocess.check_output( command, shell=True ).strip()
+    print "[{0}] => [{1}]".format( command, version )
 
   if not re.match( pattern, version ):
     raise errors.AnsibleFilterError( "Version '{0}' doesn't match pattern '{1}'".format( version, pattern ))

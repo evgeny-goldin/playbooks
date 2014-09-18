@@ -1,9 +1,12 @@
 ---
 vagrant: {
-  version:      1.6.5, # Or 'latest'
-  # version:      latest,
+  # version: 1.6.5, # Or 'latest'
+  version: latest,
+  latest: {
+    command: "curl -s 'https://dl.bintray.com/mitchellh/vagrant/' | grep vagrant | grep '.deb' | tail -1 | cut -d_ -f5",
+    pattern: '^\d+\.\d+\.\d+$'
+  },
   platform:     x86_64, # 'i686' or 'x86_64' - http://www.vagrantup.com/downloads.html
-  packages_url: 'https://dl.bintray.com/mitchellh/vagrant/',
   download_url: 'https://dl.bintray.com/mitchellh/vagrant/vagrant_<version>_<platform>.deb',
   redownload:   false
 }
