@@ -25,8 +25,8 @@
 - debug:    var=ruby_version
 - debug:    var=ruby_bin
 
-- command:  "'{{ rvm }}' install '{{ ruby_version }}'"
-- command:  "'{{ ruby_bin }}/ruby' --version"
+- command:  "{{ rvm }} install {{ ruby_version }}"
+- command:  "{{ ruby_bin }}/ruby --version"
   register: ruby_version_out
 - debug:    var=ruby_version_out.stdout
 - assert:
@@ -38,8 +38,24 @@
     src:  ruby.sh
     dest: "{{ ubuntu.envs_dir }}"
 
-- command:   "'{{ ruby_bin }}/gem' --version"
-- command:   "'{{ ruby_bin }}/gem' install '{{ item.key }}'"
-  with_dict: ruby.gems
-- command:   "{{ item.value }}"
-  with_dict: ruby.gems
+- set_fact:
+    gems: "{{ ' '.join( ruby.gems.keys()) }}"
+- debug: var=gems
+
+- template:
+    src:  install-gems.sh
+    dest: /opt
+    mode: "{{ common.mode.script }}"
+
+- file:
+    path:  "{{ item }}"
+    state: file
+  with_items:
+    - "{{ ubuntu.envs_dir }}/rvm.sh"
+    - "{{ ubuntu.envs_dir }}/ruby.sh"
+
+- command: "{{ ruby_bin }}/gem --version"
+- shell:   /opt/install-gems.sh
+
+- command:    "{{ item }}"
+  with_items: ruby.gems.values()

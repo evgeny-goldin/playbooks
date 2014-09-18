@@ -1,1 +1,8 @@
 ---
+common: {
+  mode: {
+    directory: '0755',
+    script:    '0744',
+    file:      '0644'
+  }
+}

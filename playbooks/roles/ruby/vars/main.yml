@@ -1,14 +1,14 @@
 ---
 ruby: {
-  # version:  2.1.2, # Or 'latest'
-  version:  latest,
+  # version: 2.1.2, # Or 'latest'
+  version: latest,
+  latest:  "curl 'https://www.ruby-lang.org/en/downloads/' | grep 'The current stable version is' | cut -d' ' -f6 | sed 's/\\.$//'",
   # Gems to installs
-  # name: command to test the gem
+  # name: [ commands to test the gem ]
   gems: {
-    pry:          'pry     --version',
-    test-kitchen: 'kitchen --version'
+    pry:          [ 'pry     --version', 'pry     --help' ],
+    test-kitchen: [ 'kitchen --version', 'kitchen --help' ]
   },
-  latest:   "curl 'https://www.ruby-lang.org/en/downloads/' | grep 'The current stable version is' | cut -d' ' -f6 | sed 's/\\.$//'",
   rvm: {
     url:        'https://get.rvm.io',
     redownload: false,
