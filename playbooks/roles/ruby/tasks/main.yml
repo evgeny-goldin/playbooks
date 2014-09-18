@@ -1,7 +1,11 @@
 ---
+- apt:  name={{ item }} state=latest force=yes
+  with_items:
+    - build-essential
+
 - set_fact:
-    rvm_sh:  /opt/rvm.sh
-    rvm_bin: "{{ ruby.rvm.home }}/bin/rvm"
+    rvm_sh: /opt/rvm.sh
+    rvm:    "{{ ruby.rvm.home }}/bin/rvm"
 
 - get_url:
     url:   "{{ ruby.rvm.url }}"
@@ -14,21 +18,22 @@
     mode:  0744
 
 - shell:   "{{ rvm_sh }}"
-
-- command: "{{ rvm_bin }} --version"
-  register: rvm_version
-
-- debug: var=rvm_version.stdout
-
-- lineinfile:
-    dest: "{{ ubuntu.env_file }}"
-    line: PATH="{{ ruby.rvm.home }}/bin:$PATH"
+- command: "{{ rvm }} --version"
 
 - set_fact: ruby_version="{{ ruby.version | calculate( ruby.latest ) }}"
+- set_fact: ruby_bin="{{ ruby.rvm.home }}/rubies/ruby-{{ ruby_version }}/bin"
 - debug:    var=ruby_version
+- debug:    var=ruby_bin
 
-- apt:  name={{ item }} state=latest force=yes
-  with_items:
-    - build-essential
+- command:  "'{{ rvm }}' install '{{ ruby_version }}'"
+- command:  "'{{ ruby_bin }}/ruby' --version"
+  register: ruby_version_out
+- debug:    var=ruby_version_out.stdout
+- assert:
+    that:
+      - "'ruby'               in ruby_version_out.stdout"
+      - "'{{ ruby_version }}' in ruby_version_out.stdout"
 
-- command: "{{ rvm_bin }} install {{ ruby_version }}"
+- template:
+    src:  ruby.sh
+    dest: /etc/profile.d
