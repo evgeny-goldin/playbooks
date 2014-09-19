@@ -1,10 +1,13 @@
 ---
-- apt:  update_cache=yes
+- name: Updating 'apt' cache
+  apt:  update_cache=yes
 
-- apt:  upgrade=dist
+- name: Upgrading installed packages
+  apt:  upgrade=dist
   when: ( not is_docker|bool )
 
-- apt:  name={{ item }} state=latest force=yes
+- name: Installing base packages
+  apt:  name={{ item }} state=latest force=yes
   with_items:
     - vim
     - htop
@@ -15,8 +18,10 @@
     - daemon
     - build-essential
 
-- service: name=chef-client state=stopped enabled=no
+- name:    Stopping and disabling Chef service, if exists
+  service: name=chef-client state=stopped enabled=no
   ignore_errors: yes
 
-- service: name=puppet state=stopped enabled=no
+- name:    Stopping and disabling Puppet service, if exists
+  service: name=puppet state=stopped enabled=no
   ignore_errors: yes
