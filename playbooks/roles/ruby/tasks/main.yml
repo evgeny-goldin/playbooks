@@ -23,7 +23,7 @@
     state: file
     mode:  "{{ common.mode.script }}"
 
-- name:    Installing RVM
+- name:    Running RVM installation script
   shell:   "{{ rvm_sh }}"
 
 - name:    Running RVM version
