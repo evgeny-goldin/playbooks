@@ -30,14 +30,12 @@
 - name:     "Install Ruby"
   command:  "{{ rvm }} install '{{ ruby_version }}'"
 # https://help.ubuntu.com/community/EnvironmentVariables#sudo_caveat
-- name:   Update sudoers
+- name:   Update sudoers files
   lineinfile:
-    dest: "{{ ubuntu.sudoers }}"
-    line: "{{ item }}"
-    insertafter: EOF
-  with_items:
-    - Defaults        env_reset
-    - Defaults        env_keep += "PATH"
+    dest:     "{{ ubuntu.sudoers }}"
+    regexp:   '^(Defaults\s+secure_path=)"(.+)"$'
+    line:     '\1"\2:{{ ruby_bin }}"'
+    backrefs: yes
 - name:   Update PATH
   template:
     src:  ruby.sh
