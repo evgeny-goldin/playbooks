@@ -1,12 +1,15 @@
 ---
 
-- stat: path={{ periodic_touch_file }}
+- name: Checking for existence of a periodic 'touch' file
+  stat: path={{ periodic_touch_file }}
   register: touch
 
-- set_fact:
+- name: Calculating seconds since last periodic run
+  set_fact:
     seconds_since_last_periodic: "{{ ansible_date_time.epoch|int - touch.stat.ctime|default(0)|int }}"
 
-- set_fact:
+- name: Calculating if this should be a periodic run
+  set_fact:
     periodic: "{{ ( not touch.stat.exists ) or ( seconds_since_last_periodic|int >= period|int ) }}"
 
 - debug: var=periodic
@@ -21,7 +24,8 @@
   when: ( touch.stat.exists and ( not periodic|bool ))
 
 # http://stackoverflow.com/questions/20010199/determining-if-a-process-runs-inside-lxc-docker
-- shell:    grep docker /proc/1/cgroup | wc -l
+- name:     Checking if we're running inside Docker container
+  shell:    grep docker /proc/1/cgroup | wc -l
   register: grep_result
 
 - set_fact:

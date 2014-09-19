@@ -1,9 +1,17 @@
 ---
 # https://help.ubuntu.com/community/VirtualBox/Installation
 
-- apt_key: url='http://download.virtualbox.org/virtualbox/debian/oracle_vbox.asc'
-- apt_repository: repo='deb http://download.virtualbox.org/virtualbox/debian trusty contrib non-free' update_cache=yes
-- apt: name=virtualbox-4.3 state=latest force=yes
+- name:    Adding VirtualBox repository key
+  apt_key: url='http://download.virtualbox.org/virtualbox/debian/oracle_vbox.asc'
 
-- command: VBoxManage --version
-- command: VBoxManage list vms
+- name:           Adding VirtualBox repository
+  apt_repository: repo='deb http://download.virtualbox.org/virtualbox/debian trusty contrib non-free' update_cache=yes
+
+- name: Installing VirtualBox
+  apt:  name=virtualbox-4.3 state=latest force=yes
+
+- name:    Running VirtualBox version
+  command: VBoxManage --version
+
+- name:    Running VirtualBox list of VMs
+  command: VBoxManage list vms

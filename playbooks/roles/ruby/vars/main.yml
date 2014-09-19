@@ -9,9 +9,10 @@ ruby: {
   # Gems to installs
   gems: {
     # name:       [ commands to test the gem ]
-    bundler:      [ 'bundle  --version', 'bundle  --help' ],
-    pry:          [ 'pry     --version', 'pry     --help' ],
-    test-kitchen: [ 'kitchen --version', 'kitchen --help' ]
+    bundler:        [ 'bundle  --version', 'bundle  --help' ],
+    pry:            [ 'pry     --version', 'pry     --help' ],
+    test-kitchen:   [ 'kitchen --version', 'kitchen --help' ],
+    kitchen-docker: []
   },
   rvm: {
     url:  'https://get.rvm.io',
