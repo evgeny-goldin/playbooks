@@ -39,7 +39,7 @@
     - "{{ local_zip }}"
   when: packer.redownload
 
-- name: Downloading Packer archive
+- name: Downloading Packer
   get_url:
     url:   "{{ download_url }}"
     dest:  "{{ local_zip }}"
