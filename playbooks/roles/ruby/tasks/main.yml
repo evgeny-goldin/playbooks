@@ -25,7 +25,9 @@
 
 - name:    Installing RVM
   shell:   "{{ rvm_sh }}"
-- command: "{{ rvm }} --version"
+
+- name:    Running RVM version
+  command: "{{ rvm }} --version"
 
 - name:     Installing Ruby
   command:  "{{ rvm }} install '{{ ruby_version }}'"
