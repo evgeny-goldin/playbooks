@@ -30,17 +30,6 @@
 - name:     "Install Ruby"
   command:  "{{ rvm }} install '{{ ruby_version }}'"
 
-# http://unix.stackexchange.com/a/83194/39046
-# https://docs.python.org/2/library/re.html
-# http://stackoverflow.com/a/406408/472153
-- name:   Update sudoers files
-  lineinfile:
-    dest:     "{{ ubuntu.sudoers }}"
-    regexp:   '^(Defaults\s+secure_path=)"((?!ruby).)*"$'
-    line:     '\1"\2:{{ ruby_bin }}"'
-    backrefs: yes
-    backup:   yes
-    validate: 'visudo -cf %s'
 - name:   Update PATH
   template:
     src:  ruby.sh
