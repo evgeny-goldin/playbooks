@@ -6,5 +6,5 @@ ubuntu: {
   log_dir:   /var/log,
   pid_dir:   /var/run,
   envs_dir:  /etc/profile.d, # http://goo.gl/ksHX6N
-  sudoers:   /etc/sudoers2
+  sudoers:   /etc/sudoers
 }
