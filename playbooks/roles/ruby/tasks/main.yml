@@ -37,9 +37,14 @@
     src:  ruby.sh
     dest: "{{ ubuntu.envs_dir }}"
 
-- command:  "{{ ruby_bin }}/gem  --version"
-- command:  "{{ ruby_bin }}/rake --version"
-- command:  "{{ ruby_bin }}/ruby --version"
+- name:     Running Ruby binaries
+  command:  "{{ ruby_bin }}/{{ item }} --version"
+  with_items:
+    - gem
+    - rake
+
+- name:     Running Ruby version
+  command:  "{{ ruby_bin }}/ruby --version"
   register: ruby_version_out
 - debug:    var=ruby_version_out.stdout
 
