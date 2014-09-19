@@ -1,20 +1,23 @@
 ---
-- name: Calculate Packer version
+- name: Calculating Packer version
   set_fact:
     packer_version: "{{ packer.version | calculate( packer ) }}"
 - debug: var=packer_version
 
-- include_vars: aws.yml
+- name: Loading AWS credentials
+  include_vars: aws.yml
   when: packer_store_aws_credentials
 
-- assert:
+- name: Verifying AWS credentials
+  assert:
     that:
       - AWS_ACCESS_KEY_ID     is defined
       - AWS_SECRET_ACCESS_KEY is defined
   when: packer_store_aws_credentials
 
 # http://www.packer.io/docs/builders/amazon-ebs.html#toc_2
-- lineinfile:
+- name: Storing AWS credentials as environment variables
+  lineinfile:
     dest: "{{ ubuntu.env_file }}"
     line: "{{ item }}"
   with_items:
@@ -22,7 +25,7 @@
     - AWS_SECRET_ACCESS_KEY={{ AWS_SECRET_ACCESS_KEY }}
   when: packer_store_aws_credentials
 
-- name: Calculate Packer download URL
+- name: Calculating Packer download URL
   set_fact:
     download_url: "{{ packer.download_url.replace( '<version>', packer_version ).replace( '<platform>', packer.platform ) }}"
     local_zip:    "/opt/packer-{{ packer_version }}-{{ packer.platform }}.zip"
@@ -36,61 +39,67 @@
     - "{{ local_zip }}"
   when: packer.redownload
 
-- name: Download Packer
+- name: Downloading Packer archive
   get_url:
     url:   "{{ download_url }}"
     dest:  "{{ local_zip }}"
     force: "{{ packer.redownload }}"
 
-- name: Delete Packer dir
+- name: Deleting Packer home dir
   file:
     path:  "{{ packer.dir }}"
     state: absent
 
-- name: Create Packer dir
+- name: Creating Packer home dir
   file:
     path:  "{{ packer.dir }}"
     state: directory
     mode:  "{{ common.mode.directory }}"
 
-- name: Unpack Packer
+- name: Unpacking Packer archive
   unarchive:
     src:  "{{ local_zip }}"
     dest: "{{ packer.dir }}"
     copy: no
 
-- stat: path="{{ packer.dir }}/packer"
+- name: Checking for 'packer' binary
+  stat: path="{{ packer.dir }}/packer"
   register: packer_src_bin
 
-- stat: path="{{ packer.dir }}/packer-packer"
+- name: Checking for 'packer-packer' binary
+  stat: path="{{ packer.dir }}/packer-packer"
   register: packer_packer_src_bin
 
-- assert:
+- name: Verifying Packer binary existence
+  assert:
     that:
       - packer_src_bin.stat.exists or packer_packer_src_bin.stat.exists
 
-- file:
+- name: Linking 'packer' binary
+  file:
     src:   "{{ packer.dir }}/packer"
     dest:  "{{ packer.bin }}"
     state: link
   when:  packer_src_bin.stat.exists
 
-- file:
+- name: Linking 'packer-packer' binary
+  file:
     src:   "{{ packer.dir }}/packer-packer"
     dest:  "{{ packer.bin }}"
     state: link
   when:  packer_packer_src_bin.stat.exists
 
-- command: "{{ packer.bin }} --version"
+- name:     Running Packer version (full path)
+  command:  "{{ packer.bin }} --version"
   register: packer_version_out_1
 
-- command:  packer --version
+- name:     Running Packer version (just 'packer')
+  command:  packer --version
   register: packer_version_out_2
 
 - name: Verify Packer version
   assert:
     that:
+      - packer_version_out_1.stdout == packer_version_out_2.stdout
       - packer_version in packer_version_out_1.stdout
-      - packer_version in packer_version_out_2.stdout
       - "'Packer'      in packer_version_out_1.stdout"
-      - "'Packer'      in packer_version_out_2.stdout"

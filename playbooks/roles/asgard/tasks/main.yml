@@ -13,7 +13,7 @@
     group: "{{ asgard.group }}"
     home:  "{{ asgard.user_home }}"
 
-- name: Create Asgard home dir
+- name: Creating Asgard home dir
   file:
     path:  "{{ asgard.home }}"
     state: directory
@@ -21,7 +21,7 @@
     group: "{{ asgard.group }}"
     mode:  "{{ common.mode.directory }}"
 
-- name: Create Asgard log dir
+- name: Creating Asgard log dir
   file:
     path:  "{{ asgard.log | dirname }}"
     state: directory
@@ -29,14 +29,14 @@
     group: "{{ asgard.group }}"
     mode:  "{{ common.mode.directory }}"
 
-- name: Create Asgard config
+- name: Creating Asgard config
   template:
     src:   Config.groovy
     dest:  "{{ asgard.home }}"
     owner: "{{ asgard.user }}"
     group: "{{ asgard.group }}"
 
-- name: Create Asgard init script
+- name: Creating Asgard init script
   template:
     src:   asgard
     dest:  "{{ ubuntu.init_dir }}"
@@ -46,7 +46,7 @@
 
 # http://docs.aws.amazon.com/AWSSdkDocsJava/latest/DeveloperGuide/credentials.html
 # http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html
-- name: Create AWS credentials directory
+- name: Creating AWS credentials directory
   file:
     path:  "{{ asgard.user_home }}/.aws"
     state: directory
@@ -54,7 +54,7 @@
     group: "{{ asgard.group }}"
     mode:  "{{ common.mode.directory }}"
 
-- name: Create AWS credentials file
+- name: Creating AWS credentials file
   template:
     src:   credentials
     dest:  "{{ asgard.user_home }}/.aws"
@@ -64,26 +64,26 @@
 
 # CloudNative Bakery bake - https://bakery.cloudnative.io/
 # 'artifacts' is sent as external variable, it contains Jenkins artifacts URL
-- name: Download Asgard JAR file from '{{ artifacts }}'
+- name: Downloading Asgard JAR file from '{{ artifacts }}'
   get_url:
     url:   "{{ artifacts }}"
     dest:  "{{ asgard.jar }}"
     force: yes
   when: artifacts is defined
 
-- name: Download Asgard JAR file from '{{ asgard.jar_url }}'
+- name: Downloading Asgard JAR file from '{{ asgard.jar_url }}'
   get_url:
     url:  "{{ asgard.jar_url }}"
     dest: "{{ asgard.jar }}"
   when: ( not ( artifacts is defined ))
 
-- name: Check Asgard java
+- name: Checking Asgard java
   command: "{{ asgard.java }} -version"
 
-- name: Stop Asgard service
+- name: Stopping Asgard service
   service: name=asgard state=stopped
   when: ( not asgard_start_service|bool )
 
-- name: Restart Asgard service
+- name: Restarting Asgard service
   service: name=asgard state=restarted
   when: asgard_start_service

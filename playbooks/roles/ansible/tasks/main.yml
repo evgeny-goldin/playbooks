@@ -1,19 +1,19 @@
 ---
-- name: Calculate Ansible version
+- name: Calculating Ansible version
   set_fact:
     ansible_version: "{{ ansible.version | calculate( ansible ) }}"
 - debug: var=ansible_version
 
-- name: Install Python packages
+- name: Installing Python packages
   apt:  name={{item}} state=latest force=yes
   with_items:
     - python-pip
     - python-dev
 
-- name: Install Ansible
+- name: Installing Ansible
   pip:  name=ansible version={{ ansible_version }} extra_args="--upgrade"
 
-- name: Create Ansible inventory file
+- name: Creating Ansible inventory file
   file:
     path:  "{{ ansible.inventory_file|dirname }}"
     state: directory
@@ -24,21 +24,24 @@
     dest:  "{{ ansible.inventory_file }}"
     line:  localhost
 
-- command:  ansible --version
+- name:     Running Ansible version
+  command:  ansible --version
   register: ansible_version_out
 
-- command:  ansible-playbook --version
+- name:     Running Ansible Playbook version
+  command:  ansible-playbook --version
   register: ansible_playbook_version_out
 
-- command:  ansible localhost -c local -m setup
-  register: inventory
+- name:     Running Ansible setup module
+  command:  ansible localhost -c local -m setup
+  register: inventory_out
 
-- name: Verify Ansible version
+- name: Verifying Ansible version
   assert:
     that:
       - ansible_version     in ansible_version_out.stdout
       - ansible_version     in ansible_playbook_version_out.stdout
       - "'ansible'          in ansible_version_out.stdout"
       - "'ansible-playbook' in ansible_playbook_version_out.stdout"
-      - "'ansible_facts'    in inventory.stdout"
-      - "'Ubuntu'           in inventory.stdout"
+      - "'ansible_facts'    in inventory_out.stdout"
+      - "'Ubuntu'           in inventory_out.stdout"

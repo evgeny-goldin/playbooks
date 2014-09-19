@@ -4,34 +4,39 @@
 # http://dev.mysql.com/downloads/file.php?id=452447
 # http://dev.mysql.com/get/mysql-apt-config_0.2.1-1ubuntu14.04_all.deb
 
-- apt_repository: repo="{{ item }}" update_cache=yes
+- name: Adding MySQL repositories
+  apt_repository: repo="{{ item }}" update_cache=yes
   with_items:
     - deb http://repo.mysql.com/apt/ubuntu/ trusty mysql-5.6
     - deb-src http://repo.mysql.com/apt/ubuntu/ trusty mysql-5.6
 
-- apt: name={{ item }} state=latest force=yes
+- name: Installing MySQL
+  apt:  name={{ item }} state=latest force=yes
   with_items:
     - python-mysqldb
     - mysql-server
 
 # http://stackoverflow.com/a/21151255/472153
-- lineinfile:
+- name: Updating '{{ mysql.my_cnf }}'
+  lineinfile:
     dest: "{{ mysql.my_cnf }}"
     line: '# bind-address = 127.0.0.1'
     regexp: ^bind-address\s+=
 
-- name: Start MySQL service
+- name: Starting MySQL service
   service: name=mysql state=started
 
-- command:  mysql --version
-  register: mysql_version
+- name:     Running MySQL version
+  command:  mysql --version
+  register: mysql_version_out
 
 - debug: var=mysql_version.stdout
 
-- assert:
+- name: Verifying MySQL version
+  assert:
     that:
-      - "'mysql' in mysql_version.stdout"
-      - "'5.6'   in mysql_version.stdout"
+      - "'mysql' in mysql_version_out.stdout"
+      - "'5.6'   in mysql_version_out.stdout"
 
 - set_fact:
     remote_access_script: /etc/mysql/root_remote_access.sql
@@ -40,17 +45,19 @@
     src:  root_remote_access.sql
     dest: "{{ remote_access_script }}"
 
-- shell: "mysql -u root -h localhost < {{ remote_access_script }}"
+- name:  Allowing MySQL remote access
+  shell: "mysql -u root -h localhost < {{ remote_access_script }}"
 
-- mysql_db: name={{ item }} state=present login_host=127.0.0.1 login_user=root login_password=''
+- name:     Verifying MySQL databases
+  mysql_db: name={{ item }} state=present login_host=127.0.0.1 login_user=root login_password=''
   with_items:
     - mysql
     - information_schema
     - performance_schema
 
-- name: Restart MySQL service
+- name: Restarting MySQL service
   service: name=mysql state=restarted
 
-- name: Stop MySQL service
+- name: Stopping MySQL service
   service: name=mysql state=stopped
   when: ( not mysql_start_service|bool )

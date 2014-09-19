@@ -1,10 +1,10 @@
 ---
-- name: Calculate Vagrant version
+- name: Calculating Vagrant version
   set_fact:
     vagrant_version: "{{ vagrant.version | calculate( vagrant ) }}"
 - debug: var=vagrant_version
 
-- name: Calculate vagrant download URL
+- name: Calculating vagrant download URL
   set_fact:
     download_url: "{{ vagrant.download_url.replace( '<version>', vagrant_version ).replace( '<platform>', vagrant.platform ) }}"
     local_deb:    "/opt/vagrant-{{ vagrant_version }}-{{ vagrant.platform }}.deb"
@@ -12,18 +12,20 @@
 - debug: var=download_url
 - debug: var=local_deb
 
-- name: Download Vagrant
+- name: Downloading Vagrant
   get_url:
     url:   "{{ download_url }}"
     dest:  "{{ local_deb }}"
     force: "{{ vagrant.redownload }}"
 
-- apt: deb={{ local_deb }}
+- name: Installing Vagrant
+  apt:  deb={{ local_deb }}
 
-- command:  vagrant --version
+- name:     Running Vagrant version
+  command:  vagrant --version
   register: vagrant_version_out
 
-- name: Verify Vagrant version
+- name: Verifying Vagrant version
   assert:
     that:
       - vagrant_version in vagrant_version_out.stdout

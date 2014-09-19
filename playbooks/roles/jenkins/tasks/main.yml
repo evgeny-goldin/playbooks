@@ -14,7 +14,7 @@
 - apt:            name=jenkins state=latest force=yes
   when:           install_jenkins
 
-- name: Write Jenkins files
+- name: Writing Jenkins files
   template:
     src:   "{{ item }}"
     dest:  "{{ jenkins.home }}"
@@ -25,7 +25,7 @@
     - config.xml
     - hudson.plugins.s3.S3BucketPublisher.xml
 
-- name: Jenkins jobs - create directories
+- name: Creating directories for Jenkins jobs
   file:
     path: "{{ jenkins.home }}/jobs/{{ item }}"
     state: directory
@@ -35,14 +35,14 @@
   with_items: jenkins.jobs
   when: ( jenkins.jobs | default([]))
 
-- name: Jenkins jobs - create XML configs
+- name: Creating XML configs for Jenkins jobs
   copy:
     src:  "roles/jenkins/files/jobs/{{ item }}.xml"
     dest: "{{ jenkins.home }}/jobs/{{ item }}/config.xml"
   with_items: jenkins.jobs
   when: ( jenkins.jobs | default([]))
 
-- name: Jenkins plugins - create directory
+- name: Creating directory for Jenkins plugins
   file:
     path: "{{ jenkins.home }}/plugins"
     state: directory
@@ -50,7 +50,7 @@
     group: jenkins
     mode:  "{{ common.mode.directory }}"
 
-- name: Jenkins plugins - install latest version
+- name: Installing Jenkins plugins (latest)
   with_dict: jenkins.plugins.install | default({})
   when: item.value == '*'
   get_url:
@@ -59,7 +59,7 @@
     dest:  "{{ jenkins.home }}/plugins/{{ item.key }}.hpi"
     force: "{{ jenkins.plugins.redownload }}"
 
-- name: Jenkins plugins - install explicit version
+- name: Installing Jenkins plugins (explicit)
   with_dict: jenkins.plugins.install | default({})
   when: ( item.value != '*' ) and ( not item.value.startswith( 'http' ))
   get_url:
@@ -68,7 +68,7 @@
     dest:  "{{ jenkins.home }}/plugins/{{ item.key }}.hpi"
     force: "{{ jenkins.plugins.redownload }}"
 
-- name: Jenkins plugins - install custom version
+- name: Installing Jenkins plugins (custom)
   with_dict: jenkins.plugins.install | default({})
   when: item.value.startswith( 'http' )
   get_url:
@@ -76,10 +76,10 @@
     dest:  "{{ jenkins.home }}/plugins/{{ item.key }}.hpi"
     force: "{{ jenkins.plugins.redownload }}"
 
-- name: Stop Jenkins service
+- name: Stopping Jenkins service
   service: name=jenkins state=stopped
   when: ( not jenkins_start_service|bool )
 
-- name: Restart Jenkins service
+- name: Restarting Jenkins service
   service: name=jenkins state=restarted
   when: jenkins_start_service

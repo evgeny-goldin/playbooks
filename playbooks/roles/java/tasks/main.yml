@@ -1,35 +1,29 @@
 ---
-
 # https://coderwall.com/p/zzdapg
 
-- command: java -version
-  register: java_version
-  ignore_errors: yes
-
-- set_fact: java_installed={{ java_version|success }}
-- debug: var=java_installed
-
-- apt_repository: repo=ppa:webupd8team/java state=present update-cache=yes
-  when: ( not java_installed|bool )
-
+- name: Adding Java repository
+  apt_repository: repo=ppa:webupd8team/java state=present update-cache=yes
 - shell: echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections
-  when: ( not java_installed|bool )
 
-- apt: name=oracle-java7-installer state=latest force=yes
-  when: ( not java_installed|bool )
+- name: Installing Java
+  apt: name=oracle-java7-installer state=latest force=yes
 
-- lineinfile:
+- name: Adding JAVA_HOME
+  lineinfile:
     dest: "{{ ubuntu.env_file }}"
     line: JAVA_HOME="{{ java.home }}"
 
-- shell: java -version 2>&1
-  register: java_version_1
+- name:     Running Java version (full path)
+  shell:    "{{ java.home }}/bin/java -version 2>&1"
+  register: java_version_out_1
 
-- shell: "{{ java.home }}/bin/java -version 2>&1"
-  register: java_version_2
+- name:     Running Java version (just 'java')
+  shell:    java -version 2>&1
+  register: java_version_out_2
 
-- assert:
+- name:  Verifying Java version
+  assert:
     that:
-      - java_version_1.stdout == java_version_2.stdout
-      - "'1.7.0'                           in java_version_1.stdout"
-      - "'Java(TM) SE Runtime Environment' in java_version_1.stdout"
+      - java_version_out_1.stdout == java_version_out_2.stdout
+      - "'1.7.0'                           in java_version_out_1.stdout"
+      - "'Java(TM) SE Runtime Environment' in java_version_out_1.stdout"

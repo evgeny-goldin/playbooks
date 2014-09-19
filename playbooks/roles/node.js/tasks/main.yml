@@ -1,5 +1,6 @@
 ---
-- apt: name={{ item }} state=latest force=yes
+- name: Installing Node.js packages
+  apt:  name={{ item }} state=latest force=yes
   with_items:
     - nodejs
     - npm
@@ -8,18 +9,26 @@
     path:  /usr/bin/nodejs
     state: file
 
-- file:
+- name: Linking 'nodejs' as 'node'
+  file:
     src:   /usr/bin/nodejs
     dest:  /usr/bin/node
     state: link
 
-- command: node --version
-- command: npm  --version
+- name:    Running Node.js version
+  command: node --version
 
-- npm:  name={{ item }} global=yes production=yes
+- name:    Running Npm version
+  command: npm  --version
+
+- name: Installing Node.js global packages
+  npm:  name={{ item }} global=yes production=yes
   with_items:
     - grunt-cli
     - bower
 
-- command: grunt --version
-- command: bower --version
+- name:    Running Grunt version
+  command: grunt --version
+
+- name:    Running Bower version
+  command: bower --version

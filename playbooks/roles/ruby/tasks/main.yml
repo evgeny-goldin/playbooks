@@ -1,5 +1,5 @@
 ---
-- name: Calculate Ruby version
+- name: Calculating Ruby version
   set_fact:
     ruby_version: "{{ ruby.version | calculate( ruby ) }}"
 
@@ -11,26 +11,26 @@
 - debug: var=ruby_version
 - debug: var=ruby_bin
 
-- name: Download RVM installation script
+- name: Downloading RVM installation script
   get_url:
     url:   "{{ ruby.rvm.url }}"
     dest:  "{{ rvm_sh }}"
     force: yes
 
-- name: Chmod RVM installation script
+- name: Chmoding RVM installation script
   file:
     name:  "{{ rvm_sh }}"
     state: file
     mode:  "{{ common.mode.script }}"
 
-- name:    Install RVM
+- name:    Installing RVM
   shell:   "{{ rvm_sh }}"
 - command: "{{ rvm }} --version"
 
-- name:     "Install Ruby"
+- name:     Installing Ruby
   command:  "{{ rvm }} install '{{ ruby_version }}'"
 
-- name:   Update PATH
+- name:   Creating PATH script
   template:
     src:  ruby.sh
     dest: "{{ ubuntu.envs_dir }}"
@@ -41,19 +41,19 @@
   register: ruby_version_out
 - debug:    var=ruby_version_out.stdout
 
-- name: Verify Ruby version
+- name: Verifying Ruby version
   assert:
     that:
       - ruby_version in ruby_version_out.stdout
       - "'ruby'      in ruby_version_out.stdout"
 
-- name: Install Ruby gems
+- name: Installing Ruby gems
   gem:
     executable:   "{{ ruby_bin }}/gem"
     name:         "{{ item }}"
     user_install: no
   with_items: ruby.gems.keys()
 
-- name:       Verify Ruby gems
+- name:       Verifying Ruby gems
   command:    "{{ item }}"
   with_items: ruby.gems.values()
