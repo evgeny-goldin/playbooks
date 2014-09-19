@@ -35,7 +35,7 @@
 - name:   Update sudoers files
   lineinfile:
     dest:     "{{ ubuntu.sudoers }}"
-    regexp:   '^(Defaults\s+secure_path=)"(.+(?!{{ ruby_bin }}))"$'
+    regexp:   '^(Defaults\s+secure_path=)"((?!ruby).)+"$'
     line:     '\1"\2:{{ ruby_bin }}"'
     backrefs: yes
     backup:   yes
