@@ -4,7 +4,7 @@
     ansible_version: "{{ ansible.version | calculate( ansible ) }}"
 - debug: var=ansible_version
 
-- name: Installing Python packages
+- name: Downloading and installing Python packages
   apt:  name={{item}} state=latest force=yes
   with_items:
     - python-pip

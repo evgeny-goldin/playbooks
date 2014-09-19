@@ -5,8 +5,8 @@
   apt_repository: repo=ppa:webupd8team/java state=present update-cache=yes
 - shell: echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections
 
-- name: Installing Java
-  apt: name=oracle-java7-installer state=latest force=yes
+- name: Downloading and installing Java
+  apt:  name=oracle-java7-installer state=latest force=yes
 
 - name: Adding JAVA_HOME
   lineinfile:

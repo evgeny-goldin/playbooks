@@ -18,7 +18,7 @@
     dest:  "{{ local_deb }}"
     force: "{{ vagrant.redownload }}"
 
-- name: Installing Vagrant
+- name: Downloading and installing Vagrant
   apt:  deb={{ local_deb }}
 
 - name:     Running Vagrant version

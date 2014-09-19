@@ -56,7 +56,7 @@
     state: directory
     mode:  "{{ common.mode.directory }}"
 
-- name: Unpacking Packer archive
+- name: Unpacking Packer
   unarchive:
     src:  "{{ local_zip }}"
     dest: "{{ packer.dir }}"

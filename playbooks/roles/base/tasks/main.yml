@@ -6,7 +6,7 @@
   apt:  upgrade=dist
   when: ( not is_docker|bool )
 
-- name: Installing base packages
+- name: Downloading and installing base packages
   apt:  name={{ item }} state=latest force=yes
   with_items:
     - vim
