@@ -60,4 +60,4 @@
 
 - name: Stopping MySQL service
   service: name=mysql state=stopped
-  when: ( not mysql_start_service|bool )
+  when: ( not start_service|bool )

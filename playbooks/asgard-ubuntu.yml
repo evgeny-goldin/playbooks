@@ -13,9 +13,9 @@
     - [ roles/asgard/vars/aws.yml, vars/common.yml ]
 
   roles:
-    - { role: periodic-before, period: "{{ 24 * 3600 }}" }
+    - { role: run-before, period: "{{ 24 * 3600 }}" }
     - { role: base,    when: periodic }
     - { role: ansible, when: periodic }
     - java
     - asgard
-    - periodic-after
+    - run-after

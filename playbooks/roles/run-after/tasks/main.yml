@@ -1,0 +1,7 @@
+---
+- include_vars: roles/run-before/vars/main.yml
+
+- file:
+    path:  "{{ periodic_touch_file }}"
+    state: touch
+  when:    periodic

@@ -5,5 +5,8 @@ common: {
     script:    '0744',
     file:      '0644',
     secret:    '0600'
-  }
+  },
+
+  # Whether roles should start services installed
+  start_service: true
 }

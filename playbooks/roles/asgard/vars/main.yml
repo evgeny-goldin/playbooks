@@ -14,6 +14,3 @@ asgard: {
   # https://netflixoss.ci.cloudbees.com/job/asgard-master/
   jar_url:       'https://netflixoss.ci.cloudbees.com/job/asgard-master/lastSuccessfulBuild/artifact/asgard-standalone.jar',
 }
-
-# Ansible "--extra-vars" option doesn't get dots in variable names
-asgard_start_service: true

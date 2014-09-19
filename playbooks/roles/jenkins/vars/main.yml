@@ -45,6 +45,3 @@ jenkins: {
 
   jobs: [ 'asgard' ]
 }
-
-# Ansible "--extra-vars" option doesn't get dots in variable names
-jenkins_start_service: true

@@ -82,8 +82,8 @@
 
 - name: Stopping Asgard service
   service: name=asgard state=stopped
-  when: ( not asgard_start_service|bool )
+  when: ( not start_service|bool )
 
 - name: Restarting Asgard service
   service: name=asgard state=restarted
-  when: asgard_start_service
+  when: start_service

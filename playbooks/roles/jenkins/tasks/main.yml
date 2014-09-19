@@ -72,10 +72,10 @@
     dest:  "{{ jenkins.home }}/plugins/{{ item.key }}.hpi"
     force: "{{ jenkins.plugins.redownload }}"
 
-- name: Stopping Jenkins service
+- name:    Stopping Jenkins service
   service: name=jenkins state=stopped
-  when: ( not jenkins_start_service|bool )
+  when:    ( not start_service|bool )
 
-- name: Restarting Jenkins service
+- name:    Restarting Jenkins service
   service: name=jenkins state=restarted
-  when: jenkins_start_service
+  when:    start_service
