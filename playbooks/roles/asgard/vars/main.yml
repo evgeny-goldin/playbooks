@@ -13,4 +13,9 @@ asgard: {
   # https://github.com/Netflix/asgard/releases
   # https://netflixoss.ci.cloudbees.com/job/asgard-master/
   jar_url:       'https://netflixoss.ci.cloudbees.com/job/asgard-master/lastSuccessfulBuild/artifact/asgard-standalone.jar',
+
+  # AWS credentials: AWS_ACCOUNT_ID, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
+  # If true  - loaded from "vars/aws.yml"
+  # If false - need to be provided as Ansible extra variables
+  load_aws_credentials: false
 }

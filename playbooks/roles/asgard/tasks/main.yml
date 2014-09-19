@@ -1,5 +1,10 @@
 ---
-- assert:
+- name: Loading AWS credentials
+  include_vars: aws.yml
+  when: asgard.load_aws_credentials
+
+- name: Verifying AWS credentials
+  assert:
     that:
       - AWS_ACCOUNT_ID        is defined
       - AWS_ACCESS_KEY_ID     is defined

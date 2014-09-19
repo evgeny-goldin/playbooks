@@ -10,8 +10,13 @@ packer: {
   dir:          /opt/packer,
   bin:          /usr/bin/packer,
   download_url: 'https://dl.bintray.com/mitchellh/packer/<version>_linux_<platform>.zip',
-  redownload:   false
-}
+  redownload:   false,
 
-# Ansible "--extra-vars" option doesn't get dots in variable names
-packer_store_aws_credentials: false
+  store_aws_credentials: false,
+  
+  # AWS credentials: AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
+  # If 'store_aws_credentials' is true:
+    # If true  - loaded from "vars/aws.yml"
+    # If false - need to be provided as Ansible extra variables
+  load_aws_credentials: false
+}

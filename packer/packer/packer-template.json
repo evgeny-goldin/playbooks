@@ -16,7 +16,7 @@
             "type":            "ansible-local",
             "playbook_dir":    "../../playbooks",
             "playbook_file":   "../../playbooks/packer-ubuntu.yml",
-            "extra_arguments": "-e 'packer_store_aws_credentials=false'"
+            "extra_arguments": "-e '{\"packer\": {\"store_aws_credentials\": false, \"load_aws_credentials\": false}}'"
         }
     ]
 }
