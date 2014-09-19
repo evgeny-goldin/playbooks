@@ -33,8 +33,11 @@
 - name:   Update sudoers
   lineinfile:
     dest: "{{ ubuntu.sudoers }}"
-    line: Defaults env_keep += "PATH"
+    line: "{{ item }}"
     insertafter: EOF
+  with_items:
+    - Defaults        env_reset
+    - Defaults        env_keep += "PATH"
 - name:   Update PATH
   template:
     src:  ruby.sh

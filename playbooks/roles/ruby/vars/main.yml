@@ -11,7 +11,8 @@ ruby: {
     # name:       [ commands to test the gem ]
     bundler:      [ 'bundle  --version', 'bundle  --help' ],
     pry:          [ 'pry     --version', 'pry     --help' ],
-    test-kitchen: [ 'kitchen --version', 'kitchen --help' ]
+    test-kitchen: [ 'kitchen --version', 'kitchen --help' ],
+    git-up:       [ 'git up  --version' ]
   },
   rvm: {
     url:  'https://get.rvm.io',
