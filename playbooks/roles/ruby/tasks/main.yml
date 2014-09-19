@@ -29,7 +29,13 @@
 
 - name:     "Install Ruby"
   command:  "{{ rvm }} install '{{ ruby_version }}'"
-- name:     Update PATH
+# https://help.ubuntu.com/community/EnvironmentVariables#sudo_caveat
+- name:   Update sudoers
+  lineinfile:
+    dest: "{{ ubuntu.sudoers }}"
+    line: Defaults env_keep += "PATH"
+    insertafter: EOF
+- name:   Update PATH
   template:
     src:  ruby.sh
     dest: "{{ ubuntu.envs_dir }}"
