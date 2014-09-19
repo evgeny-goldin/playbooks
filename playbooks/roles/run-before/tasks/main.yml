@@ -10,19 +10,29 @@
 
 - debug: var=period
 
+- name:     Checking if period is 'monthly'
+  set_fact: period={{ 30 * 24 * 3600 }}
+  when:     period == 'monthly'
+
+- name:     Checking if period is 'weekly'
+  set_fact: period={{ 7 * 24 * 3600 }}
+  when:     period == 'weekly'
+
+- name:     Checking if period is 'daily'
+  set_fact: period={{ 24 * 3600 }}
+  when:     period == 'daily'
+
+- name:     Checking if period is 'hourly'
+  set_fact: period={{ 3600 }}
+  when:     period == 'hourly'
+
+- debug: var=period
+
 - name: Calculating if this should be a periodic run
   set_fact:
     periodic: "{{ ( not touch.stat.exists ) or ( seconds_since_last_periodic|int >= period|int ) }}"
 
 - debug: var=periodic
-- debug: var=common.start_service
-- debug: var=ami
-
-- name: Calculating 'start_service' flag
-  set_fact:
-    start_service: "{{ ( common.start_service|bool ) and ( not ( ami|default(false)|bool )) }}"
-
-- debug: var=start_service
 
 - debug: msg="Last successful periodic run was on {{ touch.stat.ctime | strftime }}, {{ seconds_since_last_periodic | explain }} ago"
   when: touch.stat.exists
@@ -42,3 +52,11 @@
     is_docker: "{{ grep_result.stdout|int > 0 }}"
 
 - debug: var=is_docker
+- debug: var=common.start_service
+- debug: var=ami
+
+- name: Calculating 'start_service' flag
+  set_fact:
+    start_service: "{{ ( common.start_service|bool ) and ( not ( ami|default(false)|bool )) }}"
+
+- debug: var=start_service

@@ -11,10 +11,10 @@
     - vars/{{ ansible_distribution }}.yml
 
   roles:
-    - { role: run-before, period: "{{ 24 * 3600 }}" }
-    - { role: base,    when: periodic }
-    - { role: ansible, when: periodic }
-    - { role: node.js, when: periodic }
+    - { role: run-before, period: daily    }
+    - { role: base,       when:   periodic }
+    - { role: ansible,    when:   periodic }
+    - { role: node.js,    when:   periodic }
     - java
     - jenkins
     - run-after
