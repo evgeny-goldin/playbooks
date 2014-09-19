@@ -4,7 +4,7 @@ set -e
 set -x
 
 ./docker/ansible/install-ansible.sh
-ansible-playbook playbooks/packer-ubuntu.yml -c local
+# ansible-playbook playbooks/packer-ubuntu.yml -c local
 
 # ---------------
 # Ansible
@@ -18,8 +18,8 @@ ansible-playbook playbooks/packer-ubuntu.yml -c local
 # Docker
 # ---------------
 
-for box in ansible:1.7.1; do
-  name=$(echo $box | sed -r 's/:.+//')
-  cp "docker/$name/Dockerfile" .
-  docker build --rm --no-cache -t "evgenyg/$box" .
-done
+# for box in ansible:1.7.1; do
+#   name=$(echo $box | sed -r 's/:.+//')
+#   cp "docker/$name/Dockerfile" .
+#   docker build --rm --no-cache -t "evgenyg/$box" .
+# done
