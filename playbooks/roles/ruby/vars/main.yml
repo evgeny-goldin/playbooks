@@ -8,7 +8,7 @@ ruby: {
   },
   # Gems to installs
   gems: {
-    # name:       [ commands to test the gem ]
+    # name:         [ commands to test the gem ]
     bundler:        [ 'bundle  --version', 'bundle  --help' ],
     pry:            [ 'pry     --version', 'pry     --help' ],
     test-kitchen:   [ 'kitchen --version', 'kitchen --help' ],
