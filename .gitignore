@@ -5,3 +5,4 @@ packer_cache
 *.pyc
 aws.yml
 ./Dockerfile
+bakery_payload.yml

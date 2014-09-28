@@ -1,4 +1,6 @@
 ---
+- debug: var=bakery_payload
+
 - name: Loading AWS credentials
   include_vars: aws.yml
   when: asgard.load_aws_credentials
@@ -67,20 +69,18 @@
     group: "{{ asgard.group }}"
     mode:  "{{ common.mode.secret }}"
 
-# CloudNative Bakery bake - https://bakery.cloudnative.io/
-# 'artifacts' is sent as external variable, it contains Jenkins artifacts URL
-- name: Downloading Asgard JAR file from '{{ artifacts }}'
+- name: Downloading Asgard JAR file from AWS S3
   get_url:
-    url:   "{{ artifacts }}"
+    url:   "{{ bakery_payload.build.artifacts['asgard-standalone.jar'].s3 }}"
     dest:  "{{ asgard.jar }}"
     force: yes
-  when: artifacts is defined
+  when: bakery_payload is defined
 
 - name: Downloading Asgard JAR file from '{{ asgard.jar_url }}'
   get_url:
     url:  "{{ asgard.jar_url }}"
     dest: "{{ asgard.jar }}"
-  when: ( not ( artifacts is defined ))
+  when: ( not ( bakery_payload is defined ))
 
 - name: Checking Asgard java
   command: "{{ asgard.java }} -version"

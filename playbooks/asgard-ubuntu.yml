@@ -9,11 +9,12 @@
   vars_files:
     - vars/common.yml
     - vars/{{ ansible_distribution }}.yml
+    - [ ../bakery_payload.yml, vars/common.yml ]
 
   roles:
     - { role: run-before, period: daily    }
     - { role: base,       when:   periodic }
     - { role: ansible,    when:   periodic }
-    - java
+    - { role: java,       when:   periodic }
     - asgard
     - run-after
