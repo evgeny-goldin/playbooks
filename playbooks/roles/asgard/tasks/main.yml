@@ -1,5 +1,9 @@
 ---
 - debug: var=bakery_payload
+  when:  bakery_payload is defined
+
+- debug: var=bakery_payload.build.artifacts['asgard-standalone.jar'].s3
+  when:  bakery_payload is defined
 
 - name: Loading AWS credentials
   include_vars: aws.yml
