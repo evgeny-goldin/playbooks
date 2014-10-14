@@ -1,8 +1,8 @@
 ---
 ruby: {
-  # version: 2.1.3,  # Or 'latest'
+  # version: 2.1.3, # Or 'latest'
   version: latest,
-  installer: 'rbenv', # Or 'rvm'
+  installer: 'rvm', # Or 'rbenv'
   latest: {
     command: "curl -s 'https://www.ruby-lang.org/en/downloads/' | grep 'The current stable version is' | cut -d' ' -f6 | sed 's/\\.$//'",
     pattern: '^\d+\.\d+\.\d+$'

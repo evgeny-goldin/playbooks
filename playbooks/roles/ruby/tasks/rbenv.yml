@@ -1,35 +1,47 @@
 ---
-- set_fact:
-    dot_rbenv: "{{ ubuntu.root_home }}/.rbenv"
 
-- set_fact:
-    ruby_bin:        "{{ dot_rbenv }}/versions/{{ ruby_version }}/bin"
-    ruby_build:      "{{ dot_rbenv }}/plugins/ruby-build"
-    rbenv:           "{{ dot_rbenv }}/libexec/rbenv"
-    additional_envs: "export PATH=\"{{ dot_rbenv }}/bin:$PATH\" \\n eval \"$(rbenv init -)\""
+# ---------------------------------------------------------------------------------------
+# TODO:
+# 1) Use binaries: https://github.com/sstephenson/ruby-build/issues/42
+#                  https://github.com/garnieretienne/rvm-download
+# 2) Run eval "$(rbenv init -)" after git clone
+# 3) Use Shims as {{ ruby_bin }}: https://github.com/sstephenson/rbenv#understanding-shims
+# 4) In Docker root's user $HOME is "/", not "/root"
+# 5) If installed for root - rbenv is not available to oher users (permissions)
+# ---------------------------------------------------------------------------------------
 
-- name: Install dev packages
-  apt: name={{ item }}
-  with_items:
-    - autoconf
-    - bison
-    - libssl-dev
-    - libyaml-dev
-    - libreadline6-dev
-    - zlib1g-dev
-    - libncurses5-dev
 
-- name: Install rbenv
-  git:
-    repo: "{{ item.repo }}"
-    dest: "{{ item.dest }}"
-    accept_hostkey: yes
-  with_items:
-    - { repo: 'https://github.com/sstephenson/rbenv.git',      dest: "{{ dot_rbenv }}"  }
-    - { repo: 'https://github.com/sstephenson/ruby-build.git', dest: "{{ ruby_build }}" }
-
-- name: Install ruby-build
-  command: "{{ ruby_build }}/install.sh"
-
-- name: Install Ruby
-  command: "{{ rbenv }} install -f '{{ ruby_version }}'"
+# - set_fact:
+#     dot_rbenv: "{{ ubuntu.root_home }}/.rbenv"
+#
+# - set_fact:
+#     ruby_bin:        "{{ dot_rbenv }}/versions/{{ ruby_version }}/bin"
+#     ruby_build:      "{{ dot_rbenv }}/plugins/ruby-build"
+#     rbenv:           "{{ dot_rbenv }}/libexec/rbenv"
+#     additional_envs: "export PATH=\"{{ dot_rbenv }}/bin:$PATH\"\neval \"$(rbenv init -)\""
+#
+# - name: Install dev packages
+#   apt: name={{ item }}
+#   with_items:
+#     - autoconf
+#     - bison
+#     - libssl-dev
+#     - libyaml-dev
+#     - libreadline6-dev
+#     - zlib1g-dev
+#     - libncurses5-dev
+#
+# - name: Install rbenv
+#   git:
+#     repo: "{{ item.repo }}"
+#     dest: "{{ item.dest }}"
+#     accept_hostkey: yes
+#   with_items:
+#     - { repo: 'https://github.com/sstephenson/rbenv.git',      dest: "{{ dot_rbenv }}"  }
+#     - { repo: 'https://github.com/sstephenson/ruby-build.git', dest: "{{ ruby_build }}" }
+#
+# - name: Install ruby-build
+#   command: "{{ ruby_build }}/install.sh"
+#
+# - name: Install Ruby
+#   command: "{{ rbenv }} install -f '{{ ruby_version }}'"
