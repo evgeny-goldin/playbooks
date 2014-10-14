@@ -2,7 +2,7 @@
 
 set -x
 
-sed -i 's/archive\.ubuntu\.com/se.archive.ubuntu.com/' /etc/apt/sources.list
+sed -i 's/archive\.ubuntu\.com/ubuntu.mirror.su.se/' /etc/apt/sources.list
 sudo apt-get update  -y
 sudo apt-get upgrade -y
 sudo apt-get install -y vim python-pip python-dev
