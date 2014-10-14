@@ -1,4 +1,8 @@
 ---
+# ---------------
+# https://rvm.io/
+# ---------------
+
 - set_fact:
     rvm_sh:   /opt/rvm.sh
     ruby_bin: "{{ ruby.rvm.home }}/rubies/ruby-{{ ruby_version }}/bin"
