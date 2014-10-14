@@ -1,0 +1,18 @@
+---
+# Ruby playbook for Ubuntu
+# https://www.ruby-lang.org/en/
+
+- name:  Ruby
+  hosts: all
+  sudo:  yes
+
+  vars_files:
+    - vars/common.yml
+    - vars/{{ ansible_distribution }}.yml
+
+  roles:
+    - { role: run-before, period: daily    }
+    - { role: base,       when:   periodic }
+    - { role: ansible,    when:   periodic }
+    - ruby
+    - run-after

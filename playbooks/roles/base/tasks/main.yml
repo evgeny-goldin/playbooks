@@ -1,4 +1,11 @@
 ---
+- name: Update sources.list
+  replace:
+    dest:    "{{ ubuntu.sources_list }}"
+    regexp:  'archive\.ubuntu\.com'
+    replace: "{{ ubuntu.apt_repo }}"
+    backup:  yes
+
 - name: Updating 'apt' cache
   apt:  update_cache=yes
 

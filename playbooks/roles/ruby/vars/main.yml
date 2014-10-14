@@ -1,7 +1,8 @@
 ---
 ruby: {
-  # version: 2.1.2, # Or 'latest'
+  # version: 2.1.3,  # Or 'latest'
   version: latest,
+  installer: 'rbenv', # Or 'rvm'
   latest: {
     command: "curl -s 'https://www.ruby-lang.org/en/downloads/' | grep 'The current stable version is' | cut -d' ' -f6 | sed 's/\\.$//'",
     pattern: '^\d+\.\d+\.\d+$'
@@ -11,8 +12,8 @@ ruby: {
     # name:         [ commands to test the gem ]
     bundler:        [ 'bundle  --version', 'bundle  --help' ],
     pry:            [ 'pry     --version', 'pry     --help' ],
-    test-kitchen:   [ 'kitchen --version', 'kitchen --help' ],
-    kitchen-docker: []
+    # test-kitchen:   [ 'kitchen --version', 'kitchen --help' ],
+    # kitchen-docker: []
   },
   rvm: {
     url:  'https://get.rvm.io',

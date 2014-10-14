@@ -2,4 +2,4 @@
 
 FROM ubuntu:14.04
 ADD  . /docker
-RUN  /docker/install-ansible.sh
+RUN    /docker/install-ansible.sh

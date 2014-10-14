@@ -1,10 +1,13 @@
 ---
 ubuntu: {
-  home_dir:  /home,
-  env_file:  /etc/environment,
-  init_dir:  /etc/init.d,
-  log_dir:   /var/log,
-  pid_dir:   /var/run,
-  envs_dir:  /etc/profile.d, # http://goo.gl/ksHX6N
-  sudoers:   /etc/sudoers
+  apt_repo:     ubuntu.mirror.su.se, # http://mirrors.ubuntu.com/mirrors.txt
+  root_home:    /root,
+  home_dir:     /home,
+  log_dir:      /var/log,
+  pid_dir:      /var/run,
+  env_file:     /etc/environment,
+  init_dir:     /etc/init.d,
+  envs_dir:     /etc/profile.d, # http://goo.gl/ksHX6N
+  sudoers:      /etc/sudoers,
+  sources_list: /etc/apt/sources.list
 }

@@ -1,0 +1,31 @@
+---
+- set_fact:
+    dot_rbenv: "{{ ubuntu.root_home }}/.rbenv"
+
+- set_fact:
+    ruby_bin:        "{{ dot_rbenv }}/versions/{{ ruby_version }}/bin"
+    rbenv:           "{{ dot_rbenv }}/libexec/rbenv"
+    additional_envs: "export PATH=\"{{ dot_rbenv }}/bin:$PATH\" \\n eval \"$(rbenv init -)\""
+
+- name: Install dev packages
+  apt: name={{ item }}
+  with_items:
+    - autoconf
+    - bison
+    - libssl-dev
+    - libyaml-dev
+    - libreadline6-dev
+    - zlib1g-dev
+    - libncurses5-dev
+
+- name: Install rbenv and ruby-build
+  git:
+    repo: "{{ item.repo }}"
+    dest: "{{ item.dest }}"
+    accept_hostkey: yes
+  with_items:
+    - { repo: 'https://github.com/sstephenson/rbenv.git',      dest: "{{ dot_rbenv }}" }
+    - { repo: 'https://github.com/sstephenson/ruby-build.git', dest: "{{ dot_rbenv }}/plugins/ruby-build" }
+
+- name: Install Ruby
+  command: "{{ rbenv }} install -f '{{ ruby_version }}'"

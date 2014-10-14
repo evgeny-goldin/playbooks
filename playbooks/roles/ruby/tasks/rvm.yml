@@ -1,0 +1,29 @@
+---
+- set_fact:
+    rvm_sh:   /opt/rvm.sh
+    ruby_bin: "{{ ruby.rvm.home }}/rubies/ruby-{{ ruby_version }}/bin"
+    rvm:      "{{ ruby.rvm.home }}/bin/rvm"
+
+- debug: var=ruby_version
+- debug: var=ruby_bin
+
+- name: Downloading RVM installation script
+  get_url:
+    url:   "{{ ruby.rvm.url }}"
+    dest:  "{{ rvm_sh }}"
+    force: yes
+
+- name: Chmoding RVM installation script
+  file:
+    name:  "{{ rvm_sh }}"
+    state: file
+    mode:  "{{ common.mode.script }}"
+
+- name:    Running RVM installation script
+  shell:   "{{ rvm_sh }}"
+
+- name:    Running RVM version
+  command: "{{ rvm }} --version"
+
+- name:     Installing Ruby
+  command:  "{{ rvm }} install '{{ ruby_version }}'"

@@ -10,11 +10,12 @@ BOXES                   = {
   jenkins: [ 8080 ],
   asgard:  [ 8080 ],
   mysql:   [ 3306 ],
-  packer:  []
+  packer:  [],
+  ruby:    []
 }
 
-Vagrant.require_version '>= 1.6.3'
-Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+Vagrant.require_version '>= 1.6.5'
+Vagrant.configure( VAGRANTFILE_API_VERSION ) do |config|
 
   BOXES.each_pair { | box, ports |
 
