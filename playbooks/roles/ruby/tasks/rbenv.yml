@@ -4,6 +4,7 @@
 
 - set_fact:
     ruby_bin:        "{{ dot_rbenv }}/versions/{{ ruby_version }}/bin"
+    ruby_build:      "{{ dot_rbenv }}/plugins/ruby-build"
     rbenv:           "{{ dot_rbenv }}/libexec/rbenv"
     additional_envs: "export PATH=\"{{ dot_rbenv }}/bin:$PATH\" \\n eval \"$(rbenv init -)\""
 
@@ -18,14 +19,17 @@
     - zlib1g-dev
     - libncurses5-dev
 
-- name: Install rbenv and ruby-build
+- name: Install rbenv
   git:
     repo: "{{ item.repo }}"
     dest: "{{ item.dest }}"
     accept_hostkey: yes
   with_items:
-    - { repo: 'https://github.com/sstephenson/rbenv.git',      dest: "{{ dot_rbenv }}" }
-    - { repo: 'https://github.com/sstephenson/ruby-build.git', dest: "{{ dot_rbenv }}/plugins/ruby-build" }
+    - { repo: 'https://github.com/sstephenson/rbenv.git',      dest: "{{ dot_rbenv }}"  }
+    - { repo: 'https://github.com/sstephenson/ruby-build.git', dest: "{{ ruby_build }}" }
+
+- name: Install ruby-build
+  command: "{{ ruby_build }}/install.sh"
 
 - name: Install Ruby
   command: "{{ rbenv }} install -f '{{ ruby_version }}'"
