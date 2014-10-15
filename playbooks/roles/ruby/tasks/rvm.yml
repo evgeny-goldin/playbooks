@@ -4,12 +4,16 @@
 # ---------------
 
 - set_fact:
-    rvm_sh:   /opt/rvm.sh
-    ruby_bin: "{{ ruby.rvm.home }}/rubies/ruby-{{ ruby_version }}/bin"
+    rvm_sh:   '/opt/rvm.sh'
     rvm:      "{{ ruby.rvm.home }}/bin/rvm"
+    ruby_bin: "{{ ruby.rvm.home }}/rubies/ruby-{{ ruby_version }}/bin"
+    gems_bin: "{{ ruby.rvm.home }}/gems/ruby-{{ ruby_version }}/bin"
 
-- debug: var=ruby_version
-- debug: var=ruby_bin
+- set_fact: rvm_source_script=/.bash_profile
+  when: is_docker
+
+- set_fact: rvm_source_script={{ ubuntu.envs_dir }}/source-rvm.sh
+  when: ( not is_docker|bool )
 
 - name: Downloading RVM installation script
   get_url:
@@ -17,17 +21,23 @@
     dest:  "{{ rvm_sh }}"
     force: yes
 
-- name: Chmoding RVM installation script
-  file:
-    name:  "{{ rvm_sh }}"
-    state: file
-    mode:  "{{ common.mode.script }}"
+- name: Creating RVM source script
+  lineinfile:
+    dest:   "{{ rvm_source_script }}"
+    line:   "source {{ ruby.rvm.home }}/scripts/rvm\nrvm use --default '{{ ruby_version }}'"
+    create: yes
 
-- name:    Running RVM installation script
-  shell:   "{{ rvm_sh }}"
+- name:    Running RVM and Ruby installation scripts
+  command: "{{ item }}"
+  with_items:
+    - "/bin/bash '{{ rvm_sh }}'"
+    - "{{ rvm }} get stable"
+    - "{{ rvm }} install '{{ ruby_version }}'"
+    - "source '{{ rvm_source_script }}'"
 
-- name:    Running RVM version
-  command: "{{ rvm }} --version"
-
-- name:     Installing Ruby
-  command:  "{{ rvm }} install '{{ ruby_version }}'"
+- name: Writing .gemrc
+  lineinfile:
+    dest:   /.gemrc
+    line:   'gem: --no-ri --no-rdoc --no-document'
+    create: yes
+  when: is_docker

@@ -10,20 +10,6 @@
 - include: rvm.yml
   when: "{{ ruby.installer == 'rvm' }}"
 
-- assert: { that: "ruby_bin is defined" }
-- debug:  var=ruby_bin
-
-- name:   Creating PATH script
-  template:
-    src:  ruby.sh
-    dest: "{{ ubuntu.envs_dir }}"
-
-- name:     Running Ruby binaries
-  command:  "{{ ruby_bin }}/{{ item }} --version"
-  with_items:
-    - gem
-    - rake
-
 - name:     Running Ruby version
   command:  "{{ ruby_bin }}/ruby --version"
   register: ruby_version_out
@@ -36,12 +22,5 @@
       - "'ruby'      in ruby_version_out.stdout"
 
 - name: Installing Ruby gems
-  gem:
-    executable:   "{{ ruby_bin }}/gem"
-    name:         "{{ item }}"
-    user_install: no
-  with_items: ruby.gems.keys()
-
-- name:       Verifying Ruby gems
-  command:    "{{ item }}"
-  with_items: ruby.gems.values()
+  gem: name={{ item }} user_install=no executable={{ ruby_bin }}/gem
+  with_items: ruby.gems
