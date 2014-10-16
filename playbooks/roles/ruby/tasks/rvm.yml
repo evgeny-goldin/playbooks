@@ -4,40 +4,44 @@
 # ---------------
 
 - set_fact:
-    rvm_sh:   '/opt/rvm.sh'
-    rvm:      "{{ ruby.rvm.home }}/bin/rvm"
-    ruby_bin: "{{ ruby.rvm.home }}/rubies/ruby-{{ ruby_version }}/bin"
-    gems_bin: "{{ ruby.rvm.home }}/gems/ruby-{{ ruby_version }}/bin"
+    install_rvm:  '/opt/install-rvm.sh'
+    install_ruby: '/opt/install-ruby.sh'
+    rvm_source_script: "{{ ubuntu.envs_dir }}/source-rvm.sh"
+    rvm:               "{{ ruby.rvm.home }}/bin/rvm"
+    ruby_bin:          "{{ ruby.rvm.home }}/rubies/ruby-{{ ruby_version }}/bin"
+    gems_bin:          "{{ ruby.rvm.home }}/gems/ruby-{{ ruby_version }}/bin"
 
 - set_fact: rvm_source_script=/.bash_profile
   when: is_docker
 
-- set_fact: rvm_source_script={{ ubuntu.envs_dir }}/source-rvm.sh
-  when: ( not is_docker|bool )
-
 - name: Downloading RVM installation script
   get_url:
     url:   "{{ ruby.rvm.url }}"
-    dest:  "{{ rvm_sh }}"
+    dest:  "{{ install_rvm }}"
     force: yes
 
 - name: Creating RVM source script
   lineinfile:
     dest:   "{{ rvm_source_script }}"
-    line:   "source {{ ruby.rvm.home }}/scripts/rvm\nrvm use --default '{{ ruby_version }}'"
+    line:   "source {{ ruby.rvm.home }}/scripts/rvm"
     create: yes
 
-- name:    Running RVM and Ruby installation scripts
-  command: "{{ item }}"
-  with_items:
-    - "/bin/bash '{{ rvm_sh }}'"
-    - "{{ rvm }} get stable"
-    - "{{ rvm }} install '{{ ruby_version }}'"
-    - "source '{{ rvm_source_script }}'"
-
-- name: Writing .gemrc
+- name: Updating RVM source script for Docker
   lineinfile:
-    dest:   /.gemrc
-    line:   'gem: --no-ri --no-rdoc --no-document'
-    create: yes
+    dest:   "{{ rvm_source_script }}"
+    line:   "rvm use --default '{{ ruby_version }}'"
   when: is_docker
+
+- name: Writing templates
+  template:
+    src:  "{{ item.src  }}"
+    dest: "{{ item.dest }}"
+  with_items:
+    - { src: 'gemrc',           dest: "{{ ruby.gemrc }}"   }
+    - { src: 'install-ruby.sh', dest: "{{ install_ruby }}" }
+
+- name:    Running RVM and Ruby installation script
+  command: "/bin/bash '{{ item }}'"
+  with_items:
+    - "{{ install_rvm  }}"
+    - "{{ install_ruby }}"

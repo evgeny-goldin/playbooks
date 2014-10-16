@@ -20,7 +20,3 @@
     that:
       - ruby_version in ruby_version_out.stdout
       - "'ruby'      in ruby_version_out.stdout"
-
-- name: Installing Ruby gems
-  gem: name={{ item }} user_install=no executable={{ ruby_bin }}/gem
-  with_items: ruby.gems

@@ -8,6 +8,7 @@ ruby: {
     pattern: '^\d+\.\d+\.\d+$'
   },
   gems: [ 'bundler', 'pry' ],
+  gemrc: '/etc/gemrc',
   rvm: {
     url:  'https://get.rvm.io',
     home: /usr/local/rvm
