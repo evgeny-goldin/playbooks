@@ -18,7 +18,7 @@ set -e
 set -x
 
 cp "$dockerfile" .
-docker build --rm --no-cache -t="$owner/$image" .
+time docker build --rm --no-cache -t="$owner/$image" .
 rm  Dockerfile
 
 image_id="$(docker images "$owner/$image" | grep latest | awk '{print $3}')"

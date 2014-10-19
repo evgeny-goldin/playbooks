@@ -19,8 +19,8 @@ echo '-------------------------------------------------------------------------'
 set -e
 set -x
 
-docker push "$owner/$image"
-docker push "$owner/$image:$tag"
+time docker push "$owner/$image"
+time docker push "$owner/$image:$tag"
 
 set +e
 set +x
