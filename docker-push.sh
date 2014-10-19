@@ -10,11 +10,11 @@ if [ "$image" == "" ] || [ "$tag" == "" ]; then
   exit 1
 fi
 
+./docker-build.sh "$image" "$tag"
+
 echo '-------------------------------------------------------------------------'
 echo "Pushing '$owner/$image:$tag'"
 echo '-------------------------------------------------------------------------'
-
-./docker-build.sh "$image" "$tag"
 
 set -e
 set -x
