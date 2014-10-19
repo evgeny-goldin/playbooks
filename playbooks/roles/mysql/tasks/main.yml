@@ -23,6 +23,13 @@
     line: '# bind-address = 127.0.0.1'
     regexp: ^bind-address\s+=
 
+- name: Updating '{{ mysql.my_cnf }}' for Docker
+  lineinfile:
+    dest: "{{ mysql.my_cnf }}"
+    line: 'user            = root'
+    regexp: ^user\s+=\s+mysql$
+  when: is_docker
+
 - name: Starting MySQL service
   service: name=mysql state=started
 
