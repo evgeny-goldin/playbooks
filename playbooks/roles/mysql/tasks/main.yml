@@ -57,6 +57,7 @@
 
 - name: Restarting MySQL service
   service: name=mysql state=restarted
+  when: start_service
 
 - name: Stopping MySQL service
   service: name=mysql state=stopped

@@ -11,16 +11,18 @@ if [ "$image" == "" ] || [ "$tag" == "" ]; then
 fi
 
 echo '-------------------------------------------------------------------------'
-echo "Pushing '$owner/$image:$tag'"
+echo "Building '$owner/$image:$tag' from '$dockerfile'"
 echo '-------------------------------------------------------------------------'
-
-./docker-build.sh "$image" "$tag"
 
 set -e
 set -x
 
-docker push "$owner/$image"
-docker push "$owner/$image:$tag"
+cp "$dockerfile" .
+docker build --rm --no-cache -t="$owner/$image" .
+rm  Dockerfile
+
+image_id="$(docker images "$owner/$image" | grep latest | awk '{print $3}')"
+docker tag "$image_id" "$owner/$image:$tag"
 
 set +e
 set +x
