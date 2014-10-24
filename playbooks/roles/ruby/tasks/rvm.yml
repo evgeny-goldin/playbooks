@@ -11,9 +11,6 @@
     ruby_bin:          "{{ ruby.rvm.home }}/rubies/ruby-{{ ruby_version }}/bin"
     gems_bin:          "{{ ruby.rvm.home }}/gems/ruby-{{ ruby_version }}/bin"
 
-- set_fact: rvm_source_script=/.bash_profile
-  when: is_docker
-
 - name: Downloading RVM installation script
   get_url:
     url:   "{{ ruby.rvm.url }}"
@@ -25,12 +22,7 @@
     dest:   "{{ rvm_source_script }}"
     line:   "source {{ ruby.rvm.home }}/scripts/rvm"
     create: yes
-
-- name: Updating RVM source script for Docker
-  lineinfile:
-    dest:   "{{ rvm_source_script }}"
-    line:   "rvm use --default '{{ ruby_version }}'"
-  when: is_docker
+  when: ( not is_docker|bool )
 
 - name: Writing templates
   template:
