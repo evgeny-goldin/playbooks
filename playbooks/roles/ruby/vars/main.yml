@@ -7,7 +7,6 @@ ruby: {
     command: "curl -s 'https://www.ruby-lang.org/en/downloads/' | grep 'The current stable version is' | cut -d' ' -f6 | sed 's/\\.$//'",
     pattern: '^\d+\.\d+\.\d+$'
   },
-  gems: [ 'bundler', 'pry', 'cheat' ],
   gemrc: '/etc/gemrc',
   rvm: {
     url:  'https://get.rvm.io',

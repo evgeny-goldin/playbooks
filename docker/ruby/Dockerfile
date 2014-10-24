@@ -3,4 +3,4 @@
 FROM evgenyg/ansible:1.7.2
 ADD  playbooks /playbooks
 RUN  ansible-playbook /playbooks/ruby-ubuntu.yml -c local
-CMD  [ "/bin/bash", "-c", "source /.bash_profile; /bin/bash" ]
+ENV  PATH /usr/local/rvm/rubies/default/bin:$PATH
