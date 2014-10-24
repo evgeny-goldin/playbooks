@@ -7,7 +7,7 @@
 - name:           Adding Docker repository
   apt_repository: repo='deb https://get.docker.io/ubuntu docker main' update_cache=yes
 
-- name: Downloading and installing Docker
+- name: Installing Docker
   apt:  name=lxc-docker force=yes
 
 - name:     Running Docker version
