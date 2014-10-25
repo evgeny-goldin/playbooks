@@ -12,6 +12,9 @@ def strftime( epoch_time ):
   '''time.strftime wrapper'''
   return time.strftime( '%b %d, %Y at %H:%M:%S (GMT)', time.gmtime( epoch_time ))
 
+def transform( values, format ):
+    '''Transforms array of values using format specified'''
+    return [ format.format( v ) for v in values ]
 
 def explain( seconds ):
   '''Converts seconds to hh:mm:ss format'''
@@ -64,6 +67,7 @@ class FilterModule( object ):
   def filters( self ):
     return {
       'strftime'  : strftime,
+      'transform' : transform,
       'explain'   : explain,
       'calculate' : calculate,
     }

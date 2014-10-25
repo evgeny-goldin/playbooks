@@ -3,6 +3,6 @@
 .kitchen
 packer_cache
 *.pyc
-aws.yml
 /Dockerfile
-bakery_payload.yml
+/playbooks/todo-sample-app.env
+aws.yml

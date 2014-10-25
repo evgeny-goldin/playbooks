@@ -17,14 +17,6 @@
     that:
       - "'Docker' in docker_version_out.stdout"
 
-- name:     Running Docker 'evgenyg/ansible' image
-  command:  docker run evgenyg/ansible lsb_release -a
-  register: lsb_output
-- assert:
-    that:
-      - "'Ubuntu 14.04' in lsb_output.stdout"
-      - "'trusty'       in lsb_output.stdout"
-
 - name:    Generating auto boot script for Docker image '{{ image }}'
   include: auto-boot.yml
   when:    image is defined

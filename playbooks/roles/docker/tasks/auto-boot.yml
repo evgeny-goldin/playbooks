@@ -2,11 +2,30 @@
 - name: Installing upstart
   apt:  name=upstart state=latest force=yes
 
-- set_fact: upstart_app_name="docker_image" docker_port=""
-- set_fact: docker_port="-p {{ port }}"
-  when:     port is defined
+- name:  Verifying auto-boot variables
+  assert:
+    that:
+      - image    is defined
+      - app_name is defined
+
+- name:     Setting Docker ports
+  set_fact: docker_ports=""
+# [ port1, port2, port3 ] => "-p port1:port1 -p port2:port1 -p port3:port3"
+- set_fact: docker_ports="{{ ports | transform( "-p {0}:{0}" ) | join( ' ' ) }}"
+  when:     ports is defined
+- debug:    var=docker_ports
+
+- name:     Setting Docker env file
+  set_fact: docker_env_file=""
+- set_fact: docker_env_file="--env-file '{{ env }}'"
+  when:     env is defined
+- debug:    var=docker_env_file
+
+- name:     Building Docker command
+  set_fact: docker_command="docker run {{ docker_ports }} {{ docker_env_file }} {{ image }}"
+- debug:    var=docker_command
 
 - name: Generating upstart template
   template:
     src:  upstart
-    dest: "/etc/init/{{ upstart_app_name }}.conf"
+    dest: "/etc/init/{{ app_name }}.conf"

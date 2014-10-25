@@ -6,7 +6,7 @@ start on started mountall
 stop  on shutdown
 
 # Automatically Respawn:
-# respawn
-# respawn limit 99 5
+respawn
+respawn limit 5 5
 
-exec docker run {{ docker_port }} {{ image }} >> '/var/log/{{ upstart_app_name }}.log' 2>&1
+exec {{ docker_command }} >> '/var/log/{{ app_name }}.log' 2>&1

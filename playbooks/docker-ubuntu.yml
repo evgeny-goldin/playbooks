@@ -14,5 +14,5 @@
     - { role: run-before, period: daily    }
     - { role: base,       when:   periodic }
     - { role: ansible,    when:   periodic }
-    - { role: docker,     image:  "evgenyg/todo-sample-app", port: "3000:3000" }
+    - docker
     - run-after
