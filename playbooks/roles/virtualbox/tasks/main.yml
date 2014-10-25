@@ -8,7 +8,7 @@
 - name:           Adding VirtualBox repository
   apt_repository: repo='deb http://download.virtualbox.org/virtualbox/debian trusty contrib non-free' update_cache=yes
 
-- name: Downloading and installing VirtualBox
+- name: Installing VirtualBox
   apt:  name=virtualbox-4.3 state=latest force=yes
 
 - name:    Running VirtualBox version

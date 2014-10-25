@@ -2,7 +2,7 @@
 
 set -x
 
-sed -i 's/archive\.ubuntu\.com/ubuntu.mirror.su.se/' /etc/apt/sources.list
+sed -i 's/\/archive\.ubuntu\.com\//\/ubuntu.mirror.su.se\//' /etc/apt/sources.list
 sudo apt-get update  -y
 sudo apt-get upgrade -y
 sudo apt-get install -y vim git man wget curl htop build-essential psmisc

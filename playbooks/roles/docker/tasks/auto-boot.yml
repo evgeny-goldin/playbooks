@@ -1,0 +1,12 @@
+---
+- name: Installing upstart
+  apt:  name=upstart state=latest force=yes
+
+- set_fact: upstart_app_name="docker_image" docker_port=""
+- set_fact: docker_port="-p {{ port }}"
+  when:     port is defined
+
+- name: Generating upstart template
+  template:
+    src:  upstart
+    dest: "/etc/init/{{ upstart_app_name }}.conf"

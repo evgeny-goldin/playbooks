@@ -10,7 +10,7 @@
     - deb http://repo.mysql.com/apt/ubuntu/ trusty mysql-5.6
     - deb-src http://repo.mysql.com/apt/ubuntu/ trusty mysql-5.6
 
-- name: Downloading and installing MySQL
+- name: Installing MySQL
   apt:  name={{ item }} state=latest force=yes
   with_items:
     - python-mysqldb

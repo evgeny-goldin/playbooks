@@ -1,9 +1,9 @@
 ---
-- name: Update sources.list
+- name: Updating sources.list
   replace:
     dest:    "{{ ubuntu.sources_list }}"
-    regexp:  'archive\.ubuntu\.com'
-    replace: "{{ ubuntu.apt_repo }}"
+    regexp:  '\/archive\.ubuntu\.com\/'
+    replace: "/{{ ubuntu.apt_repo }}/"
     backup:  yes
 
 - name: Updating 'apt' cache
@@ -13,7 +13,7 @@
   apt:  upgrade=dist
   when: ( not is_docker|bool )
 
-- name: Downloading and installing base packages
+- name: Installing base packages
   apt:  name={{ item }} state=latest force=yes
   with_items:
     - vim
@@ -23,7 +23,9 @@
     - git
     - unzip
     - daemon
+    - man
     - build-essential
+    - psmisc
 
 - name:    Stopping and disabling Chef service, if exists
   service: name=chef-client state=stopped enabled=no

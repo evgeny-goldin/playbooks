@@ -10,6 +10,7 @@ BOXES                   = {
   jenkins: [ 8080 ],
   asgard:  [ 8080 ],
   mysql:   [ 3306 ],
+  docker:  [ 3000 ],
   packer:  [],
   ruby:    []
 }

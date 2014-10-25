@@ -1,0 +1,12 @@
+#!upstart
+# http://stackoverflow.com/a/11276071/472153
+description "Docker image '{{ image }}'"
+
+start on started mountall
+stop  on shutdown
+
+# Automatically Respawn:
+# respawn
+# respawn limit 99 5
+
+exec docker run {{ docker_port }} {{ image }} >> '/var/log/{{ upstart_app_name }}.log' 2>&1

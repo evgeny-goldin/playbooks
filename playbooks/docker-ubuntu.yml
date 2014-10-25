@@ -1,0 +1,18 @@
+---
+# Docker playbook for Ubuntu, auto-starting container specified on boot
+# https://www.docker.com/
+
+- name:  Docker
+  hosts: all
+  sudo:  yes
+
+  vars_files:
+    - vars/common.yml
+    - vars/{{ ansible_distribution }}.yml
+
+  roles:
+    - { role: run-before, period: daily    }
+    - { role: base,       when:   periodic }
+    - { role: ansible,    when:   periodic }
+    - { role: docker,     image:  "evgenyg/todo-sample-app", port: "3000:3000" }
+    - run-after

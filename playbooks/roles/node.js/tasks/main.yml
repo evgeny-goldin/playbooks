@@ -1,5 +1,5 @@
 ---
-- name: Downloading and installing Node.js packages
+- name: Installing Node.js packages
   apt:  name={{ item }} state=latest force=yes
   with_items:
     - nodejs

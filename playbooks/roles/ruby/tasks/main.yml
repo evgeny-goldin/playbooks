@@ -4,11 +4,13 @@
     ruby_version:    "{{ ruby.version | calculate( ruby ) }}"
     additional_envs: ""
 
-- include: rbenv.yml
-  when: "{{ ruby.installer == 'rbenv' }}"
+- name:    Running 'rbenv' install
+  include: rbenv.yml
+  when:    "{{ ruby.installer == 'rbenv' }}"
 
-- include: rvm.yml
-  when: "{{ ruby.installer == 'rvm' }}"
+- name:    Running 'rvm' install
+  include: rvm.yml
+  when:    "{{ ruby.installer == 'rvm' }}"
 
 - name:     Running Ruby version
   command:  "{{ ruby_bin }}/ruby --version"
