@@ -8,6 +8,10 @@ import re
 from ansible import errors
 
 
+def merge( hash_a, hash_b ):
+  '''Merges two hashes'''
+  return dict( hash_a.items() + hash_b.items());
+
 def strftime( epoch_time ):
   '''time.strftime wrapper'''
   return time.strftime( '%b %d, %Y at %H:%M:%S (GMT)', time.gmtime( epoch_time ))
@@ -66,6 +70,7 @@ class FilterModule( object ):
 
   def filters( self ):
     return {
+      'merge'     : merge,
       'strftime'  : strftime,
       'transform' : transform,
       'explain'   : explain,
