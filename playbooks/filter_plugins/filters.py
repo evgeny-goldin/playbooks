@@ -13,7 +13,7 @@ def strftime( epoch_time ):
   return time.strftime( '%b %d, %Y at %H:%M:%S (GMT)', time.gmtime( epoch_time ))
 
 def transform( values, format ):
-    '''Transforms array of values using format specified'''
+    '''Transforms array of values using format specified (map-like)'''
     return [ format.format( v ) for v in values ]
 
 def explain( seconds ):

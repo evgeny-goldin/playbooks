@@ -9,4 +9,4 @@ stop  on shutdown
 respawn
 respawn limit 5 5
 
-exec {{ docker_command }} >> '/var/log/{{ app_name }}.log' 2>&1
+exec /bin/bash -c "sleep 20; ( echo '--'; date; echo '--'; {{ docker_command }} ) >> '/var/log/{{ app_name }}.log' 2>&1"

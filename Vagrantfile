@@ -6,15 +6,15 @@ VAGRANTFILE_API_VERSION = '2'
 CPUS                    = '2'
 MEMORY                  = '1024'
 BOXES                   = {
-  # Name of the box (and corresponding playbook): [ list of ports to forward ]
+  # Name of the box (and corresponding playbook) => { playbook's extra variables, :ports is respected by Vagrant }
+  packer:  {},
+  ruby:    {},
   jenkins: { ports: [ 8080 ]},
   asgard:  { ports: [ 8080 ]},
   mysql:   { ports: [ 3306 ]},
   docker:  { ports: [ 3000 ], app_name: 'tsa',
                               image:    'evgenyg/todo-sample-app',
-                              env:      '/playbooks/todo-sample-app.env' },
-  packer:  {},
-  ruby:    {}
+                              env_file: '/playbooks/todo-sample-app.env' }
 }
 
 Vagrant.require_version '>= 1.6.5'
@@ -29,7 +29,7 @@ Vagrant.configure( VAGRANTFILE_API_VERSION ) do |config|
       b.vm.box_check_update = true
       b.vm.synced_folder 'playbooks', '/playbooks'
 
-      ( variables[:ports] || [] ).each { | port |
+      ( variables[ :ports ] || [] ).each { | port |
         b.vm.network 'forwarded_port', guest: port, host: port
       }
 
