@@ -14,9 +14,23 @@
 - set_fact: docker_ports="{{ ports | transform( "-p {0}:{0}" ) | join( ' ' ) }}"
   when:     ports is defined
 
-- name:     Setting Docker env file
-  set_fact: docker_env_file=""
-- set_fact: docker_env_file="--env-file '{{ env_file }}'"
+- name: Creating Docker env file
+  lineinfile:
+    # http://docs.ansible.com/faq.html#how-do-i-access-a-variable-name-programmatically
+    line:   "{{ item }}={{ hostvars[ inventory_hostname ][ item ] }}"
+    create: yes
+    dest:   "/opt/{{ app_name }}.env"
+  with_items: env_vars
+  when:       env_vars is defined
+
+- set_fact: docker_env_file=""
+
+- name:     Setting Docker env file (file created)
+  set_fact: docker_env_file="--env-file '/opt/{{ app_name }}.env'"
+  when:     env_vars is defined
+
+- name:     Setting Docker env file (file already exists)
+  set_fact: docker_env_file="--env-file '{{ env_file }}'"
   when:     env_file is defined
 
 - name:     Building Docker command
