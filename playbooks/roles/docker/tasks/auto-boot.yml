@@ -34,14 +34,19 @@
   when:     env_file is defined
 
 - name:     Building Docker command
-  set_fact: docker_commands="docker kill '{{ app_name }}'; docker rm '{{ app_name }}'; docker run {{ docker_ports }} {{ docker_env_file }} --name '{{ app_name }}' '{{ image }}'"
+  set_fact:
+    docker_commands:
+      - "docker kill '{{ app_name }}'"
+      - "docker rm   '{{ app_name }}'"
+      - "docker rmi  '{{ image }}'"
+      - "docker pull '{{ image }}'"
+      - "docker run {{ docker_ports }} {{ docker_env_file }} --name '{{ app_name }}' '{{ image }}'"
 - debug:    var=docker_commands
-
-- name:    Pulling Docker image
-  command: docker pull '{{ image }}'
-  when:    pull_image | default( true )
 
 - name: Generating upstart template
   template:
     src:  upstart
     dest: "/etc/init/{{ app_name }}.conf"
+- command:  cat "/etc/init/{{ app_name }}.conf"
+  register: upstart_template
+- debug: var=upstart_template.stdout_lines
