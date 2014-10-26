@@ -38,7 +38,6 @@
     docker_commands:
       - "docker kill '{{ app_name }}'"
       - "docker rm   '{{ app_name }}'"
-      - "docker rmi  '{{ image }}'"
       - "docker pull '{{ image }}'"
       - "docker run {{ docker_ports }} {{ docker_env_file }} --name '{{ app_name }}' '{{ image }}'"
 - debug:    var=docker_commands
