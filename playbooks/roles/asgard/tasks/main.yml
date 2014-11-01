@@ -1,9 +1,6 @@
 ---
-- debug: var=bakery_payload
-  when:  bakery_payload is defined
-
-- debug: var=bakery_payload.build.artifacts['asgard-standalone.jar'].s3
-  when:  bakery_payload is defined
+- debug: var=build
+  when:  build is defined
 
 - name: Verifying AWS credentials
   assert:
@@ -71,16 +68,16 @@
 
 - name: Downloading Asgard JAR file from AWS S3
   get_url:
-    url:   "{{ bakery_payload.build.artifacts['asgard-standalone.jar'].s3 }}"
+    url:   "{{ build.artifacts['asgard-standalone.jar'].s3 }}"
     dest:  "{{ asgard.jar }}"
     force: yes
-  when: bakery_payload is defined
+  when: build is defined
 
 - name: Downloading Asgard JAR file from '{{ asgard.jar_url }}'
   get_url:
     url:  "{{ asgard.jar_url }}"
     dest: "{{ asgard.jar }}"
-  when: ( not ( bakery_payload is defined ))
+  when: ( not ( build is defined ))
 
 - name: Checking Asgard java
   command: "{{ asgard.java }} -version"
