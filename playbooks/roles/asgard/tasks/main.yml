@@ -5,10 +5,6 @@
 - debug: var=bakery_payload.build.artifacts['asgard-standalone.jar'].s3
   when:  bakery_payload is defined
 
-- name: Loading AWS credentials
-  include_vars: aws.yml
-  when: asgard.load_aws_credentials
-
 - name: Verifying AWS credentials
   assert:
     that:
@@ -89,10 +85,10 @@
 - name: Checking Asgard java
   command: "{{ asgard.java }} -version"
 
-- name: Stopping Asgard service
+- name:    Stopping Asgard service
   service: name=asgard state=stopped
-  when: ( not start_service|bool )
+  when:    ( not start_service|bool )
 
-- name: Restarting Asgard service
+- name:    Restarting Asgard service
   service: name=asgard state=restarted
-  when: start_service
+  when:    start_service
