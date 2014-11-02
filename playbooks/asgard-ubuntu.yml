@@ -9,8 +9,8 @@
   vars_files:
     - vars/common.yml
     - vars/{{ ansible_distribution }}.yml
-    - [ /root/repo/bakery_payload.yml, vars/common.yml ]
-    - [ roles/asgard/vars/aws.yml,     vars/common.yml ]
+    - [ bakery_payload.yml,        vars/common.yml ]
+    - [ roles/asgard/vars/aws.yml, vars/common.yml ]
 
   roles:
     - { role: run-before, period: daily    }
