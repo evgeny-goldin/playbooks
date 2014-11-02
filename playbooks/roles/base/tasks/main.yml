@@ -22,7 +22,7 @@
     - curl
     - git
     - unzip
-    - daemon
+    - upstart
     - man
     - build-essential
     - psmisc

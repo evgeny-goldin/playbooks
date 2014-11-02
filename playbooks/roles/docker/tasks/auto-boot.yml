@@ -45,7 +45,4 @@
 - name: Generating upstart template
   template:
     src:  upstart
-    dest: "/etc/init/{{ app_name }}.conf"
-- command:  cat "/etc/init/{{ app_name }}.conf"
-  register: upstart_template
-- debug: var=upstart_template.stdout_lines
+    dest: "{{ ubuntu.init_dir }}/{{ app_name }}.conf"

@@ -40,14 +40,6 @@
     owner: "{{ asgard.user }}"
     group: "{{ asgard.group }}"
 
-- name: Creating Asgard init script
-  template:
-    src:   asgard
-    dest:  "{{ ubuntu.init_dir }}"
-    owner: root
-    group: root
-    mode:  "{{ common.mode.script }}"
-
 # http://docs.aws.amazon.com/AWSSdkDocsJava/latest/DeveloperGuide/credentials.html
 # http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html
 - name: Creating AWS credentials directory
@@ -81,6 +73,11 @@
 
 - name: Checking Asgard java
   command: "{{ asgard.java }} -version"
+
+- name: Generating upstart template
+  template:
+    src:  upstart
+    dest: "{{ ubuntu.init_dir }}/asgard.conf"
 
 - name:    Restarting Asgard service
   service: name=asgard state=restarted

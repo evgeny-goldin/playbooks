@@ -1,0 +1,12 @@
+#!upstart
+description "Asgard Application"
+
+start on started mountall
+stop  on shutdown
+
+# Automatically Respawn:
+# http://upstart.ubuntu.com/cookbook/#respawn-limit
+respawn
+respawn limit 4 15
+
+exec /bin/su -l '{{ asgard.user }}' --shell=/bin/bash -c "{{ asgard.java }} {{ asgard.java_args }} -jar {{ asgard.jar }} >> '{{ asgard.log }}' 2>&1"

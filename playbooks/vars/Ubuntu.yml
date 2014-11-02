@@ -6,7 +6,7 @@ ubuntu: {
   log_dir:      /var/log,
   pid_dir:      /var/run,
   env_file:     /etc/environment,
-  init_dir:     /etc/init.d,
+  init_dir:     /etc/init,
   envs_dir:     /etc/profile.d, # http://goo.gl/ksHX6N
   sudoers:      /etc/sudoers,
   sources_list: /etc/apt/sources.list
