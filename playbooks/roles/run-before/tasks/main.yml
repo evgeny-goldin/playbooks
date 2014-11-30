@@ -8,29 +8,33 @@
   set_fact:
     seconds_since_last_periodic: "{{ ansible_date_time.epoch|int - touch.stat.ctime|default(0)|int }}"
 
-- debug: var=period
-
 - name:     Checking if period is 'monthly'
-  set_fact: period={{ 30 * 24 * 3600 }}
+  set_fact: period_sec={{ 30 * 24 * 3600 }}
   when:     period == 'monthly'
 
 - name:     Checking if period is 'weekly'
-  set_fact: period={{ 7 * 24 * 3600 }}
+  set_fact: period_sec={{ 7 * 24 * 3600 }}
   when:     period == 'weekly'
 
 - name:     Checking if period is 'daily'
-  set_fact: period={{ 24 * 3600 }}
+  set_fact: period_sec={{ 24 * 3600 }}
   when:     period == 'daily'
 
 - name:     Checking if period is 'hourly'
-  set_fact: period={{ 3600 }}
+  set_fact: period_sec={{ 3600 }}
   when:     period == 'hourly'
 
+- name:     Checking if period_sec is undefined
+  set_fact: period_sec={{ period|int }}
+  when:     period_sec is undefined
+
 - debug: var=period
+- debug: var=period_sec
+- debug: var=seconds_since_last_periodic
 
 - name: Calculating if this should be a periodic run
   set_fact:
-    periodic: "{{ ( not touch.stat.exists ) or ( seconds_since_last_periodic|int >= period|int ) }}"
+    periodic: "{{ ( not touch.stat.exists ) or ( seconds_since_last_periodic|int >= period_sec|int ) }}"
 
 - debug: var=periodic
 
@@ -40,7 +44,7 @@
 - debug: msg="Next periodic run - now!"
   when: periodic
 
-- debug: msg="Next periodic run will be on {{ ( touch.stat.ctime|int + period|int ) | strftime }}, in {{ ( period|int - seconds_since_last_periodic|int ) | explain }}"
+- debug: msg="Next periodic run will be on {{ ( touch.stat.ctime|int + period_sec|int ) | strftime }}, in {{ ( period_sec|int - seconds_since_last_periodic|int ) | explain }}"
   when: ( touch.stat.exists and ( not periodic|bool ))
 
 # http://stackoverflow.com/questions/20010199/determining-if-a-process-runs-inside-lxc-docker
