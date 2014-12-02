@@ -16,7 +16,7 @@
 
 #### Usage:
 
-* To create VMs, if you have **Vagrant** and **VirtualBox** installed locally:
+* To create VMs, if you have **Vagrant** and **VirtualBox** installed:
 
   * `vagrant up asgard|docker|jenkins|mysql|packer|ruby`
 
