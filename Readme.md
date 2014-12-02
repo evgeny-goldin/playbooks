@@ -40,3 +40,12 @@
 * [`"ruby"`](https://github.com/evgeny-goldin/playbooks/blob/master/playbooks/ruby-ubuntu.yml) comes with Ruby.
 
 * Review [each role's](https://github.com/evgeny-goldin/playbooks/tree/master/playbooks/roles) `"vars/main.yml"` for fine-tuning your installation. Most roles allow explicit versioning of the package installed.
+
+* To create Docker images with Ansible playbooks:
+
+      FROM evgenyg/ansible:1.8.1
+      ADD  playbooks /playbooks
+      RUN  ansible-playbook /playbooks/asgard|docker|jenkins|mysql|packer|ruby-ubuntu.yml -c local
+      ...
+
+  See examples for [Ruby](https://github.com/evgeny-goldin/playbooks/blob/master/docker/ruby/Dockerfile) and [Jenkins](https://github.com/evgeny-goldin/playbooks/blob/master/docker/jenkins/Dockerfile).
