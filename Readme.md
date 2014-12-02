@@ -16,16 +16,16 @@ This repo contains **Ansible** [Playbooks](https://github.com/evgeny-goldin/play
 
 #### Usage:
 
-* `<options> = asgard | docker | jenkins | mysql | packer | ruby`
+* `<flavor> = asgard | docker | jenkins | mysql | packer | ruby`
 
 * To create Ubuntu VMs, if you have **Vagrant** and **VirtualBox** installed:
 
-  * `vagrant up <options>`
+  * `vagrant up <flavor>`
 
   All boxes come with Ansible installed so you can re-run the playbook (available at `"/playbooks"`) from within a box:
 
-  * `vagrant ssh <options>`
-  * `ansible-playbook /playbooks/<options>-ubuntu.yml -s -c local`
+  * `vagrant ssh <flavor>`
+  * `ansible-playbook /playbooks/<flavor>-ubuntu.yml -s -c local`
 
 
 * [`"asgard"`](https://github.com/evgeny-goldin/playbooks/blob/master/playbooks/asgard-ubuntu.yml) playbook installs Java and runs Asgard as an `"asgard"` service.
@@ -49,7 +49,7 @@ To create a Docker by running an Ansible playbook:
 
     FROM evgenyg/ansible:1.8.1
     ADD  playbooks /playbooks
-    RUN  ansible-playbook /playbooks/<options>-ubuntu.yml -c local
+    RUN  ansible-playbook /playbooks/<flavor>-ubuntu.yml -c local
     ...
 
 See examples of [Ruby](https://github.com/evgeny-goldin/playbooks/blob/master/docker/ruby/Dockerfile) and [Jenkins](https://github.com/evgeny-goldin/playbooks/blob/master/docker/jenkins/Dockerfile) containers.
