@@ -1,4 +1,4 @@
-FROM   evgenyg/ansible:1.7.2
+FROM   evgenyg/ansible:1.8.1
 ADD    playbooks /playbooks
 RUN    ansible-playbook /playbooks/jenkins-ubuntu.yml -c local
 EXPOSE 8080

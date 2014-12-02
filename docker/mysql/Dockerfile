@@ -1,6 +1,6 @@
 # https://registry.hub.docker.com/u/evgenyg/mysql/
 
-FROM   evgenyg/ansible:1.7.2
+FROM   evgenyg/ansible:1.8.1
 EXPOSE 3306
 VOLUME /var/lib/mysql
 ADD    playbooks /playbooks
