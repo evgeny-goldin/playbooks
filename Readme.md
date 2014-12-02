@@ -14,7 +14,7 @@ This repo contains **Ansible** [Playbooks](https://github.com/evgeny-goldin/play
 * [Vagrant](http://www.vagrantup.com/)
 * [VirtualBox](https://www.virtualbox.org/)
 
-#### Usage:
+#### Usage
 
 * `<flavor> = asgard | docker | jenkins | mysql | packer | ruby`
 
