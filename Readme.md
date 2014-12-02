@@ -52,4 +52,4 @@ To create a Docker by running an Ansible playbook:
     RUN  ansible-playbook /playbooks/<options>-ubuntu.yml -c local
     ...
 
-See examples for [Ruby](https://github.com/evgeny-goldin/playbooks/blob/master/docker/ruby/Dockerfile) and [Jenkins](https://github.com/evgeny-goldin/playbooks/blob/master/docker/jenkins/Dockerfile) containers.
+See examples of [Ruby](https://github.com/evgeny-goldin/playbooks/blob/master/docker/ruby/Dockerfile) and [Jenkins](https://github.com/evgeny-goldin/playbooks/blob/master/docker/jenkins/Dockerfile) containers.
