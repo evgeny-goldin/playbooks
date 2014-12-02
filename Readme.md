@@ -28,11 +28,6 @@
   * `ansible-playbook /playbooks/<options>-ubuntu.yml -s -c local`
 
 
-* To provision local Ubuntu instance, if you have **Ansible** installed:
-
-  * `ansible-playbook playbooks/<options>-ubuntu.yml -s -c local -i "127.0.0.1,"`
-
-
 * [`"asgard"`](https://github.com/evgeny-goldin/playbooks/blob/master/playbooks/asgard-ubuntu.yml) comes with Java and Asgard running as an `"asgard"` service.
 
 * [`"docker"`](https://github.com/evgeny-goldin/playbooks/blob/master/playbooks/docker-ubuntu.yml) comes with Docker.
