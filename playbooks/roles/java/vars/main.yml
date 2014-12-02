@@ -1,8 +1,15 @@
 ---
 java: {
-  version: 8, # 7 or 8
-  installer: {
-    url:  'http://www.duinsoft.nl/pkg/pool/all/update-sun-jre.bin',
-    home: '/update-sun-jre'
+  version: 8,        # 7 or 8
+  jre_or_jdk: 'jre', # 'jre' or 'jdk'
+  jre: {
+    redownload:       false,
+    installer_url:    'http://www.duinsoft.nl/pkg/pool/all/update-sun-jre.bin',
+    installer_home:   /update-sun-jre,
+    installer_bin:    update-sun-jre.bin,
+    installer_script: update-sun-jre
+  },
+  jdk: {
+
   }
 }

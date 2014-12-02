@@ -1,36 +1,32 @@
 ---
-# http://www.duinsoft.nl/packages.php
+- name:    Running JRE installer
+  include: jre.yml
+  when:    java.jre_or_jdk == 'jre'
 
-- file: name=/tmp/update-sun-jre/        state=absent
-- file: name="{{ java.installer.home }}" state=directory
+- name:    Running JDK installer
+  include: jdk.yml
+  when:    java.jre_or_jdk == 'jdk'
 
-- set_fact:
-    installer_bin:         "{{ java.installer.home }}/update-sun-jre.bin"
-    installer_script:      "{{ java.installer.home }}/update-sun-jre"
-    installer_jre_version: ''
-
-- set_fact:
-    installer_jre_version: '-7'
-  when: java.version == 7
-
-- name: Downloading Java installer
-  get_url: url={{ java.installer.url }} dest="{{ installer_bin }}"
-
-- name:  Run Java installer
-  command: "{{ item }}"
-  args:
-    chdir: "{{ java.installer.home }}"
-  with_items:
-    - "bash {{ installer_bin }} -x"
-    - "{{ installer_script }} {{ installer_jre_version }} -c -i install"
-
-- name:     Running Java version
+- name:     Running Java
   shell:    java -version 2>&1
-  register: java_version_out
-- debug:    var=java_version_out.stdout
+  register: java_out
+- debug:    var=java_out.stdout
 
 - name:  Verifying Java version
   assert:
     that:
-      - "'1.{{ java.version }}'            in java_version_out.stdout"
-      - "'Java(TM) SE Runtime Environment' in java_version_out.stdout"
+      - "'1.{{ java.version }}'            in java_out.stdout"
+      - "'Java(TM) SE Runtime Environment' in java_out.stdout"
+
+- name:     Running Javac
+  shell:    javac -help 2>&1
+  register: javac_out
+  when:     java.jre_or_jdk == 'jdk'
+
+- name:  Verifying Javac
+  assert:
+    that:
+      - "'Usage'                in javac_out.stdout"
+      - "'-bootclasspath'       in javac_out.stdout"
+      - "'Generate no warnings' in javac_out.stdout"
+  when: java.jre_or_jdk == 'jdk'

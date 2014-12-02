@@ -16,16 +16,20 @@
 
 #### Usage:
 
-* To create VMs, if you have **Vagrant** and **VirtualBox** installed:
+* To create Ubuntu VMs, if you have **Vagrant** and **VirtualBox** installed:
 
   * `vagrant up asgard|docker|jenkins|mysql|packer|ruby`
 
-* To provision the local box, if you have **Ansible** installed:
+  All boxes come with Ansible installed so you can re-run the playbook (available at `"/playbooks"`) from within a box:
 
-  * `cd playbooks`
-  * `ansible-playbook asgard|docker|jenkins|mysql|packer|ruby-ubuntu.yml -c local -i "127.0.0.1,"`
+  * `vagrant ssh asgard|docker|jenkins|mysql|packer|ruby`
+  * `ansible-playbook /playbooks/asgard|docker|jenkins|mysql|packer|ruby-ubuntu.yml -s -c local`
 
-* All boxes come with Ansible installed so you can re-run the playbook (available at `"/playbooks"`) from within a box.
+
+* To provision local Ubuntu instance, if you have **Ansible** installed:
+
+  * `ansible-playbook playbooks/asgard|docker|jenkins|mysql|packer|ruby-ubuntu.yml -s -c local -i "127.0.0.1,"`
+
 
 * [`"asgard"`](https://github.com/evgeny-goldin/playbooks/blob/master/playbooks/asgard-ubuntu.yml) comes with Java and Asgard running as an `"asgard"` service.
 
