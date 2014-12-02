@@ -1,4 +1,6 @@
 ---
+# https://help.ubuntu.com/community/Java
+
 - name:    Running JRE installer
   include: jre.yml
   when:    java.jre_or_jdk == 'jre'
