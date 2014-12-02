@@ -6,3 +6,5 @@ packer_cache
 /Dockerfile
 /playbooks/todo-sample-app.env
 aws.yml
+ansible.cfg
+hosts

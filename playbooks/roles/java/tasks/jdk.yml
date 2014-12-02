@@ -1,1 +1,17 @@
 ---
+# https://launchpad.net/~webupd8team/+archive/ubuntu/java
+# http://www.webupd8.org/2012/01/install-oracle-java-jdk-7-in-ubuntu-via.html
+# http://www.webupd8.org/2012/09/install-oracle-java-8-in-ubuntu-via-ppa.html
+
+- name: Adding JDK repository
+  apt_repository: repo=ppa:webupd8team/java state=present update-cache=yes
+
+- shell: echo oracle-java{{ java.version }}-installer shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections
+
+- name: Installing JDK
+  apt:  name={{ item }} state=latest force=yes
+  with_items:
+    - oracle-java{{ java.version }}-installer
+    - oracle-java{{ java.version }}-set-default
+
+- command: update-java-alternatives -s java-{{ java.version }}-oracle
