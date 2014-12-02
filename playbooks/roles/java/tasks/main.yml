@@ -1,29 +1,36 @@
 ---
-# https://coderwall.com/p/zzdapg
+# http://www.duinsoft.nl/packages.php
 
-- name: Adding Java repository
-  apt_repository: repo=ppa:webupd8team/java state=present update-cache=yes
-- shell: echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections
+- file: name=/tmp/update-sun-jre/        state=absent
+- file: name="{{ java.installer.home }}" state=directory
 
-- name: Installing Java
-  apt:  name=oracle-java7-installer state=latest force=yes
+- set_fact:
+    installer_bin:         "{{ java.installer.home }}/update-sun-jre.bin"
+    installer_script:      "{{ java.installer.home }}/update-sun-jre"
+    installer_jre_version: ''
 
-- name: Adding JAVA_HOME
-  lineinfile:
-    dest: "{{ ubuntu.env_file }}"
-    line: JAVA_HOME="{{ java.home }}"
+- set_fact:
+    installer_jre_version: '-7'
+  when: java.version == 7
 
-- name:     Running Java version (full path)
-  shell:    "{{ java.home }}/bin/java -version 2>&1"
-  register: java_version_out_1
+- name: Downloading Java installer
+  get_url: url={{ java.installer.url }} dest="{{ installer_bin }}"
 
-- name:     Running Java version (just 'java')
+- name:  Run Java installer
+  command: "{{ item }}"
+  args:
+    chdir: "{{ java.installer.home }}"
+  with_items:
+    - "bash {{ installer_bin }} -x"
+    - "{{ installer_script }} {{ installer_jre_version }} -c -i install"
+
+- name:     Running Java version
   shell:    java -version 2>&1
-  register: java_version_out_2
+  register: java_version_out
+- debug:    var=java_version_out.stdout
 
 - name:  Verifying Java version
   assert:
     that:
-      - java_version_out_1.stdout == java_version_out_2.stdout
-      - "'1.7.0'                           in java_version_out_1.stdout"
-      - "'Java(TM) SE Runtime Environment' in java_version_out_1.stdout"
+      - "'1.{{ java.version }}'            in java_version_out.stdout"
+      - "'Java(TM) SE Runtime Environment' in java_version_out.stdout"

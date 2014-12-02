@@ -1,4 +1,8 @@
 ---
 java: {
-  home: /usr/lib/jvm/java-7-oracle
+  version: 8, # 7 or 8
+  installer: {
+    url:  'http://www.duinsoft.nl/pkg/pool/all/update-sun-jre.bin',
+    home: '/update-sun-jre'
+  }
 }
