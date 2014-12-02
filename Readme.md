@@ -45,7 +45,7 @@ This repo contains **Ansible** [Playbooks](https://github.com/evgeny-goldin/play
 
 #### Docker
 
-To create a Docker by running an Ansible playbook:
+To create a Docker image by running an Ansible playbook:
 
     FROM evgenyg/ansible:1.8.1
     ADD  playbooks /playbooks
