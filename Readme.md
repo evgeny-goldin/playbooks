@@ -28,26 +28,28 @@
   * `ansible-playbook /playbooks/<options>-ubuntu.yml -s -c local`
 
 
-* [`"asgard"`](https://github.com/evgeny-goldin/playbooks/blob/master/playbooks/asgard-ubuntu.yml) comes with Java and Asgard running as an `"asgard"` service.
+* [`"asgard"`](https://github.com/evgeny-goldin/playbooks/blob/master/playbooks/asgard-ubuntu.yml) playbook installs Java and runs Asgard as an `"asgard"` service.
 
-* [`"docker"`](https://github.com/evgeny-goldin/playbooks/blob/master/playbooks/docker-ubuntu.yml) comes with Docker.
+* [`"docker"`](https://github.com/evgeny-goldin/playbooks/blob/master/playbooks/docker-ubuntu.yml) playbook installs Docker.
 
-* [`"jenkins"`](https://github.com/evgeny-goldin/playbooks/blob/master/playbooks/jenkins-ubuntu.yml) comes with Java, Node.js, Npm, Grunt, Bower and Jenkins running as a `"jenkins"` service. Jenkins plugins to install are [configurable](https://github.com/evgeny-goldin/playbooks/blob/master/playbooks/roles/jenkins/vars/main.yml).
+* [`"jenkins"`](https://github.com/evgeny-goldin/playbooks/blob/master/playbooks/jenkins-ubuntu.yml) playbook installs Java, Node.js, Npm, Grunt, Bower and Jenkins running as a `"jenkins"` service. Jenkins plugins to install are [configurable](https://github.com/evgeny-goldin/playbooks/blob/master/playbooks/roles/jenkins/vars/main.yml).
 
-* [`"mysql"`](https://github.com/evgeny-goldin/playbooks/blob/master/playbooks/mysql-ubuntu.yml) comes with MySQL 5.6 running as `"mysql"` service accepting any remote connections. User is "root" with an empty password.
+* [`"mysql"`](https://github.com/evgeny-goldin/playbooks/blob/master/playbooks/mysql-ubuntu.yml) playbook installs MySQL 5.6 running as `"mysql"` service accepting any remote connections. User is "root" with an empty password.
 
-* [`"packer"`](https://github.com/evgeny-goldin/playbooks/blob/master/playbooks/packer-ubuntu.yml) comes with Docker, Vagrant, VirtualBox, Ruby and Packer.
+* [`"packer"`](https://github.com/evgeny-goldin/playbooks/blob/master/playbooks/packer-ubuntu.yml) playbook installs Docker, Vagrant, VirtualBox, Ruby and Packer.
 
-* [`"ruby"`](https://github.com/evgeny-goldin/playbooks/blob/master/playbooks/ruby-ubuntu.yml) comes with Ruby.
+* [`"ruby"`](https://github.com/evgeny-goldin/playbooks/blob/master/playbooks/ruby-ubuntu.yml) playbook installs Ruby.
 
-* Review [each role's](https://github.com/evgeny-goldin/playbooks/tree/master/playbooks/roles) `"vars/main.yml"` for fine-tuning your installation. Most roles allow explicit versioning of the package installed.
+* Packages installed are usually of the latest version, review each role's `"vars/main.yml"` for fine-tuning. Most roles also allow explicit versioning of the package installed.
 
 
-#### Creating Docker images with Ansible playbooks:
+#### Docker
+
+To create a Docker by running an Ansible playbook:
 
     FROM evgenyg/ansible:1.8.1
     ADD  playbooks /playbooks
     RUN  ansible-playbook /playbooks/<options>-ubuntu.yml -c local
     ...
 
-See examples for [Ruby](https://github.com/evgeny-goldin/playbooks/blob/master/docker/ruby/Dockerfile) and [Jenkins](https://github.com/evgeny-goldin/playbooks/blob/master/docker/jenkins/Dockerfile).
+See examples for [Ruby](https://github.com/evgeny-goldin/playbooks/blob/master/docker/ruby/Dockerfile) and [Jenkins](https://github.com/evgeny-goldin/playbooks/blob/master/docker/jenkins/Dockerfile) containers.
