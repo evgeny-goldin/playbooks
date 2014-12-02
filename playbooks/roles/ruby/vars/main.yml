@@ -1,6 +1,6 @@
 ---
 ruby: {
-  # version: 2.1.3, # Or 'latest'
+  # version: 2.1.5, # Or 'latest'
   version: latest,
   installer: 'rvm', # Or 'rbenv'
   latest: {
