@@ -57,7 +57,7 @@ See examples of [Ruby](https://github.com/evgeny-goldin/playbooks/blob/master/do
 
 #### Docker Images
 
-Some Docker images are published as:
+Some Docker images based on the playbooks above are published as:
 
 * [`evgenyg/ansible`](https://registry.hub.docker.com/u/evgenyg/ansible/)
 * [`evgenyg/ruby`](https://registry.hub.docker.com/u/evgenyg/ruby/)
