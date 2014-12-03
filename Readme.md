@@ -57,7 +57,7 @@ A Dockerfile for creating an image by running an Ansible playbook may look like 
 
 See examples of Dockerfiles for [Ruby](https://github.com/evgeny-goldin/playbooks/blob/master/docker/ruby/Dockerfile) and [Jenkins](https://github.com/evgeny-goldin/playbooks/blob/master/docker/jenkins/Dockerfile) images.
 
-#### Docker Images
+#### Docker Hub
 
 Some Docker images based on the playbooks above are published as:
 
