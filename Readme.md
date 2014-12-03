@@ -59,7 +59,7 @@ See examples of Dockerfiles for [Ruby](https://github.com/evgeny-goldin/playbook
 
 #### Docker Hub
 
-Some Docker images based on the playbooks above are published as:
+Some Docker images based on the playbooks above are published on Docker Hub as:
 
 * [`evgenyg/ansible`](https://registry.hub.docker.com/u/evgenyg/ansible/)
 * [`evgenyg/ruby`](https://registry.hub.docker.com/u/evgenyg/ruby/)
