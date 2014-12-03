@@ -48,14 +48,14 @@ This repo contains **Ansible** [Playbooks](https://github.com/evgeny-goldin/play
 
 #### Docker
 
-A Dockerfile for creating an image by running an Ansible playbook may look like:
+A Dockerfile for creating an image by running an Ansible playbook may look like this:
 
     FROM evgenyg/ansible
     ADD  playbooks /playbooks
     RUN  ansible-playbook /playbooks/<box>-ubuntu.yml -c local
     ...
 
-See examples of [Ruby](https://github.com/evgeny-goldin/playbooks/blob/master/docker/ruby/Dockerfile) and [Jenkins](https://github.com/evgeny-goldin/playbooks/blob/master/docker/jenkins/Dockerfile) images.
+See examples of Dockerfiles for [Ruby](https://github.com/evgeny-goldin/playbooks/blob/master/docker/ruby/Dockerfile) and [Jenkins](https://github.com/evgeny-goldin/playbooks/blob/master/docker/jenkins/Dockerfile) images.
 
 #### Docker Images
 
