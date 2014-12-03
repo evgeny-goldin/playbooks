@@ -16,17 +16,18 @@ This repo contains **Ansible** [Playbooks](https://github.com/evgeny-goldin/play
 
 #### Usage
 
-* `<flavor> = asgard | docker | jenkins | mysql | packer | ruby`
+* `<box>` is one of `asgard | docker | jenkins | mysql | packer | ruby`
 
-* To create Ubuntu VMs, if you have **Vagrant** and **VirtualBox** installed:
+* You can create Ubuntu VMs if **Vagrant** and **VirtualBox** are installed:
 
-  * `vagrant up <flavor>`
+  * `vagrant up <box>`
 
-  All boxes come with Ansible installed so you can re-run the playbook (available at `"/playbooks"`) from within a box:
+  All boxes come with Ansible installed so you can re-run the playbook from within a box:
 
-  * `vagrant ssh <flavor>`
-  * `ansible-playbook /playbooks/<flavor>-ubuntu.yml -s -c local`
+  * `vagrant ssh <box>`
+  * `ansible-playbook /playbooks/<box>-ubuntu.yml -s -c local`
 
+#### Playbooks
 
 * [`"asgard"`](https://github.com/evgeny-goldin/playbooks/blob/master/playbooks/asgard-ubuntu.yml) playbook installs Java and runs Asgard as an `"asgard"` service.
 
@@ -49,7 +50,14 @@ To create a Docker image by running an Ansible playbook:
 
     FROM evgenyg/ansible:1.8.1
     ADD  playbooks /playbooks
-    RUN  ansible-playbook /playbooks/<flavor>-ubuntu.yml -c local
+    RUN  ansible-playbook /playbooks/<box>-ubuntu.yml -c local
     ...
 
 See examples of [Ruby](https://github.com/evgeny-goldin/playbooks/blob/master/docker/ruby/Dockerfile) and [Jenkins](https://github.com/evgeny-goldin/playbooks/blob/master/docker/jenkins/Dockerfile) containers.
+
+#### Docker Images
+
+Some Docker images are published as:
+
+* [`evgenyg/ansible`](https://registry.hub.docker.com/u/evgenyg/ansible/)
+* [`evgenyg/ruby`](https://registry.hub.docker.com/u/evgenyg/ruby/)
