@@ -22,5 +22,10 @@ set -x
 time docker push "$owner/$image"
 time docker push "$owner/$image:$tag"
 
+echo '---------------------------------------'
+echo "Remeber to update the image description"
+echo '---------------------------------------'
+open "https://registry.hub.docker.com/u/$owner/$image/"
+
 set +e
 set +x
