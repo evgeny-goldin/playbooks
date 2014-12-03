@@ -53,7 +53,7 @@ A Dockerfile for creating an image by running an Ansible playbook may look like:
     RUN  ansible-playbook /playbooks/<box>-ubuntu.yml -c local
     ...
 
-See examples of [Ruby](https://github.com/evgeny-goldin/playbooks/blob/master/docker/ruby/Dockerfile) and [Jenkins](https://github.com/evgeny-goldin/playbooks/blob/master/docker/jenkins/Dockerfile) containers.
+See examples of [Ruby](https://github.com/evgeny-goldin/playbooks/blob/master/docker/ruby/Dockerfile) and [Jenkins](https://github.com/evgeny-goldin/playbooks/blob/master/docker/jenkins/Dockerfile) images.
 
 #### Docker Images
 
