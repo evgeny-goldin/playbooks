@@ -1,7 +1,7 @@
 ---
 - name: Calculating Ansible version
   set_fact:
-    ansible_version: "{{ ansible.version | calculate( ansible ) }}"
+    ansible_version: "{{ ansible.version | calculate( ansible.latest ) }}"
 - debug: var=ansible_version
 
 - name: Installing Python packages

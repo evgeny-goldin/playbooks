@@ -1,7 +1,7 @@
 ---
 - name: Calculating Ruby version
   set_fact:
-    ruby_version:    "{{ ruby.version | calculate( ruby ) }}"
+    ruby_version:    "{{ ruby.version | calculate( ruby.latest ) }}"
     additional_envs: ""
 
 - name:    Running 'rbenv' install

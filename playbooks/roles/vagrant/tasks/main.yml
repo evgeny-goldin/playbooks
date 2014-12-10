@@ -1,7 +1,7 @@
 ---
 - name: Calculating Vagrant version
   set_fact:
-    vagrant_version: "{{ vagrant.version | calculate( vagrant ) }}"
+    vagrant_version: "{{ vagrant.version | calculate( vagrant.latest ) }}"
 - debug: var=vagrant_version
 
 - name: Calculating vagrant download URL

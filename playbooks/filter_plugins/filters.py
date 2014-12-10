@@ -44,23 +44,20 @@ def calculate( version, vars_tree ):
 
 
 def read_latest( vars_tree ):
-  if not vars_tree.has_key( 'latest' ):
-    raise errors.AnsibleFilterError( "{0} variables - 'latest' is missing".format( vars_tree ))
+  if not vars_tree.has_key( 'command' ):
+    raise errors.AnsibleFilterError( "{0} - 'command' is missing".format( vars_tree ))
 
-  if not vars_tree['latest'].has_key( 'command' ):
-    raise errors.AnsibleFilterError( "{0} variables - 'latest/command' is missing".format( vars_tree ))
+  if not vars_tree.has_key( 'pattern' ):
+    raise errors.AnsibleFilterError( "{0} - 'pattern' is missing".format( vars_tree ))
 
-  if not vars_tree['latest'].has_key( 'pattern' ):
-    raise errors.AnsibleFilterError( "{0} variables - 'latest/pattern' is missing".format( vars_tree ))
-
-  command = vars_tree['latest']['command']
-  pattern = vars_tree['latest']['pattern']
+  command = vars_tree['command']
+  pattern = vars_tree['pattern']
 
   if not command.strip():
-    raise errors.AnsibleFilterError( "{0} variables - 'latest/command' '{1}' is empty".format( vars_tree, command ))
+    raise errors.AnsibleFilterError( "{0} - 'command' '{1}' is empty".format( vars_tree, command ))
 
   if not pattern.strip():
-    raise errors.AnsibleFilterError( "{0} variables - 'latest/pattern' '{1}' is empty".format( vars_tree, pattern ))
+    raise errors.AnsibleFilterError( "{0} - 'pattern' '{1}' is empty".format( vars_tree, pattern ))
 
   return ( command, pattern )
 

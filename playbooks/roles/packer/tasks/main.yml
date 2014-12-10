@@ -1,7 +1,7 @@
 ---
 - name: Calculating Packer version
   set_fact:
-    packer_version: "{{ packer.version | calculate( packer ) }}"
+    packer_version: "{{ packer.version | calculate( packer.latest ) }}"
 - debug: var=packer_version
 
 - name: Loading AWS credentials

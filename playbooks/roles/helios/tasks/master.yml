@@ -6,7 +6,7 @@
 
 - name: Calculating Helios version
   set_fact:
-    helios_version:  "{{ helios.version | calculate( helios ) }}"
+    helios_version:  "{{ helios.version | calculate( helios.latest ) }}"
     helios_packages: /opt/helios
 
 - name: Downloading Helios packages
