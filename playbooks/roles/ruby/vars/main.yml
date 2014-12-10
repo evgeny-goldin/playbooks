@@ -1,7 +1,6 @@
 ---
 ruby: {
-  # version: 2.1.5, # Or 'latest'
-  version: latest,
+  version: latest,  # 2.1.5 or latest
   installer: 'rvm', # Or 'rbenv'
   latest: {
     command: "curl -s 'https://www.ruby-lang.org/en/downloads/' | grep 'The current stable version is' | cut -d' ' -f6 | sed 's/\\.$//'",

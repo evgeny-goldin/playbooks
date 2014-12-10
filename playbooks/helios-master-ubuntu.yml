@@ -11,8 +11,9 @@
     - vars/{{ ansible_distribution }}.yml
 
   roles:
-    - { role: run-before, period: daily    }
-    - { role: base,       when:   periodic }
-    - { role: ansible,    when:   periodic }
-    - java
+    - { role: run-before, period: daily  }
+    - { role: base,    when: periodic }
+    - { role: ansible, when: periodic }
+    - { role: java,    when: periodic }
+    - { role: helios,  helios_role: master }
     - run-after

@@ -1,0 +1,10 @@
+---
+helios: {
+  version:      latest, # 0.8.130 or latest - https://github.com/spotify/helios/releases
+  releases_url: 'https://github.com/spotify/helios/releases',
+  latest: {
+    command: "curl -s 'https://github.com/spotify/helios/releases' | grep '/spotify/helios/releases/tag/' | sed -r 's/<[^>]+>//g' | sed -r 's/:.+//' | sed '/^\\s*$/d' | head -1 | awk '{print $1}'",
+    pattern: '^\d+\.\d+\.\d+$'
+  },
+
+}

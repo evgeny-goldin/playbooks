@@ -1,7 +1,6 @@
 ---
 packer: {
-  # version: 0.7.1, # or 'latest'
-  version: latest,
+  version: latest, # 0.7.1 or latest
   latest: {
     command: "curl -s 'https://dl.bintray.com/mitchellh/packer/' | grep packer | grep linux | tail -1 | cut -d_ -f5",
     pattern: '^\d+\.\d+\.\d+$'
@@ -13,7 +12,7 @@ packer: {
   redownload:   false,
 
   store_aws_credentials: false,
-  
+
   # AWS credentials: AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
   # If 'store_aws_credentials' is true:
     # If true  - loaded from "vars/aws.yml"

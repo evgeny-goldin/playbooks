@@ -1,0 +1,18 @@
+---
+# https://github.com/spotify/helios
+- name: Calculating Helios version
+  set_fact:
+    helios_version: "{{ helios.version | calculate( helios ) }}"
+
+- name: Downloading Helios packages
+  get_url:
+    url:  '{{ helios.releases_url }}/download/{{ helios_version }}/helios-debs.tar.gz'
+    dest: /opt/helios-{{ helios_version }}.tar.gz
+
+- file: path=/opt/helios state=absent
+- file: path=/opt/helios state=directory
+- name: Unpacking Helios packages
+  unarchive:
+    src:  /opt/helios-{{ helios_version }}.tar.gz
+    dest: /opt/helios
+    copy: false
