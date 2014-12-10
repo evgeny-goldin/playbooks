@@ -1,10 +1,18 @@
 ---
 helios: {
-  version:      latest, # 0.8.130 or latest - https://github.com/spotify/helios/releases
-  releases_url: 'https://github.com/spotify/helios/releases',
+  version:      latest, # 0.8.130 or latest
+  download_url: 'https://github.com/spotify/helios/releases/download',
   latest: {
     command: "curl -s 'https://github.com/spotify/helios/releases' | grep '/spotify/helios/releases/tag/' | sed -r 's/<[^>]+>//g' | sed -r 's/:.+//' | sed '/^\\s*$/d' | head -1 | awk '{print $1}'",
     pattern: '^\d+\.\d+\.\d+$'
+  },
+  exhibitor: {
+    version:   latest, # 1.5.2 or latest
+    clone_url: 'https://github.com/Netflix/exhibitor.git',
+    latest: {
+      command: "curl -s 'https://github.com/Netflix/exhibitor/releases' | grep 'tag-name' | sed -r 's/<[^>]+>//g' | head -1 | awk '{print $1}'",
+      pattern: '^\d+\.\d+\.\d+$'
+    },
   },
 
 }
