@@ -1,18 +1,38 @@
 ---
+# -------------------------------------------------------------
 # https://github.com/spotify/helios
+# https://github.com/spotify/helios/blob/master/Vagrantfile
+# -------------------------------------------------------------
+
 - name: Calculating Helios version
   set_fact:
-    helios_version: "{{ helios.version | calculate( helios ) }}"
+    helios_version:  "{{ helios.version | calculate( helios ) }}"
+    helios_packages: /opt/helios
 
 - name: Downloading Helios packages
   get_url:
     url:  '{{ helios.releases_url }}/download/{{ helios_version }}/helios-debs.tar.gz'
     dest: /opt/helios-{{ helios_version }}.tar.gz
 
-- file: path=/opt/helios state=absent
-- file: path=/opt/helios state=directory
+- file: path={{ helios_packages }} state=absent
+- file: path={{ helios_packages }} state=directory
 - name: Unpacking Helios packages
   unarchive:
-    src:  /opt/helios-{{ helios_version }}.tar.gz
-    dest: /opt/helios
+    src:  "/opt/helios-{{ helios_version }}.tar.gz"
+    dest: "{{ helios_packages }}"
     copy: false
+
+- name: Installing dependencies
+  apt: name={{ item }}
+  with_items:
+    - default-jdk
+    - zookeeperd
+
+- name: Starting ZooKeeper service
+  service: name=zookeeper state=started enabled=yes
+
+- name: Installing Helios packages
+  apt: deb="{{ item }}"
+  with_items:
+    - "{{ helios_packages }}/helios-services_{{ helios_version }}_all.deb"
+    - "{{ helios_packages }}/helios-master_{{ helios_version }}_all.deb"
