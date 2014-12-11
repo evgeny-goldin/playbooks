@@ -1,0 +1,23 @@
+/**
+ * https://github.com/Netflix/exhibitor/wiki/Building-Exhibitor#gradle
+ * https://raw.githubusercontent.com/Netflix/exhibitor/master/exhibitor-standalone/src/main/resources/buildscripts/standalone/gradle/build.gradle
+ */
+
+apply plugin: 'java'
+apply plugin: 'maven'
+group   = 'exhibitor'
+version = '{{ exhibitor_version }}'
+
+repositories { jcenter() }
+
+dependencies {
+  compile 'com.netflix.exhibitor:exhibitor-standalone:{{ exhibitor_version }}'
+}
+
+jar {
+  from { configurations.compile.collect { it.isDirectory() ? it : zipTree( it ) } }
+  manifest {
+    attributes ( 'Main-Class': 'com.netflix.exhibitor.application.ExhibitorMain',
+                 'Implementation-Version': project.version )
+  }
+}

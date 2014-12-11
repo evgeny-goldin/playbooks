@@ -1,50 +1,15 @@
 ---
 # -------------------------------------------------------------
 # https://github.com/spotify/helios
-# https://github.com/spotify/helios/blob/master/Vagrantfile
 # -------------------------------------------------------------
 
-- name: Installing dependencies
-  apt: name={{ item }}
-  with_items:
-    - default-jdk
-    - zookeeperd
-
-- name: Starting ZooKeeper service
-  service: name=zookeeper state=started enabled=yes
-
-- name: Calculating latest versions
+- name: Setting up variables
   set_fact:
     helios_version:    "{{ helios.version | calculate( helios.latest ) }}"
     exhibitor_version: "{{ helios.exhibitor.version | calculate( helios.exhibitor.latest ) }}"
     helios_packages:   /opt/helios
     exhibitor_home:    /opt/exhibitor
 
-- name: Downloading Helios archive
-  get_url:
-    url:  '{{ helios.download_url }}/{{ helios_version }}/helios-debs.tar.gz'
-    dest: /opt/helios-{{ helios_version }}.tar.gz
-
-- file: path={{ helios_packages }} state=absent
-- file: path={{ helios_packages }} state=directory
-- name: Unpacking Helios archive
-  unarchive:
-    src:  "/opt/helios-{{ helios_version }}.tar.gz"
-    dest: "{{ helios_packages }}"
-
-- name: Installing Helios packages
-  apt: deb="{{ item }}"
-  with_items:
-    - "{{ helios_packages }}/helios-services_{{ helios_version }}_all.deb"
-    - "{{ helios_packages }}/helios-master_{{ helios_version }}_all.deb"
-
-- name: Cloning Exhibitor
-  git:
-    repo:    "{{ helios.exhibitor.clone_url }}"
-    dest:    "{{ exhibitor_home }}"
-    version: "{{ exhibitor_version }}"
-
-- name: Building Exhibitor
-  command: ./gradlew build
-  args:
-    chdir: "{{ exhibitor_home }}"
+- include: zookeeper.yml
+- include: exhibitor.yml
+- include: helios-master.yml

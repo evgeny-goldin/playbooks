@@ -1,0 +1,12 @@
+#!upstart
+# http://stackoverflow.com/a/11276071/472153
+description "Exhibitor"
+
+start on started mountall
+stop  on shutdown
+
+# Automatically Respawn:
+respawn
+respawn limit 5 5
+
+exec /bin/bash -c "java -jar '{{ exhibitor_home }}/build/libs/exhibitor-{{ exhibitor_version }}.jar' -c file >> '{{ ubuntu.log_dir }}/exhibitor.log' 2>&1"

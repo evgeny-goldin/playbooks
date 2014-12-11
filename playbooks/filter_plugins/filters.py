@@ -35,7 +35,7 @@ def calculate( version, vars_tree ):
   ( command, pattern ) = read_latest( vars_tree )
 
   if version == 'latest':
-    if sys.platform == "darwin":
+    if sys.platform == "darwin": # OS X 'sed' uses '-E' where Linux one uses '-r'
       command = command.replace( 'sed -r', 'sed -E' )
     version = subprocess.check_output( command, shell=True ).strip()
     print "[{0}] => [{1}]".format( command, version )

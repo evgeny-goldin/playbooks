@@ -1,0 +1,34 @@
+---
+- name: Cloning Gradle provider
+  git:
+    repo: "{{ helios.exhibitor.gradle_provider }}"
+    dest: "{{ exhibitor_home }}"
+
+- name: Writing Exhibitor build file
+  template:
+    src:  build.gradle
+    dest: "{{ exhibitor_home }}/build.gradle"
+
+- name: Building Exhibitor standalone
+  command: ./gradlew jar
+  args:
+    chdir: "{{ exhibitor_home }}"
+
+- name:     Running Exhibitor standalone help
+  command:  java -jar '{{ exhibitor_home }}/build/libs/exhibitor-{{ exhibitor_version }}.jar' --help
+  register: exhibitor_help_out
+
+- name:  Verifying Exhibitor standalone help
+  assert:
+    that:
+      - "'Exhibitor v{{ exhibitor_version }}' in exhibitor_help_out.stdout"
+      - "'Print this help'                    in exhibitor_help_out.stdout"
+      - "'Default Property Names'             in exhibitor_help_out.stdout"
+
+- name: Generating Exhibitor upstart template
+  template:
+    src:  exhibitor-upstart
+    dest: "{{ ubuntu.init_dir }}/exhibitor.conf"
+
+- name: Starting Exhibitor service
+  service: name=exhibitor state=started enabled=yes
