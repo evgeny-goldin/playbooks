@@ -42,7 +42,7 @@
       - "docker run {{ docker_ports }} {{ docker_env_file }} --name '{{ app_name }}' '{{ image }}'"
 - debug:    var=docker_commands
 
-- name: Generating upstart template
+- name: Generating Docker upstart script
   template:
     src:  upstart
     dest: "{{ ubuntu.init_dir }}/{{ app_name }}.conf"

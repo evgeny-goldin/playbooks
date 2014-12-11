@@ -10,7 +10,7 @@
     dest: "{{ exhibitor_home }}/build.gradle"
 
 - name: Building Exhibitor standalone
-  command: ./gradlew jar
+  command: ./gradlew clean jar
   args:
     chdir: "{{ exhibitor_home }}"
 
@@ -25,7 +25,7 @@
       - "'Print this help'                    in exhibitor_help_out.stdout"
       - "'Default Property Names'             in exhibitor_help_out.stdout"
 
-- name: Generating Exhibitor upstart template
+- name: Generating Exhibitor upstart script
   template:
     src:  exhibitor-upstart
     dest: "{{ ubuntu.init_dir }}/exhibitor.conf"

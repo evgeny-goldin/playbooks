@@ -9,7 +9,7 @@ BOXES                   = {
   # Name of the box (and corresponding playbook) => { playbook's extra variables, :ports is respected by Vagrant }
   packer:            {},
   ruby:              {},
-  'helios-master' => { ports: [ 8080 ]},
+  'helios-master' => { ports: [ 8080, 5801 ]},
   jenkins:           { ports: [ 8080 ]},
   asgard:            { ports: [ 8080 ]},
   mysql:             { ports: [ 3306 ]},

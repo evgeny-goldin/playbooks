@@ -74,7 +74,7 @@
 - name: Checking Asgard java
   command: "{{ asgard.java }} -version"
 
-- name: Generating upstart template
+- name: Generating Asgard upstart script
   template:
     src:  upstart
     dest: "{{ ubuntu.init_dir }}/asgard.conf"

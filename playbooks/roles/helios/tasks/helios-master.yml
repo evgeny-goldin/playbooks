@@ -1,18 +1,32 @@
 ---
-- name: Downloading Helios archive
+- name: Downloading Helios master archive
   get_url:
     url:  '{{ helios.download_url }}/{{ helios_version }}/helios-debs.tar.gz'
     dest: /opt/helios-{{ helios_version }}.tar.gz
 
 - file: path={{ helios_packages }} state=absent
 - file: path={{ helios_packages }} state=directory
-- name: Unpacking Helios archive
+- name: Unpacking Helios master archive
   unarchive:
     src:  "/opt/helios-{{ helios_version }}.tar.gz"
     dest: "{{ helios_packages }}"
+    copy: false
 
-- name: Installing Helios packages
+- name: Installing Helios master packages
   apt: deb="{{ item }}"
   with_items:
     - "{{ helios_packages }}/helios-services_{{ helios_version }}_all.deb"
     - "{{ helios_packages }}/helios-master_{{ helios_version }}_all.deb"
+
+- name: Copying Helios master config
+  copy:
+    src:  helios-master
+    dest: /etc/default/helios-master
+
+- name: Generating Helios master upstart script
+  template:
+    src:  helios-master-upstart
+    dest: "{{ ubuntu.init_dir }}/helios-master.conf"
+
+- name: Starting Helios master service
+  service: name=helios-master state=started enabled=yes
