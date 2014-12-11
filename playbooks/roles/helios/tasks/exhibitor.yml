@@ -6,7 +6,7 @@
 
 - name: Writing Exhibitor build file
   template:
-    src:  build.gradle
+    src:  exhibitor-build.gradle
     dest: "{{ exhibitor_home }}/build.gradle"
 
 - name: Building Exhibitor standalone
