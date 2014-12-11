@@ -7,6 +7,7 @@ import subprocess
 import re
 import sys
 from ansible import errors
+from timeit  import default_timer as timer
 
 
 def merge( hash_a, hash_b ):
@@ -37,8 +38,9 @@ def calculate( version, vars_tree ):
   if version == 'latest':
     if sys.platform == "darwin": # OS X 'sed' uses '-E' where Linux one uses '-r'
       command = command.replace( 'sed -r', 'sed -E' )
+    start   = timer()
     version = subprocess.check_output( command, shell=True ).strip()
-    print "[{0}] => [{1}]".format( command, version )
+    print "[{0}] => [{1}] ({2} sec)".format( command, version, int( timer() - start ))
 
   if not re.match( pattern, version ):
     raise errors.AnsibleFilterError( "Version '{0}' doesn't match pattern '{1}'".format( version, pattern ))
