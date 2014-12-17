@@ -1,3 +1,12 @@
 ---
-- include: master.yml
+- name: Setting up Helios version
+  set_fact:
+    helios_version: "{{ helios.version | calculate( helios.latest ) }}"
+
+- include: helios-common.yml
+
+- include: helios-master/main.yml
   when:    helios_role == 'master'
+
+- include: helios-agent/main.yml
+  when:    helios_role == 'agent'

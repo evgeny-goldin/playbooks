@@ -1,0 +1,6 @@
+---
+- name: Installing Helios agent
+  apt:  deb="{{ helios.helios_packages }}/helios-agent_{{ helios_version }}_all.deb"
+
+- name: Starting Helios agent service
+  service: name=helios-agent state=started enabled=yes

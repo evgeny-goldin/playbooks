@@ -1,0 +1,18 @@
+---
+# Helios Master playbook for Ubuntu
+# https://github.com/spotify/helios
+
+- name:  Helios Agent
+  hosts: all
+  sudo:  yes
+
+  vars_files:
+    - vars/common.yml
+    - vars/{{ ansible_distribution }}.yml
+
+  roles:
+    - { role: run-before, period: daily  }
+    - { role: base,       when: periodic }
+    - { role: ansible,    when: periodic }
+    - { role: helios,     helios_role: agent }
+    - run-after

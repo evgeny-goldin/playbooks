@@ -7,15 +7,17 @@ CPUS                    = '2'
 MEMORY                  = '1024'
 BOXES                   = {
   # Name of the box (and corresponding playbook) => { playbook's extra variables, :ports is respected by Vagrant }
-  packer:            {},
-  ruby:              {},
-  'helios-master' => { ports: [ 8080, 5801 ]},
-  jenkins:           { ports: [ 8080 ]},
-  asgard:            { ports: [ 8080 ]},
-  mysql:             { ports: [ 3306 ]},
-  docker:            { ports: [ 3000 ], app_name: 'tsa',
-                                        image:    'evgenyg/todo-sample-app',
-                                        env_file: '/playbooks/todo-sample-app.env' }
+  packer:             {},
+  ruby:               {},
+  'helios-master'  => { ports: [ 8080, 5801 ]},
+  'helios-agent-1' => { playbook: 'helios-agent-ubuntu' },
+  'helios-agent-2' => { playbook: 'helios-agent-ubuntu' },
+  jenkins:            { ports: [ 8080 ]},
+  asgard:             { ports: [ 8080 ]},
+  mysql:              { ports: [ 3306 ]},
+  docker:             { ports: [ 3000 ], app_name: 'tsa',
+                                         image:    'evgenyg/todo-sample-app',
+                                         env_file: '/playbooks/todo-sample-app.env' }
 }
 
 Vagrant.require_version '>= 1.6.5'
@@ -30,7 +32,7 @@ Vagrant.configure( VAGRANTFILE_API_VERSION ) do |config|
       b.vm.box_check_update = true
       b.vm.synced_folder 'playbooks', '/playbooks'
 
-      ( variables[ :ports ] || [] ).each { | port |
+      ( variables[:ports] || [] ).each { | port |
         b.vm.network 'forwarded_port', guest: port, host: port
       }
 
@@ -43,7 +45,7 @@ Vagrant.configure( VAGRANTFILE_API_VERSION ) do |config|
 
       config.vm.provision 'ansible' do | ansible |
         # ansible.verbose  = 'vv'
-        ansible.playbook   = "playbooks/#{box_name}.yml"
+        ansible.playbook   = "playbooks/#{ variables[:playbook] || box_name }.yml"
         ansible.extra_vars = variables.merge({
           # Uncomment and set to true to forcefully update all packages
           # Uncomment and set to false to disable periodic run

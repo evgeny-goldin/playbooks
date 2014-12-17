@@ -1,0 +1,6 @@
+---
+- name: Installing ZooKeeper service
+  apt: name=zookeeperd
+
+- name: Starting ZooKeeper service
+  service: name=zookeeper state=started enabled=yes

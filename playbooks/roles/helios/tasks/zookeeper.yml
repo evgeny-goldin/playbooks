@@ -1,9 +1,0 @@
----
-- name: Installing ZooKeeper
-  apt: name={{ item }}
-  with_items:
-    - zookeeperd
-    - default-jdk
-
-- name: Starting ZooKeeper service
-  service: name=zookeeper state=started enabled=yes
