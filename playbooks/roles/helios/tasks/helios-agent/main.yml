@@ -1,4 +1,9 @@
 ---
+- name: Copying Helios agent config
+  copy:
+    src:  helios-agent
+    dest: /etc/default/helios-agent
+
 - name: Installing Helios agent
   apt:  deb="{{ helios.helios_packages }}/helios-agent_{{ helios_version }}_all.deb"
 
