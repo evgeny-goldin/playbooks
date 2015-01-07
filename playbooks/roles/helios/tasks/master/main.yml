@@ -12,4 +12,4 @@
   apt:  deb="{{ helios.packages }}/helios-master_{{ helios_version }}_all.deb"
 
 - name: Starting Helios master service
-  service: name=helios-master state=started enabled=yes
+  service: name=helios-master state=restarted enabled=yes

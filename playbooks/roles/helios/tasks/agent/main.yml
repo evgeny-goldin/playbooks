@@ -16,4 +16,4 @@
   apt:  deb="{{ helios.packages }}/helios-agent_{{ helios_version }}_all.deb"
 
 - name: Starting Helios agent service
-  service: name=helios-agent state=started enabled=yes
+  service: name=helios-agent state=restarted enabled=yes
