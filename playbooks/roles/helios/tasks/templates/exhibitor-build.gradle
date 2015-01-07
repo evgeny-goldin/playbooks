@@ -5,14 +5,12 @@
 
 apply plugin: 'java'
 apply plugin: 'maven'
+
 group   = 'exhibitor'
 version = '{{ exhibitor_version }}'
 
 repositories { jcenter() }
-
-dependencies {
-  compile 'com.netflix.exhibitor:exhibitor-standalone:{{ exhibitor_version }}'
-}
+dependencies { compile 'com.netflix.exhibitor:exhibitor-standalone:{{ exhibitor_version }}' }
 
 jar {
   from { configurations.compile.collect { it.isDirectory() ? it : zipTree( it ) } }

@@ -6,7 +6,7 @@
 - name: Copying Helios master config
   copy:
     src:  helios-master
-    dest: /etc/default/helios-master
+    dest: "{{ helios.master.config }}"
 
 - name: Installing Helios master
   apt:  deb="{{ helios.helios_packages }}/helios-master_{{ helios_version }}_all.deb"

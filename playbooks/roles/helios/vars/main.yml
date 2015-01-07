@@ -1,6 +1,6 @@
 ---
 helios: {
-  version:         latest, # 0.8.130 or latest
+  version:         latest, # 0.8.138 or latest
   download_url:    'https://github.com/spotify/helios/releases/download',
   helios_packages: /opt/helios,
   latest: {
@@ -14,5 +14,11 @@ helios: {
       command: "curl -s 'http://jcenter.bintray.com/com/netflix/exhibitor/exhibitor-standalone/' | grep '<pre>' | grep -v 'maven-metadata.xml' | sed -r 's/<[^>]+>//g' | tr -d '/' | tail -1",
       pattern: '^\d+\.\d+\.\d+$'
     }
+  },
+  master: {
+      config: /etc/default/helios-master
+  },
+  agent: {
+      config: /etc/default/helios-agent
   }
 }
