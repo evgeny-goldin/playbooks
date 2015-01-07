@@ -3,6 +3,9 @@
   template:
     src:  helios-agent
     dest: "{{ helios.agent.config }}"
+    
+- name: Installing ZooKeeper client
+  pip: name=zk-shell
 
 - name: Downloading Helios SkyDNS plugin
   get_url:

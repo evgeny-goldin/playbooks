@@ -33,10 +33,12 @@ Vagrant.configure( VAGRANTFILE_API_VERSION ) do |config|
     config.vm.define box do | b |
       b.vm.box              = 'ubuntu/trusty64'
       b.vm.box_check_update = true
+      b.vm.hostname         = box_name
       b.vm.synced_folder 'playbooks', '/playbooks'
+      b.vm.network       'private_network', type: 'dhcp'
 
-      ( variables[:ports] || [] ).each { | port |
-        b.vm.network 'forwarded_port', guest: port, host: port
+      ( variables[:ports] || [] ).each { | port |  
+        b.vm.network 'forwarded_port', guest: port, host: port, auto_correct: true
       }
 
       config.vm.provider 'virtualbox' do | vb |
