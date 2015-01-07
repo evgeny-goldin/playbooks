@@ -1,8 +1,8 @@
 ---
 helios: {
-  version:         latest, # 0.8.138 or latest
-  download_url:    'https://github.com/spotify/helios/releases/download',
-  helios_packages: /opt/helios,
+  version:       latest, # 0.8.138 or latest
+  download_url:  'https://github.com/spotify/helios/releases/download',
+  packages:      /opt/helios,
   latest: {
     command: "curl -s 'https://github.com/spotify/helios/releases' | grep '/spotify/helios/releases/tag/' | sed -r 's/<[^>]+>//g' | sed -r 's/:.+//' | sed '/^\\s*$/d' | head -1 | awk '{print $1}'",
     pattern: '^\d+\.\d+\.\d+$'
@@ -16,9 +16,13 @@ helios: {
     }
   },
   master: {
-      config: /etc/default/helios-master
+      config:  /etc/default/helios-master
   },
   agent: {
-      config: /etc/default/helios-agent
+      config:  /etc/default/helios-agent,
+      sky_dns: {
+          url: 'https://github.com/spotify/helios-skydns/releases/download/0.1/helios-skydns-0.1.jar',
+          jar: /opt/helios-skydns.jar
+      }
   }
 }

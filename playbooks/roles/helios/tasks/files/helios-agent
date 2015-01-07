@@ -1,2 +1,0 @@
-ENABLED=true
-HELIOS_AGENT_OPTS="--state-dir=/var/lib/helios-agent --name=ubuntu-14.skydns.local --zk localhost:2181 --service-registry http://127.0.0.1:4001 --service-registrar-plugin /usr/share/helios/lib/plugins/helios-skydns-0.1.jar --domain skydns.local"

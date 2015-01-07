@@ -39,14 +39,14 @@
     url:  '{{ helios.download_url }}/{{ helios_version }}/helios-debs.tar.gz'
     dest: "{{ helios_archive }}"
 
-- file: path={{ helios.helios_packages }} state=absent
-- file: path={{ helios.helios_packages }} state=directory
+- file: path={{ helios.packages }} state=absent
+- file: path={{ helios.packages }} state=directory
 
 - name: Unpacking Helios packages archive
   unarchive:
     src:  "{{ helios_archive }}"
-    dest: "{{ helios.helios_packages }}"
+    dest: "{{ helios.packages }}"
     copy: false
 
 - name: Installing Helios services
-  apt:  deb="{{ helios.helios_packages }}/helios-services_{{ helios_version }}_all.deb"
+  apt:  deb="{{ helios.packages }}/helios-services_{{ helios_version }}_all.deb"

@@ -9,7 +9,7 @@
     dest: "{{ helios.master.config }}"
 
 - name: Installing Helios master
-  apt:  deb="{{ helios.helios_packages }}/helios-master_{{ helios_version }}_all.deb"
+  apt:  deb="{{ helios.packages }}/helios-master_{{ helios_version }}_all.deb"
 
 - name: Starting Helios master service
   service: name=helios-master state=started enabled=yes

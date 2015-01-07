@@ -1,11 +1,16 @@
 ---
 - name: Copying Helios agent config
-  copy:
+  template:
     src:  helios-agent
     dest: "{{ helios.agent.config }}"
 
+- name: Downloading Helios SkyDNS plugin
+  get_url:
+    url:  "{{ helios.agent.sky_dns.url }}"
+    dest: "{{ helios.agent.sky_dns.jar }}"
+
 - name: Installing Helios agent
-  apt:  deb="{{ helios.helios_packages }}/helios-agent_{{ helios_version }}_all.deb"
+  apt:  deb="{{ helios.packages }}/helios-agent_{{ helios_version }}_all.deb"
 
 - name: Starting Helios agent service
   service: name=helios-agent state=started enabled=yes
