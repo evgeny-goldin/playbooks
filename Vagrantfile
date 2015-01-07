@@ -9,7 +9,10 @@ BOXES                   = {
   # Name of the box (and corresponding playbook) => { playbook's extra variables, :ports is respected by Vagrant }
   packer:             {},
   ruby:               {},
-  'helios-master'  => { ports: [ 8080, 5801 ]},
+  'helios-master'  => { ports: [ 2181, # ZooKeeper
+                                 5801, # Helios Master
+                                 8080  # Netflix Exhibitor
+                               ]},
   'helios-agent-1' => { playbook: 'helios-agent-ubuntu' },
   'helios-agent-2' => { playbook: 'helios-agent-ubuntu' },
   jenkins:            { ports: [ 8080 ]},
@@ -55,5 +58,4 @@ Vagrant.configure( VAGRANTFILE_API_VERSION ) do |config|
       end
     end
   }
-
 end
