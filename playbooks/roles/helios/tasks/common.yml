@@ -3,22 +3,36 @@
 # Common tasks between Helios master and agent
 # ----------------------------------------------
 
-- name: Installing Java
-  apt: name=default-jdk
+- name: Setting up Helios variables
+  set_fact: helios_version="{{ helios.version | calculate( helios.latest ) }}"
+- name: Setting up Helios variables
+  set_fact: helios_archive=/opt/helios-{{ helios_version }}.tar.gz
+
+- name: Installing packages
+  apt: name={{ item }}
+  with_items:
+    - default-jdk
+    - golang
+
+- name:     Running Go
+  shell:    go version 2>&1
+  register: go_out
 
 - name:     Running Java
   shell:    java -version 2>&1
   register: java_out
+
+- name:  Verifying Go
+  assert:
+    that:
+      - "'go version' in go_out.stdout"
+      - "'linux'      in go_out.stdout"
 
 - name:  Verifying Java
   assert:
     that:
       - "'OpenJDK Runtime Environment' in java_out.stdout"
       - "'OpenJDK 64-Bit Server VM'    in java_out.stdout"
-
-- name: Setting up Helios common variables
-  set_fact:
-    helios_archive: /opt/helios-{{ helios_version }}.tar.gz
 
 - name: Downloading Helios packages archive
   get_url:

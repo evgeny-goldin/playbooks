@@ -10,7 +10,13 @@ if [ "$image" == "" ] || [ "$tag" == "" ]; then
   exit 1
 fi
 
-./docker-build.sh "$image" "$tag"
+if [ "$(docker images | grep "$owner/$image" | awk '{print $2}' | grep "$tag" | wc -l | awk '{print $1}')" == "1" ]; then
+  echo '-------------------------------------------------------------------------'
+  echo "Found '$owner/$image:$tag'"
+  echo '-------------------------------------------------------------------------'
+else
+  ./docker-build.sh "$image" "$tag"
+fi
 
 echo '-------------------------------------------------------------------------'
 echo "Pushing '$owner/$image:$tag'"

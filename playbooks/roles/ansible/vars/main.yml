@@ -1,6 +1,6 @@
 ---
 ansible: {
-  version: latest, # 1.7.2 or latest
+  version: latest, # 1.8.2 or latest
   latest: {
     command: "curl -s 'https://pypi.python.org/pypi/ansible' | grep '<title>' | sed 's/^.*<title>//' | cut -d' ' -f2",
     pattern: '^\d+\.\d+(\.\d+)?$'
