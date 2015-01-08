@@ -11,19 +11,19 @@ HELIOS_AGENT_PROPERTIES = { playbook: 'helios-agent-ubuntu',
                             zk_port:  2181 }
 BOXES                   = {
   # Name of the box (and corresponding playbook) => { playbook's extra variables, :ports is respected by Vagrant }
-  packer:             {},
-  ruby:               {},
+  # packer:             {},
+  # ruby:               {},
   'helios-master'  => { ports: [ 2181,    # ZooKeeper
                                  5801,    # Helios Master
                                  8080 ]}, # Netflix Exhibitor
   'helios-agent-1' => HELIOS_AGENT_PROPERTIES,
   'helios-agent-2' => HELIOS_AGENT_PROPERTIES,
-  jenkins:            { ports: [ 8080 ]},
-  asgard:             { ports: [ 8080 ]},
-  mysql:              { ports: [ 3306 ]},
-  docker:             { ports: [ 3000 ], app_name: 'tsa',
-                                         image:    'evgenyg/todo-sample-app',
-                                         env_file: '/playbooks/todo-sample-app.env' }
+  # jenkins:            { ports: [ 8080 ]},
+  # asgard:             { ports: [ 8080 ]},
+  # mysql:              { ports: [ 3306 ]},
+  # docker:             { ports: [ 3000 ], app_name: 'tsa',
+  #                                        image:    'evgenyg/todo-sample-app',
+  #                                        env_file: '/playbooks/todo-sample-app.env' }
 }
 
 Vagrant.require_version '>= 1.6.5'
