@@ -5,9 +5,9 @@
 VAGRANTFILE_API_VERSION = '2'
 CPUS                    = '2'
 MEMORY                  = '1024'
-TOP_LEVEL_DOMAIN        = 'vm' 
+VAGRANT_DOMAIN          = 'vm' 
 HELIOS_AGENT_PROPERTIES = { playbook: 'helios-agent-ubuntu',
-                            zk_host:  "helios-master.#{ TOP_LEVEL_DOMAIN }",
+                            zk_host:  "helios-master.#{ VAGRANT_DOMAIN }",
                             zk_port:  2181 }
 BOXES                   = {
   # Name of the box (and corresponding playbook) => { playbook's extra variables, :ports is respected by Vagrant }
@@ -34,19 +34,20 @@ Vagrant.configure( VAGRANTFILE_API_VERSION ) do | config |
   # vagrant landrush start|stop|restart|status|ls|vms|help 
   # ~/.vagrant.d/data/landrush
   config.landrush.enabled = true
-  config.landrush.tld     = TOP_LEVEL_DOMAIN
+  config.landrush.tld     = VAGRANT_DOMAIN
 
   BOXES.each_pair { | box, variables |
 
-    box_name = "#{ box }.#{ TOP_LEVEL_DOMAIN }"
+    box_name = "#{ box }.#{ VAGRANT_DOMAIN }"
 
     config.vm.define box do | b |
       b.vm.box              = 'ubuntu/trusty64'
       b.vm.box_check_update = true
-      b.vm.hostname         = box_name
+      b.vm.hostname         = box_name # 1) Vagrant will cut out everything starting from the first dot but ..
+                                       # 2) Landrush needs a proper hostname ending with config.landrush.tld
       b.vm.synced_folder 'playbooks', '/playbooks'
 
-      ( variables[:ports] || [] ).each { | port |  
+      ( variables[ :ports ] || [] ).each { | port |  
         b.vm.network 'forwarded_port', guest: port, host: port, auto_correct: true
       }
 

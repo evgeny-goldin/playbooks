@@ -18,9 +18,12 @@
   register: zk_shell_out
 - debug:    msg="{{ zk_shell_command }} => [{{ zk_shell_out.stdout }}]"
   
-- name:  Verifying Helios master host name
+- name:  Verifying ZooKeeper client was able to connect
   assert:
     that:
+      - not ( 'Failed'        in zk_shell_out.stdout )
+      - not ( 'time-out'      in zk_shell_out.stdout )
+      - not ( 'Not connected' in zk_shell_out.stdout )
       - zk_host in zk_shell_out.stdout
 
 - name: Downloading Helios SkyDNS plugin
