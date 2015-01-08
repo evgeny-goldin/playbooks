@@ -1,11 +1,27 @@
 ---
+- debug: var={{ zk_host }}
+- debug: var={{ zk_port }}
+
 - name: Copying Helios agent config
   template:
     src:  helios-agent
     dest: "{{ helios.agent.config }}"
     
 - name: Installing ZooKeeper client
-  pip: name=zk-shell
+  pip:  name=zk-shell
+  
+- set_fact: 
+    zk_shell_command: "zk-shell '{{ zk_host }}:{{ zk_port }}' --run-once 'ls /status/masters'" 
+  
+- name:     Running ZooKeeper client
+  command:  "{{ zk_shell_command }}"
+  register: zk_shell_out
+- debug:    msg="{{ zk_shell_command }} => [{{ zk_shell_out.stdout }}]"
+  
+- name:  Verifying Helios master host name
+  assert:
+    that:
+      - zk_host in zk_shell_out.stdout
 
 - name: Downloading Helios SkyDNS plugin
   get_url:
