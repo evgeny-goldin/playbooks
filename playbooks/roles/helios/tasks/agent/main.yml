@@ -21,9 +21,9 @@
 - name:  Verifying ZooKeeper client was able to connect
   assert:
     that:
-      - not ( 'Failed'        in zk_shell_out.stdout )
-      - not ( 'time-out'      in zk_shell_out.stdout )
-      - not ( 'Not connected' in zk_shell_out.stdout )
+      - not ( 'failed'        in zk_shell_out.stdout.lower())
+      - not ( 'time-out'      in zk_shell_out.stdout.lower())
+      - not ( 'not connected' in zk_shell_out.stdout.lower())
       - zk_host in zk_shell_out.stdout
 
 - name: Downloading Helios SkyDNS plugin
