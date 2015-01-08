@@ -10,6 +10,10 @@ from ansible import errors
 from timeit  import default_timer as timer
 
 
+def bare( str ):
+  '''Leaves out the dot and everything that follows from a domain name'''
+  return re.sub( '\..*', '', str )
+    
 def merge( hash_a, hash_b ):
   '''Merges two hashes'''
   return dict( hash_a.items() + hash_b.items());
@@ -72,6 +76,7 @@ class FilterModule( object ):
 
   def filters( self ):
     return {
+      'bare'      : bare,
       'merge'     : merge,
       'strftime'  : strftime,
       'transform' : transform,
