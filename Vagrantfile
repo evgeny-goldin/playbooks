@@ -6,7 +6,7 @@ VAGRANTFILE_API_VERSION = '2'
 CPUS                    = '2'
 MEMORY                  = '1024'
 VAGRANT_DOMAIN          = 'vm' 
-ZOOKEEPER_PORT          = 2183
+ZOOKEEPER_PORT          = 2185
 HELIOS_AGENT_PROPERTIES = { playbook:       'helios-agent-ubuntu',
                             helios_master:  "helios-master.#{ VAGRANT_DOMAIN }",
                             zookeeper_port: ZOOKEEPER_PORT }

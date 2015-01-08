@@ -8,6 +8,9 @@
 - set_fact: zk_host="{{ helios_master }}:{{ zookeeper_port }}"
 - set_fact: zk_shell_command="zk-shell '{{ zk_host }}' --run-once 'ls /status/masters'" 
   
+- name: Checking ZooKeeper service
+  wait_for: host={{ helios_master }} port={{ zookeeper_port }} timeout=3
+
 - name:     Running ZooKeeper client
   command:  "{{ zk_shell_command }}"
   register: zk_shell_out
@@ -34,5 +37,5 @@
 - name: Installing Helios agent
   apt:  deb="{{ helios.packages }}/helios-agent_{{ helios_version }}_all.deb"
 
-- name: Starting Helios agent service
+- name: Restarting Helios agent service
   service: name=helios-agent state=restarted enabled=yes

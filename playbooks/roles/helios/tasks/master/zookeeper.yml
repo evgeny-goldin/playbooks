@@ -11,5 +11,8 @@
     line:   "clientPort={{ zookeeper_port }}"
     regexp: '^clientPort=\d+$'
         
-- name: Starting ZooKeeper service
+- name: Restarting ZooKeeper service
   service: name=zookeeper state=restarted enabled=yes
+
+- name: Checking ZooKeeper service
+  wait_for: port={{ zookeeper_port }} timeout=3
