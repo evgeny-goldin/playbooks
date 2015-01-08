@@ -1,14 +1,14 @@
 ---
 - name: Setting up Exhibitor variables
   set_fact:
-    exhibitor_version: "{{ helios.exhibitor.version | calculate( helios.exhibitor.latest ) }}"
+    exhibitor_version: "{{ helios.master.exhibitor.version | calculate( helios.master.exhibitor.latest ) }}"
     exhibitor_home:    /opt/exhibitor
 - set_fact:
     exhibitor_jar:     "{{ exhibitor_home }}/build/libs/exhibitor-{{ exhibitor_version }}.jar"
 
 - name: Cloning Gradle provider
   git:
-    repo: "{{ helios.exhibitor.gradle_provider }}"
+    repo: "{{ helios.master.exhibitor.gradle_provider }}"
     dest: "{{ exhibitor_home }}"
 
 - name: Writing Exhibitor build file

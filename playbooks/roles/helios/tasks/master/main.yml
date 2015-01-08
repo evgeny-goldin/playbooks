@@ -4,7 +4,7 @@
 - include: exhibitor.yml
 
 - name: Copying Helios master config
-  copy:
+  template:
     src:  helios-master
     dest: "{{ helios.master.config }}"
 

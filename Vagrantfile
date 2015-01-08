@@ -6,14 +6,16 @@ VAGRANTFILE_API_VERSION = '2'
 CPUS                    = '2'
 MEMORY                  = '1024'
 VAGRANT_DOMAIN          = 'vm' 
-HELIOS_AGENT_PROPERTIES = { playbook: 'helios-agent-ubuntu',
-                            zk_host:  "helios-master.#{ VAGRANT_DOMAIN }",
-                            zk_port:  2181 }
+ZOOKEEPER_PORT          = 2183
+HELIOS_AGENT_PROPERTIES = { playbook:       'helios-agent-ubuntu',
+                            helios_master:  "helios-master.#{ VAGRANT_DOMAIN }",
+                            zookeeper_port: ZOOKEEPER_PORT }
 BOXES                   = {
   # Name of the box (and corresponding playbook) => { playbook's extra variables, :ports is respected by Vagrant }
   # packer:             {},
   # ruby:               {},
-  'helios-master'  => { ports: [ 2181,    # ZooKeeper
+  'helios-master'  => { zookeeper_port: ZOOKEEPER_PORT,
+                        ports: [ ZOOKEEPER_PORT,
                                  5801,    # Helios Master
                                  8080 ]}, # Netflix Exhibitor
   'helios-agent-1' => HELIOS_AGENT_PROPERTIES,

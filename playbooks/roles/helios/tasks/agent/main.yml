@@ -1,17 +1,12 @@
 ---
-- debug: var=zk_host
-- debug: var=zk_port
-
-- name: Copying Helios agent config
-  template:
-    src:  helios-agent
-    dest: "{{ helios.agent.config }}"
+- debug: var=helios_master
+- debug: var=zookeeper_port
     
 - name: Installing ZooKeeper client
   pip:  name=zk-shell
   
-- set_fact: 
-    zk_shell_command: "zk-shell '{{ zk_host }}:{{ zk_port }}' --run-once 'ls /status/masters'" 
+- set_fact: zk_host="{{ helios_master }}:{{ zookeeper_port }}"
+- set_fact: zk_shell_command="zk-shell '{{ zk_host }}' --run-once 'ls /status/masters'" 
   
 - name:     Running ZooKeeper client
   command:  "{{ zk_shell_command }}"
@@ -24,7 +19,12 @@
       - not ( 'failed'        in zk_shell_out.stdout.lower())
       - not ( 'time-out'      in zk_shell_out.stdout.lower())
       - not ( 'not connected' in zk_shell_out.stdout.lower())
-      - "'{{ zk_host | bare }}' in zk_shell_out.stdout"
+      - "'{{ helios_master | bare }}' in zk_shell_out.stdout"
+
+- name: Copying Helios agent config
+  template:
+    src:  helios-agent
+    dest: "{{ helios.agent.config }}"
 
 - name: Downloading Helios SkyDNS plugin
   get_url:

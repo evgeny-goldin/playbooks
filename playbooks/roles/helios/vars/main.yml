@@ -7,16 +7,19 @@ helios: {
     command: "curl -s 'https://github.com/spotify/helios/releases' | grep '/spotify/helios/releases/tag/' | sed -r 's/<[^>]+>//g' | sed -r 's/:.+//' | sed '/^\\s*$/d' | head -1 | awk '{print $1}'",
     pattern: '^\d+\.\d+\.\d+$'
   },
-  exhibitor: {
-    version: latest, # 1.5.2 or latest
-    gradle_provider: 'https://github.com/evgeny-goldin/gradle-provider.git',
-    latest: {
-      command: "curl -s 'http://jcenter.bintray.com/com/netflix/exhibitor/exhibitor-standalone/' | grep '<pre>' | grep -v 'maven-metadata.xml' | sed -r 's/<[^>]+>//g' | tr -d '/' | tail -1",
-      pattern: '^\d+\.\d+\.\d+$'
-    }
-  },
   master: {
-      config:  /etc/default/helios-master
+      config:  /etc/default/helios-master,
+      exhibitor: {
+        version: latest, # 1.5.2 or latest
+        gradle_provider: 'https://github.com/evgeny-goldin/gradle-provider.git',
+        latest: {
+          command: "curl -s 'http://jcenter.bintray.com/com/netflix/exhibitor/exhibitor-standalone/' | grep '<pre>' | grep -v 'maven-metadata.xml' | sed -r 's/<[^>]+>//g' | tr -d '/' | tail -1",
+          pattern: '^\d+\.\d+\.\d+$'
+        }
+      },
+      zookeeper: {
+        config: /etc/zookeeper/conf/zoo.cfg
+      }
   },
   agent: {
       config:  /etc/default/helios-agent,

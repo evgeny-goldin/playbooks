@@ -11,7 +11,7 @@ from timeit  import default_timer as timer
 
 
 def bare( str ):
-  '''Leaves out the dot and everything that follows from a domain name'''
+  '''Leaves out the dot and everything that follows from a domain name: "helios-master.vm" => "helios-master"'''
   return re.sub( '\..*', '', str )
     
 def merge( hash_a, hash_b ):

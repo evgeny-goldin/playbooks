@@ -1,2 +1,0 @@
-ENABLED=true
-HELIOS_MASTER_OPTS="--syslog --zk localhost:2181"
