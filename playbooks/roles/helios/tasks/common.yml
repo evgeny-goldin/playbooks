@@ -2,8 +2,6 @@
 # ----------------------------------------------
 # Common tasks between Helios master and agent
 # ----------------------------------------------
-- file: path=~/.helios state=directory
-
 - name: Setting up Helios variables
   set_fact: helios_version="{{ helios.version | calculate( helios.latest ) }}"
 - name: Setting up Helios variables

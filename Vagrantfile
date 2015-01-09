@@ -7,11 +7,14 @@ CPUS                    = '2'
 MEMORY                  = '1024'
 VAGRANT_DOMAIN          = 'vm' 
 ZOOKEEPER_PORT          = 2185
-HELIOS_MASTER_PORT      = 5805 
+HELIOS_MASTER_PORT      = 5805
+HELIOS_REGISTRY_PORT    = 4001
 HELIOS_AGENT_PROPERTIES = { playbook:           'helios-agent-ubuntu',
                             helios_master:      "helios-master.#{ VAGRANT_DOMAIN }",
                             helios_master_port: HELIOS_MASTER_PORT,
-                            zookeeper_port:     ZOOKEEPER_PORT }
+                            zookeeper_port:     ZOOKEEPER_PORT,
+                            registry_port:      HELIOS_REGISTRY_PORT,
+                            domain:             VAGRANT_DOMAIN }
 BOXES                   = {
   # Name of the box (and corresponding playbook) => { playbook's extra variables, :ports is respected by Vagrant }
   # packer:             {},

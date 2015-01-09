@@ -2,6 +2,10 @@
 - debug: var=helios_master
 - debug: var=helios_master_port
 - debug: var=zookeeper_port
+- debug: var=registry_port
+- debug: var=domain
+
+- file: path={{ helios.agent.home }} state=directory
   
 - name: Checking Helios master endpoints
   wait_for: host={{ helios_master }} port={{ item }} timeout=3
@@ -20,7 +24,7 @@
     dest: "{{ item.to   }}"
   with_items:
     - { from: 'helios-agent',  to: "{{ helios.agent.config }}" }
-    - { from: 'helios-config', to: "{{ helios.agent.helios_config }}" }
+    - { from: 'helios-config', to: "{{ helios.agent.home }}/config" }
 
 - name: Downloading Helios SkyDNS plugin
   get_url:

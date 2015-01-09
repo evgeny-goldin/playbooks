@@ -23,8 +23,9 @@ helios: {
     }
   },
   agent: {
-    config:        /etc/default/helios-agent,
-    helios_config: ~/.helios/config,
+    home:      ~/.helios,
+    config:    /etc/default/helios-agent,
+    state_dir: /var/lib/helios-agent,
     sky_dns: {
         url: 'https://github.com/spotify/helios-skydns/releases/download/0.1/helios-skydns-0.1.jar',
         jar: /opt/helios-skydns.jar
