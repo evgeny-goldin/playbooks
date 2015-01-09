@@ -8,7 +8,7 @@ MEMORY                  = '1024'
 VAGRANT_DOMAIN          = 'vm' 
 ZOOKEEPER_PORT          = 2185
 HELIOS_MASTER_PORT      = 5805
-HELIOS_REGISTRY_PORT    = 4001
+HELIOS_REGISTRY_PORT    = 4004
 WEB_PORT                = 8080
 HELIOS_AGENT_PROPERTIES = { playbook:           'helios-agent-ubuntu',
                             helios_master:      "helios-master.#{ VAGRANT_DOMAIN }",

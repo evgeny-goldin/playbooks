@@ -26,7 +26,8 @@ helios: {
       dir_name: etcd-v<version>-linux-amd64,
       url:      'https://github.com/coreos/etcd/releases/download/v<version>/<dirname>.tar.gz',
       archive:  /opt/etcd.tar.gz,
-      home:     /opt/etcd
+      home:     /opt/etcd,
+      config:   /etc/etcd/etcd.conf
     },
     skydns: {
       

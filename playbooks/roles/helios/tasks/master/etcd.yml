@@ -1,6 +1,8 @@
 ---
 - set_fact: etcd_dir="{{ helios.master.etcd.dir_name.replace( '<version>', helios.master.etcd.version ) }}"
-- set_fact: etcd="{{ helios.master.etcd.home }}/{{ etcd_dir }}/etcd"
+- set_fact: 
+    etcd_src: "{{ helios.master.etcd.home }}/{{ etcd_dir }}/etcd"
+    etcd_bin: "{{ ubuntu.bin_dir }}/etcd"
 
 - name: Downloading etcd
   get_url:
@@ -14,8 +16,12 @@
     dest: "{{ helios.master.etcd.home }}"
     copy: no       
 
+- name: Stopping etcd service
+  service: name=etcd state=stopped
+  ignore_errors: yes
+
 - name: Copying etcd executable
-  command: cp "{{ etcd }}" "{{ ubuntu.bin_dir }}"
+  command: cp "{{ etcd_src }}" "{{ etcd_bin }}"
 
 - name:     Running etcd
   command:  etcd --version
@@ -25,3 +31,20 @@
   assert:
     that:
       - "'etcd version {{ helios.master.etcd.version }}' in etcd_out.stdout"
+
+- command: mkdir -p $(dirname '{{ helios.master.etcd.config }}')
+- name: Copying etcd config
+  template:
+    src:  etcd-config
+    dest: "{{ helios.master.etcd.config }}"
+    
+- name: Generating etcd upstart script
+  template:
+    src:  etcd-upstart
+    dest: "{{ ubuntu.init_dir }}/etcd.conf"  
+
+- name: Starting etcd service
+  service: name=etcd state=restarted enabled=yes
+
+- name: Verifying etcd endpoint
+  wait_for: port={{ registry_port }} timeout=3

@@ -7,14 +7,14 @@
 
 - file: path={{ helios.agent.home }} state=directory
   
-- name: Checking Helios master endpoints
+- name: Verifying Helios master endpoints
   wait_for: host={{ helios_master }} port={{ item }} timeout=3
   with_items:
     - "{{ helios_master_port }}"
     - "{{ zookeeper_port }}"
     # - "{{ registry_port }}"
 
-- name: Checking Helios master HTTP endpoints
+- name: Verifying Helios master HTTP endpoints
   uri:  url=http://{{ helios_master }}:{{ item.port }} status_code={{ item.status }}
   with_items:
     - { port: "{{ helios_master_port }}", status: 404 }
