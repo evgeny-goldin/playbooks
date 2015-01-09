@@ -33,7 +33,7 @@
     dest: "{{ helios.agent.registrar_plugin.jar }}"
 
 - name: Installing Helios agent
-  apt:  deb="{{ helios.packages }}/helios-agent_{{ helios_version }}_all.deb"
+  apt:  deb="{{ helios.home }}/helios-agent_{{ helios_version }}_all.deb"
 
 - name: Restarting Helios agent service
   service: name=helios-agent state=restarted enabled=yes

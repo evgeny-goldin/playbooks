@@ -1,8 +1,9 @@
 ---
 helios: {
-  version:       latest, # 0.8.138 or latest
-  download_url:  'https://github.com/spotify/helios/releases/download',
-  packages:      /opt/helios,
+  version: latest, # 0.8.138 or latest
+  url:     'https://github.com/spotify/helios/releases/download/<version>/helios-debs.tar.gz',
+  archive: /opt/helios-<version>.tar.gz,
+  home:    /opt/helios,
   latest: {
     command: "curl -s 'https://github.com/spotify/helios/releases' | grep '/spotify/helios/releases/tag/' | sed -r 's/<[^>]+>//g' | sed -r 's/:.+//' | sed '/^\\s*$/d' | head -1 | awk '{print $1}'",
     pattern: '^\d+\.\d+\.\d+$'
@@ -24,13 +25,17 @@ helios: {
     etcd: {
       version:  0.4.6,
       dir_name: etcd-v<version>-linux-amd64,
-      url:      'https://github.com/coreos/etcd/releases/download/v<version>/<dirname>.tar.gz',
-      archive:  /opt/etcd.tar.gz,
+      url:      'https://github.com/coreos/etcd/releases/download/v<version>/<dir_name>.tar.gz',
+      archive:  /opt/etcd-<version>.tar.gz,
       home:     /opt/etcd,
       config:   /etc/etcd/etcd.conf
     },
     skydns: {
-      
+      version:  2.0.1a,
+      dir_name: skydns-<version>,
+      url:      'https://github.com/skynetservices/skydns/archive/<version>.tar.gz',
+      archive:  /opt/skydns-<version>.tar.gz,
+      home:     /opt/skydns,
     }
   },
   agent: {
@@ -38,8 +43,9 @@ helios: {
     config:    /etc/default/helios-agent,
     state_dir: /var/lib/helios-agent,
     registrar_plugin: {
-      url: 'https://github.com/spotify/helios-skydns/releases/download/0.1/helios-skydns-0.1.jar',
-      jar: /opt/helios-skydns.jar
+      version: 0.1,
+      url:     'https://github.com/spotify/helios-skydns/releases/download/<version>/helios-skydns-<version>.jar',
+      jar:     /opt/helios-skydns-<version>.jar
     }
   }
 }

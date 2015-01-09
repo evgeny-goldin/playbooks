@@ -6,9 +6,14 @@ import time
 import subprocess
 import re
 import sys
-from ansible import errors
-from timeit  import default_timer as timer
+from   ansible import errors
+from   timeit  import default_timer as timer
 
+def tokens( str, vars_tree ):
+  '''Replaces all <token> sections in a string with corresponding Ansible variables'''
+  new_str = re.sub( '<([^>]+)>', lambda m: vars_tree[ m.group(1) ], str )
+  # print "[{0}] => [{1}]".format( str, new_str )
+  return new_str
 
 def bare( str ):
   '''Leaves out the dot and everything that follows from a domain name: "helios-master.vm" => "helios-master"'''
@@ -76,6 +81,7 @@ class FilterModule( object ):
 
   def filters( self ):
     return {
+      'tokens'    : tokens,        
       'bare'      : bare,
       'merge'     : merge,
       'strftime'  : strftime,

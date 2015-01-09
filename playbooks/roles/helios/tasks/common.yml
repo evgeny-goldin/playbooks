@@ -4,9 +4,7 @@
 # ----------------------------------------------
 - name: Setting up Helios variables
   set_fact: helios_version="{{ helios.version | calculate( helios.latest ) }}"
-- name: Setting up Helios variables
-  set_fact: helios_archive=/opt/helios-{{ helios_version }}.tar.gz
-
+  
 - name: Installing packages
   apt: name={{ item }}
   with_items:
@@ -35,17 +33,17 @@
 
 - name: Downloading Helios packages archive
   get_url:
-    url:  '{{ helios.download_url }}/{{ helios_version }}/helios-debs.tar.gz'
-    dest: "{{ helios_archive }}"
+    url:  "{{ helios.url     | tokens( { 'version': helios_version } ) }}"
+    dest: "{{ helios.archive | tokens( { 'version': helios_version } ) }}"
 
-- file: path={{ helios.packages }} state=absent
-- file: path={{ helios.packages }} state=directory
+- file: path={{ helios.home }} state=absent
+- file: path={{ helios.home }} state=directory
 
 - name: Unpacking Helios packages archive
   unarchive:
-    src:  "{{ helios_archive }}"
-    dest: "{{ helios.packages }}"
+    src:  "{{ helios.archive | tokens( { 'version': helios_version } ) }}"
+    dest: "{{ helios.home }}"
     copy: false
 
 - name: Installing Helios services
-  apt:  deb="{{ helios.packages }}/helios-services_{{ helios_version }}_all.deb"
+  apt:  deb="{{ helios.home }}/helios-services_{{ helios_version }}_all.deb"
