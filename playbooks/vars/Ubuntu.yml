@@ -8,6 +8,7 @@ ubuntu: {
   env_file:     /etc/environment,
   init_dir:     /etc/init,
   envs_dir:     /etc/profile.d, # http://goo.gl/ksHX6N
+  bin_dir:      /usr/bin,
   sudoers:      /etc/sudoers,
   sources_list: /etc/apt/sources.list
 }

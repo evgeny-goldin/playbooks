@@ -1,1 +1,27 @@
 ---
+- set_fact: etcd_dir="{{ helios.master.etcd.dir_name.replace( '<version>', helios.master.etcd.version ) }}"
+- set_fact: etcd="{{ helios.master.etcd.home }}/{{ etcd_dir }}/etcd"
+
+- name: Downloading etcd
+  get_url:
+    url:  "{{ helios.master.etcd.url.replace( '<version>', helios.master.etcd.version ).replace( '<dirname>', etcd_dir ) }}"
+    dest: "{{ helios.master.etcd.archive }}"
+    
+- file: path="{{ helios.master.etcd.home }}" state=directory
+- name: Unpacking etcd
+  unarchive:
+    src:  "{{ helios.master.etcd.archive }}"
+    dest: "{{ helios.master.etcd.home }}"
+    copy: no       
+
+- name: Copying etcd executable
+  command: cp "{{ etcd }}" "{{ ubuntu.bin_dir }}"
+
+- name:     Running etcd
+  command:  etcd --version
+  register: etcd_out
+  
+- name: Verifying etcd version
+  assert:
+    that:
+      - "'etcd version {{ helios.master.etcd.version }}' in etcd_out.stdout"
