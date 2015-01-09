@@ -1,0 +1,15 @@
+---
+# Downloads {{ url }} to {{ archive }} and unpacks it to {{ home }} directory
+- name: Downloading {{ name }}
+  get_url:
+    url:  "{{ url }}"
+    dest: "{{ archive }}"
+
+- file: path={{ home }} state=absent
+- file: path={{ home }} state=directory
+
+- name: Unpacking {{ name }}
+  unarchive:
+    src:  "{{ archive }}"
+    dest: "{{ home }}"
+    copy: false

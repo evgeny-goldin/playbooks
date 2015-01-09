@@ -5,19 +5,12 @@
     etcd_src: "{{ helios.master.etcd.home }}/{{ etcd_dir }}/etcd"
     etcd_bin: "{{ ubuntu.bin_dir }}/etcd"
 
-- name: Downloading etcd
-  get_url:
-    url:  "{{ helios.master.etcd.url     | tokens( { 'dir_name': etcd_dir, 'version': helios.master.etcd.version }) }}"
-    dest: "{{ helios.master.etcd.archive | tokens( helios.master.etcd ) }}"
-    
-- file: path="{{ helios.master.etcd.home }}" state=absent
-- file: path="{{ helios.master.etcd.home }}" state=directory
-
-- name: Unpacking etcd
-  unarchive:
-    src:  "{{ helios.master.etcd.archive | tokens( helios.master.etcd ) }}"
-    dest: "{{ helios.master.etcd.home }}"
-    copy: no       
+- include: ../download-unpack.yml
+  vars:
+    name:    etcd
+    url:     "{{ helios.master.etcd.url     | tokens( { 'dir_name': etcd_dir, 'version': helios.master.etcd.version }) }}"
+    archive: "{{ helios.master.etcd.archive | tokens( helios.master.etcd ) }}"
+    home:    "{{ helios.master.etcd.home }}"
 
 - name: Stopping etcd service
   service: name=etcd state=stopped

@@ -9,15 +9,15 @@ import sys
 from   ansible import errors
 from   timeit  import default_timer as timer
 
-def tokens( str, vars_tree ):
+def tokens( s, vars_tree ):
   '''Replaces all <token> sections in a string with corresponding Ansible variables'''
-  new_str = re.sub( '<([^>]+)>', lambda m: vars_tree[ m.group(1) ], str )
-  # print "[{0}] => [{1}]".format( str, new_str )
+  new_str = re.sub( '<([^>]+)>', lambda m: str( vars_tree[ m.group(1) ]), s )
+  # print "[{0}] => [{1}]".format( s, new_str )
   return new_str
 
-def bare( str ):
+def bare( hostname ):
   '''Leaves out the dot and everything that follows from a domain name: "helios-master.vm" => "helios-master"'''
-  return re.sub( '\..*', '', str )
+  return re.sub( '\..*', '', hostname )
     
 def merge( hash_a, hash_b ):
   '''Merges two hashes'''

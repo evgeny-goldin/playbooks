@@ -5,14 +5,18 @@
 - debug: var=registry_port
 - debug: var=domain
 
-- file: path={{ helios.agent.home }} state=directory
+- name: Creating Helios home directory
+  file: path={{ helios.agent.home }} state=directory
+
+- set_fact: 
+    registrar_plugin_jar: "{{ helios.agent.registrar_plugin.jar | tokens( helios.agent.registrar_plugin ) }}"
   
 - name: Verifying Helios master endpoints
   wait_for: host={{ helios_master }} port={{ item }} timeout=3
   with_items:
     - "{{ helios_master_port }}"
     - "{{ zookeeper_port }}"
-    # - "{{ registry_port }}"
+    - "{{ registry_port }}"
 
 - name: Verifying Helios master HTTP endpoints
   uri:  url=http://{{ helios_master }}:{{ item.port }} status_code={{ item.status }}
@@ -29,8 +33,8 @@
 
 - name: Downloading registrar plugin
   get_url:
-    url:  "{{ helios.agent.registrar_plugin.url }}"
-    dest: "{{ helios.agent.registrar_plugin.jar }}"
+    url:  "{{ helios.agent.registrar_plugin.url | tokens( helios.agent.registrar_plugin ) }}"
+    dest: "{{ registrar_plugin_jar }}"
 
 - name: Installing Helios agent
   apt:  deb="{{ helios.home }}/helios-agent_{{ helios_version }}_all.deb"

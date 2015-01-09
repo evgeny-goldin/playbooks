@@ -1,14 +1,8 @@
 ---
-- name: Downloading SkyDNS
-  get_url:
-    url:  "{{ helios.master.skydns.url     | tokens( helios.master.skydns ) }}"
-    dest: "{{ helios.master.skydns.archive | tokens( helios.master.skydns ) }}"
-
-- file: path="{{ helios.master.skydns.home }}" state=absent    
-- file: path="{{ helios.master.skydns.home }}" state=directory
-
-- name: Unpacking SkyDNS
-  unarchive:
-    src:  "{{ helios.master.skydns.archive | tokens( helios.master.skydns ) }}"
-    dest: "{{ helios.master.skydns.home }}"
-    copy: no       
+- include: ../download-unpack.yml
+  vars:
+    name:    SkyDNS
+    url:     "{{ helios.master.skydns.url     | tokens( helios.master.skydns ) }}"
+    archive: "{{ helios.master.skydns.archive | tokens( helios.master.skydns ) }}"
+    home:    "{{ helios.master.skydns.home }}"
+  

@@ -31,19 +31,12 @@
       - "'OpenJDK Runtime Environment' in java_out.stdout"
       - "'OpenJDK 64-Bit Server VM'    in java_out.stdout"
 
-- name: Downloading Helios packages archive
-  get_url:
-    url:  "{{ helios.url     | tokens( { 'version': helios_version } ) }}"
-    dest: "{{ helios.archive | tokens( { 'version': helios_version } ) }}"
-
-- file: path={{ helios.home }} state=absent
-- file: path={{ helios.home }} state=directory
-
-- name: Unpacking Helios packages archive
-  unarchive:
-    src:  "{{ helios.archive | tokens( { 'version': helios_version } ) }}"
-    dest: "{{ helios.home }}"
-    copy: false
+- include: download-unpack.yml
+  vars:
+    name:    Helios 
+    url:     "{{ helios.url     | tokens( { 'version': helios_version } ) }}" 
+    archive: "{{ helios.archive | tokens( { 'version': helios_version } ) }}" 
+    home:    "{{ helios.home }}"
 
 - name: Installing Helios services
   apt:  deb="{{ helios.home }}/helios-services_{{ helios_version }}_all.deb"
