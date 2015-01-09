@@ -25,7 +25,7 @@
     - upstart
     - man
     - build-essential
-    - psmisc
+    - psmisc # Needed for 'killall'
 
 - name:    Stopping and disabling Chef service, if exists
   service: name=chef-client state=stopped enabled=no
