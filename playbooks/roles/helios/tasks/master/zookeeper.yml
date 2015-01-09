@@ -1,6 +1,4 @@
 ---
-- debug: var=zookeeper_port
-
 - name: Installing ZooKeeper service
   apt: name=zookeeperd
 

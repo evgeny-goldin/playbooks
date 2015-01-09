@@ -8,25 +8,26 @@ helios: {
     pattern: '^\d+\.\d+\.\d+$'
   },
   master: {
-      config:  /etc/default/helios-master,
-      exhibitor: {
-        version: latest, # 1.5.2 or latest
-        gradle_provider: 'https://github.com/evgeny-goldin/gradle-provider.git',
-        home:            /opt/exhibitor,
-        latest: {
-          command: "curl -s 'http://jcenter.bintray.com/com/netflix/exhibitor/exhibitor-standalone/' | grep '<pre>' | grep -v 'maven-metadata.xml' | sed -r 's/<[^>]+>//g' | tr -d '/' | tail -1",
-          pattern: '^\d+\.\d+\.\d+$'
-        }
-      },
-      zookeeper: {
-        config: /etc/zookeeper/conf/zoo.cfg
+    config:  /etc/default/helios-master,
+    exhibitor: {
+      version: latest, # 1.5.2 or latest
+      gradle_provider: 'https://github.com/evgeny-goldin/gradle-provider.git',
+      home:            /opt/exhibitor,
+      latest: {
+        command: "curl -s 'http://jcenter.bintray.com/com/netflix/exhibitor/exhibitor-standalone/' | grep '<pre>' | grep -v 'maven-metadata.xml' | sed -r 's/<[^>]+>//g' | tr -d '/' | tail -1",
+        pattern: '^\d+\.\d+\.\d+$'
       }
+    },
+    zookeeper: {
+      config: /etc/zookeeper/conf/zoo.cfg
+    }
   },
   agent: {
-      config:  /etc/default/helios-agent,
-      sky_dns: {
-          url: 'https://github.com/spotify/helios-skydns/releases/download/0.1/helios-skydns-0.1.jar',
-          jar: /opt/helios-skydns.jar
-      }
+    config:        /etc/default/helios-agent,
+    helios_config: ~/.helios/config,
+    sky_dns: {
+        url: 'https://github.com/spotify/helios-skydns/releases/download/0.1/helios-skydns-0.1.jar',
+        jar: /opt/helios-skydns.jar
+    }
   }
 }

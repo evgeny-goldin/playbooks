@@ -1,2 +1,2 @@
 ENABLED=true
-HELIOS_MASTER_OPTS="--zk localhost:{{ zookeeper_port }}"
+HELIOS_MASTER_OPTS="--http http://0.0.0.0:{{ helios_master_port }} --zk localhost:{{ zookeeper_port }}"

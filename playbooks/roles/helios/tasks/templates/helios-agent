@@ -1,2 +1,2 @@
 ENABLED=true
-HELIOS_AGENT_OPTS="--state-dir=/var/lib/helios-agent --name=ubuntu-14.skydns.local --zk {{ zk_host }} --service-registry http://127.0.0.1:4001 --service-registrar-plugin {{ helios.agent.sky_dns.jar }} --domain skydns.local"
+HELIOS_AGENT_OPTS="--state-dir=/var/lib/helios-agent --name=ubuntu-14.skydns.local --zk {{ helios_master }}:{{ zookeeper_port }} --service-registry http://127.0.0.1:4001 --service-registrar-plugin {{ helios.agent.sky_dns.jar }} --domain skydns.local"
