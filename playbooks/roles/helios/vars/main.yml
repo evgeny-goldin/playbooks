@@ -20,15 +20,21 @@ helios: {
     },
     zookeeper: {
       config: /etc/zookeeper/conf/zoo.cfg
+    },
+    etcd: {
+      
+    },
+    skydns: {
+      
     }
   },
   agent: {
     home:      ~/.helios,
     config:    /etc/default/helios-agent,
     state_dir: /var/lib/helios-agent,
-    sky_dns: {
-        url: 'https://github.com/spotify/helios-skydns/releases/download/0.1/helios-skydns-0.1.jar',
-        jar: /opt/helios-skydns.jar
+    registrar_plugin: {
+      url: 'https://github.com/spotify/helios-skydns/releases/download/0.1/helios-skydns-0.1.jar',
+      jar: /opt/helios-skydns.jar
     }
   }
 }

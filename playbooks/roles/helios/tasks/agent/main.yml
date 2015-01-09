@@ -27,10 +27,10 @@
     - { from: 'helios-agent',  to: "{{ helios.agent.config }}" }
     - { from: 'helios-config', to: "{{ helios.agent.home }}/config" }
 
-- name: Downloading Helios SkyDNS plugin
+- name: Downloading registrar plugin
   get_url:
-    url:  "{{ helios.agent.sky_dns.url }}"
-    dest: "{{ helios.agent.sky_dns.jar }}"
+    url:  "{{ helios.agent.registrar_plugin.url }}"
+    dest: "{{ helios.agent.registrar_plugin.jar }}"
 
 - name: Installing Helios agent
   apt:  deb="{{ helios.packages }}/helios-agent_{{ helios_version }}_all.deb"

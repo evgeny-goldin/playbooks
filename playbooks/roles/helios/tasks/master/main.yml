@@ -4,8 +4,9 @@
 - debug: var=registry_port
 
 - include: zookeeper.yml
-
 - include: exhibitor.yml
+- include: etcd.yml
+- include: skydns.yml
 
 - name: Copying Helios master config
   template:
