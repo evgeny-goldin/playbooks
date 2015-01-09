@@ -9,6 +9,7 @@ VAGRANT_DOMAIN          = 'vm'
 ZOOKEEPER_PORT          = 2185
 HELIOS_MASTER_PORT      = 5805
 HELIOS_REGISTRY_PORT    = 4001
+WEB_PORT                = 8080
 HELIOS_AGENT_PROPERTIES = { playbook:           'helios-agent-ubuntu',
                             helios_master:      "helios-master.#{ VAGRANT_DOMAIN }",
                             helios_master_port: HELIOS_MASTER_PORT,
@@ -21,11 +22,12 @@ BOXES                   = {
   # ruby:               {},
   'helios-master'  => { helios_master_port: HELIOS_MASTER_PORT,
                         zookeeper_port:     ZOOKEEPER_PORT,
-                        ports:              [ ZOOKEEPER_PORT, HELIOS_MASTER_PORT, 8080 ]}, # 8080 is for Netflix Exhibitor
+                        registry_port:      HELIOS_REGISTRY_PORT,
+                        ports:              [ ZOOKEEPER_PORT, HELIOS_MASTER_PORT, HELIOS_REGISTRY_PORT, WEB_PORT ]}, # Web port is for Netflix Exhibitor
   'helios-agent-1' => HELIOS_AGENT_PROPERTIES,
   'helios-agent-2' => HELIOS_AGENT_PROPERTIES,
-  # jenkins:            { ports: [ 8080 ]},
-  # asgard:             { ports: [ 8080 ]},
+  # jenkins:            { ports: [ WEB_PORT ]},
+  # asgard:             { ports: [ WEB_PORT ]},
   # mysql:              { ports: [ 3306 ]},
   # docker:             { ports: [ 3000 ], app_name: 'tsa',
   #                                        image:    'evgenyg/todo-sample-app',
