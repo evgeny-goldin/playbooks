@@ -1,1 +1,4 @@
-SKYDNS_OPTS="-addr={{ common.net.any_ip }}:{{ common.net.dns_port }} -machines="{{ common.net.localhost }}:{{ registry_port }}" -nameservers={{ common.net.public_dns }}"
+# https://github.com/skynetservices/skydns
+SKYDNS_ADDR="{{ common.net.any_ip }}:{{ common.net.dns_port }}"
+ETCD_MACHINES="{{ common.net.localhost }}:{{ registrar_port }}"
+SKYDNS_NAMESERVERS="{{ common.net.public_dns }}"

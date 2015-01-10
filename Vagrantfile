@@ -8,13 +8,13 @@ MEMORY                  = '1024'
 VAGRANT_DOMAIN          = 'vm'
 ZOOKEEPER_PORT          = 2181
 HELIOS_MASTER_PORT      = 5801
-HELIOS_REGISTRY_PORT    = 4001
+HELIOS_ETCD_PORT        = 4001
 WEB_PORT                = 8080
 HELIOS_AGENT_PROPERTIES = { playbook:           'helios-agent-ubuntu',
                             helios_master:      "helios-master.#{ VAGRANT_DOMAIN }",
                             helios_master_port: HELIOS_MASTER_PORT,
                             zookeeper_port:     ZOOKEEPER_PORT,
-                            registry_port:      HELIOS_REGISTRY_PORT,
+                            registrar_port:     HELIOS_ETCD_PORT,
                             domain:             VAGRANT_DOMAIN }
 BOXES                   = {
   # Name of the box (and corresponding playbook) => { playbook's extra variables, :ports is respected by Vagrant }
@@ -22,8 +22,8 @@ BOXES                   = {
   # ruby:               {},
   'helios-master'  => { helios_master_port: HELIOS_MASTER_PORT,
                         zookeeper_port:     ZOOKEEPER_PORT,
-                        registry_port:      HELIOS_REGISTRY_PORT,
-                        ports:              [ ZOOKEEPER_PORT, HELIOS_MASTER_PORT, HELIOS_REGISTRY_PORT, WEB_PORT ]}, # Web port is for Netflix Exhibitor
+                        registrar_port:     HELIOS_ETCD_PORT,
+                        ports:              [ ZOOKEEPER_PORT, HELIOS_MASTER_PORT, HELIOS_ETCD_PORT, WEB_PORT ]}, # Web port for Netflix Exhibitor
   'helios-agent-1' => HELIOS_AGENT_PROPERTIES,
   'helios-agent-2' => HELIOS_AGENT_PROPERTIES,
   # jenkins:            { ports: [ WEB_PORT ]},

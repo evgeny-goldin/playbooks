@@ -1,0 +1,36 @@
+---
+# ---------------------------------------------
+# Verifies Helios master connectivity
+# ---------------------------------------------
+
+- name: Verifying Helios master endpoints
+  wait_for: host={{ helios_master }} port={{ item }} timeout=3
+  with_items:
+    - "{{ helios_master_port }}"
+    - "{{ zookeeper_port }}"
+    - "{{ registrar_port }}"
+    - "{{ common.net.dns_port }}"
+
+- name: Verifying Helios master HTTP endpoints
+  uri:  url=http://{{ helios_master }}:{{ item.port }}{{ item.path }} status_code={{ item.status }}
+  with_items:
+    - { port: "{{ helios_master_port }}", path: '',         status: 404 }
+    - { port: "{{ registrar_port }}",     path: '/version', status: 200 }
+
+- name:     Running Helios master dig
+  command:  dig @{{ helios_master }}
+  register: dig_out
+
+- name: Verifying Helios master dig
+  assert:
+    that:
+      - "'Got answer'       in dig_out.stdout"
+      - "'QUESTION SECTION' in dig_out.stdout"
+      - "'Query time'       in dig_out.stdout"
+
+# - name: Sending self-registration request
+#   uri:
+#     method:  POST
+#     url:     "{{ registrar_endpoint }}/v2/keys/skydns/local/skydns/{{ ansible_hostname }}"
+#     body:    " 'host' : '{{ facter_ipaddress_eth1 }}' "
+#     timeout: 3

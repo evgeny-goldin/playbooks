@@ -1,7 +1,7 @@
 ---
 - debug: var=helios_master_port
 - debug: var=zookeeper_port
-- debug: var=registry_port
+- debug: var=registrar_port
 
 - include: zookeeper.yml
 - include: exhibitor.yml

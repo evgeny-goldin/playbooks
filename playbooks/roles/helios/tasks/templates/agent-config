@@ -1,2 +1,2 @@
 ENABLED=true
-HELIOS_AGENT_OPTS="--syslog --state-dir={{ helios.agent.state_dir }} --name={{ ansible_hostname }}.{{ domain }} --zk {{ helios_master }}:{{ zookeeper_port }} --service-registry http://{{ helios_master }}:{{ registry_port }} --service-registrar-plugin {{ registrar_plugin_jar }} --domain {{ domain }}"
+HELIOS_AGENT_OPTS="--syslog --state-dir={{ helios.agent.state_dir }} --name={{ ansible_hostname }}.{{ domain }} --zk {{ helios_master }}:{{ zookeeper_port }} --service-registry {{ registrar_endpoint }} --service-registrar-plugin {{ registrar_plugin }} --domain {{ domain }}"

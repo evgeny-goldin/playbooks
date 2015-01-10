@@ -1,18 +1,18 @@
 ---
 helios: {
   version: latest, # 0.8.138 or latest
-  url:     'https://github.com/spotify/helios/releases/download/<version>/helios-debs.tar.gz',
+  url:     '{{ common.github }}/spotify/helios/releases/download/<version>/helios-debs.tar.gz',
   archive: /opt/helios-<version>.tar.gz,
   home:    /opt/helios,
   latest: {
-    command: "curl -s 'https://github.com/spotify/helios/releases' | grep '/spotify/helios/releases/tag/' | sed -r 's/<[^>]+>//g' | sed -r 's/:.+//' | sed '/^\\s*$/d' | head -1 | awk '{print $1}'",
+    command: "curl -s '{{ common.github }}/spotify/helios/releases' | grep '/spotify/helios/releases/tag/' | sed -r 's/<[^>]+>//g' | sed -r 's/:.+//' | sed '/^\\s*$/d' | head -1 | awk '{print $1}'",
     pattern: '^\d+\.\d+\.\d+$'
   },
   master: {
-    config:  /etc/default/helios-master,
+    config:  "{{ ubuntu.etc_default }}/helios-master",
     exhibitor: {
       version: latest, # 1.5.2 or latest
-      gradle_provider: 'https://github.com/evgeny-goldin/gradle-provider.git',
+      gradle_provider: '{{ common.github }}/evgeny-goldin/gradle-provider.git',
       home:            /opt/exhibitor,
       latest: {
         command: "curl -s 'http://jcenter.bintray.com/com/netflix/exhibitor/exhibitor-standalone/' | grep '<pre>' | grep -v 'maven-metadata.xml' | sed -r 's/<[^>]+>//g' | tr -d '/' | tail -1",
@@ -23,25 +23,26 @@ helios: {
       config: /etc/zookeeper/conf/zoo.cfg
     },
     etcd: {
-      version:  0.4.6,
+      version:  2.0.0-rc.1, # https://github.com/coreos/etcd/releases
       dir_name: etcd-v<version>-linux-amd64,
-      url:      'https://github.com/coreos/etcd/releases/download/v<version>/<dir_name>.tar.gz',
+      url:      '{{ common.github }}/coreos/etcd/releases/download/v<version>/<dir_name>.tar.gz',
       archive:  /opt/etcd-<version>.tar.gz,
       home:     /opt/etcd,
-      config:   /etc/etcd/etcd.conf
+      config:   "{{ ubuntu.etc_default }}/etcd"
     },
     skydns: {
-      url:    github.com/skynetservices/skydns,
-      config: /etc/default/skydns
+      version: 2.0.1d, # https://github.com/skynetservices/skydns/releases
+      url:     github.com/skynetservices/skydns,
+      config:  "{{ ubuntu.etc_default }}/skydns"
     }
   },
   agent: {
     home:      ~/.helios,
-    config:    /etc/default/helios-agent,
+    config:    "{{ ubuntu.etc_default }}/helios-agent",
     state_dir: /var/lib/helios-agent,
     registrar_plugin: {
-      version: 0.1,
-      url:     'https://github.com/spotify/helios-skydns/releases/download/<version>/helios-skydns-<version>.jar',
+      version: 0.1, # https://github.com/spotify/helios-skydns/releases
+      url:     '{{ common.github }}/spotify/helios-skydns/releases/download/<version>/helios-skydns-<version>.jar',
       jar:     /opt/helios-skydns-<version>.jar
     }
   }

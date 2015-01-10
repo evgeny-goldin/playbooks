@@ -7,7 +7,7 @@ respawn
 respawn limit unlimited
 
 script
-    [ -r /etc/default/skydns ] && . /etc/default/skydns
+    [ -r {{ helios.master.skydns.config }} ] && . {{ helios.master.skydns.config }}
     {{ skydns_bin }} $SKYDNS_OPTS
 end script
 

@@ -1,5 +1,5 @@
 description "etcd"
-    
+
 start on runlevel [2345]
 stop  on runlevel [!2345]
 
@@ -7,7 +7,7 @@ respawn
 respawn limit unlimited
 
 script
-    [ -r /etc/default/etcd ] && . /etc/default/etcd
+    [ -r {{ helios.master.etcd.config }} ] && . {{ helios.master.etcd.config }}
     {{ etcd_bin }} $ETCD_OPTS
 end script
 

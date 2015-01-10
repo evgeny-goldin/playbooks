@@ -24,12 +24,11 @@
   register: etcd_out
 
 - name: Verifying etcd version
-  assert:
-    that:
-      - "'etcd version {{ helios.master.etcd.version }}' in etcd_out.stdout"
+  fail: msg="Expected etcd version '{{ helios.master.etcd.version }}', read '{{ etcd_out.stdout }}' instead"
+  when: "'{{ helios.master.etcd.version }}' not in etcd_out.stdout"
 
 - command: mkdir -p $(dirname '{{ helios.master.etcd.config }}')
-- name: Copying etcd config
+- name: Generating etcd config
   template:
     src:  etcd-config
     dest: "{{ helios.master.etcd.config }}"
@@ -43,4 +42,12 @@
   service: name=etcd state=started enabled=yes
 
 - name: Verifying etcd endpoint
-  wait_for: port={{ registry_port }} timeout=3
+  wait_for: port={{ registrar_port }} timeout=3
+
+- name: Verifying etcd HTTP endpoint
+  uri:  url="http://{{ common.net.localhost }}:{{ registrar_port }}/version" return_content=yes
+  register: etcd_version
+
+- name: Verifying etcd version
+  fail: msg="Expected etcd version '{{ helios.master.etcd.version }}', read '{{ etcd_version.content }}' instead"
+  when: "'{{ helios.master.etcd.version }}' not in '{{ etcd_version.content }}'"

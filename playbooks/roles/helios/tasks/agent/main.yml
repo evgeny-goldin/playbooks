@@ -2,30 +2,19 @@
 - debug: var=helios_master
 - debug: var=helios_master_port
 - debug: var=zookeeper_port
-- debug: var=registry_port
+- debug: var=registrar_port
 - debug: var=domain
 
 - set_fact:
-    registrar_plugin_jar: "{{ helios.agent.registrar_plugin.jar | tokens( helios.agent.registrar_plugin ) }}"
+    registrar_plugin:   "{{ helios.agent.registrar_plugin.jar | tokens( helios.agent.registrar_plugin ) }}"
+    registrar_endpoint: "http://{{ helios_master }}:{{ registrar_port }}"
 
-- name: Verifying Helios master endpoints
-  wait_for: host={{ helios_master }} port={{ item }} timeout=3
-  with_items:
-    - "{{ helios_master_port }}"
-    - "{{ zookeeper_port }}"
-    - "{{ registry_port }}"
-
-- name: Verifying Helios master HTTP endpoints
-  uri:  url=http://{{ helios_master }}:{{ item.port }} status_code={{ item.status }}
-  with_items:
-    - { port: "{{ helios_master_port }}", status: 404 }
-
-- include: verify-registration.yml
+- include: verify-master.yml
 
 - name: Downloading registrar plugin
   get_url:
     url:  "{{ helios.agent.registrar_plugin.url | tokens( helios.agent.registrar_plugin ) }}"
-    dest: "{{ registrar_plugin_jar }}"
+    dest: "{{ registrar_plugin }}"
 
 - name: Creating Helios home directory
   file: path={{ helios.agent.home }} state=directory

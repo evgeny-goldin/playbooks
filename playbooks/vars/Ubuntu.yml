@@ -3,6 +3,7 @@ ubuntu: {
   apt_repo:     ubuntu.mirror.su.se, # http://mirrors.ubuntu.com/mirrors.txt
   root_home:    /root,
   home_dir:     /home,
+  bash:         /bin/bash,
   log_dir:      /var/log,
   pid_dir:      /var/run,
   env_file:     /etc/environment,
@@ -12,5 +13,5 @@ ubuntu: {
   local_dir:    /usr/local,
   sudoers:      /etc/sudoers,
   sources_list: /etc/apt/sources.list,
-  bash:         /bin/bash
+  etc_default:  /etc/default
 }

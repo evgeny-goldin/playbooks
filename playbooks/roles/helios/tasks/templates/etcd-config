@@ -1,2 +1,3 @@
-addr      = "{{ common.net.localhost }}:{{ registry_port }}"
-bind_addr = "{{ common.net.any_ip }}:{{ registry_port }}"
+# https://github.com/coreos/etcd/blob/master/Documentation/configuration.md
+ETCD_ADDR="{{ common.net.localhost }}:{{ registrar_port }}"
+ETCD_BIND_ADDR="{{ common.net.any_ip }}:{{ registrar_port }}"

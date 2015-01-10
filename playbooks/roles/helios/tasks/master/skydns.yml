@@ -8,6 +8,11 @@
   environment:
     "{{ go_env }}"
 
+- name: Switching SkyDNS version
+  command: git checkout '{{ helios.master.skydns.version }}'
+  args:
+    chdir: "{{ skydns_root }}"
+
 - name: Building SkyDNS
   command: go build -v
   args:
@@ -33,9 +38,8 @@
   ignore_errors: yes
 
 - name: Verifying SkyDNS run
-  assert:
-    that:
-      - "'Usage of skydns' in skydns_out.stdout"
+  fail: msg="Unknown output of 'skydns --help' - {{ skydns_out.stdout }}"
+  when: "'Usage of skydns' not in skydns_out.stdout"
 
 - name: Generating SkyDNS upstart script
   template:
