@@ -20,7 +20,7 @@
   service: name=helios-master state=restarted enabled=yes
 
 - name: Verifying Helios master endpoint
-  wait_for: port={{ helios_master_port }} timeout=3
+  wait_for: port={{ helios_master_port }} timeout=10
 
 - name: Verifying Helios master HTTP endpoint
   uri:  url=http://localhost:{{ helios_master_port }} status_code=404
