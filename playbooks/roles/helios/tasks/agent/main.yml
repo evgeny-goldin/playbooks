@@ -8,9 +8,9 @@
 - name: Creating Helios home directory
   file: path={{ helios.agent.home }} state=directory
 
-- set_fact: 
+- set_fact:
     registrar_plugin_jar: "{{ helios.agent.registrar_plugin.jar | tokens( helios.agent.registrar_plugin ) }}"
-  
+
 - name: Verifying Helios master endpoints
   wait_for: host={{ helios_master }} port={{ item }} timeout=3
   with_items:
@@ -28,7 +28,7 @@
     src:  "{{ item.from }}"
     dest: "{{ item.to   }}"
   with_items:
-    - { from: 'helios-agent',  to: "{{ helios.agent.config }}" }
+    - { from: 'agent-config',  to: "{{ helios.agent.config }}" }
     - { from: 'helios-config', to: "{{ helios.agent.home }}/config" }
 
 - name: Downloading registrar plugin

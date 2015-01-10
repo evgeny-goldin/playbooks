@@ -10,7 +10,7 @@
 
 - name: Copying Helios master config
   template:
-    src:  helios-master
+    src:  master-config
     dest: "{{ helios.master.config }}"
 
 - name: Installing Helios master
