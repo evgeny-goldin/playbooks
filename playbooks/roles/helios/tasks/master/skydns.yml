@@ -49,7 +49,7 @@
   wait_for: port={{ common.ports.dns }} timeout=5
 
 - name:     Running local dig
-  command:  dig @localhost
+  command:  dig @127.0.0.1
   register: dig_out
 
 - name: Verifying local dig
