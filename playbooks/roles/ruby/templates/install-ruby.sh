@@ -1,4 +1,4 @@
-#!/bin/bash
+#!{{ ubuntu.bash }}
 
 source '{{ ruby.rvm.home }}/scripts/rvm'
 

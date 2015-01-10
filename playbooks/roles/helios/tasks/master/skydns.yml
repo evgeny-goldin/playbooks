@@ -1,4 +1,8 @@
 ---
+- set_fact:
+    skydns_root: "{{ go.path }}/src/{{ helios.master.skydns.url }}"
+    skydns_bin:  "{{ ubuntu.bin_dir }}/skydns"
+
 - name: Downloading SkyDNS
   command: go get '{{ helios.master.skydns.url }}'
   environment:
@@ -7,11 +11,50 @@
 - name: Building SkyDNS
   command: go build -v
   args:
-    chdir: "{{ go.path }}/src/{{ helios.master.skydns.url }}"
+    chdir: "{{ skydns_root }}"
   environment:
     "{{ go_env }}"
 
 - name: Copying SkyDNS config
-  copy:
-    src:  skydns
+  template:
+    src:  skydns-config
     dest: "{{ helios.master.skydns.config }}"
+
+- name: Stopping SkyDNS service
+  service: name=skydns state=stopped
+  ignore_errors: yes
+
+- name: Copying SkyDNS executable
+  command: cp "{{ skydns_root }}/skydns" "{{ skydns_bin }}"
+
+- name:     Running SkyDNS
+  command:  "{{ ubuntu.bash }} -c 'skydns --help 2>&1; exit 0'"
+  register: skydns_out
+  ignore_errors: yes
+
+- name: Verifying SkyDNS run
+  assert:
+    that:
+      - "'Usage of skydns' in skydns_out.stdout"
+
+- name: Generating SkyDNS upstart script
+  template:
+    src:  skydns-upstart
+    dest: "{{ ubuntu.init_dir }}/skydns.conf"
+
+- name: Starting SkyDNS service
+  service: name=skydns state=started enabled=yes
+
+- name: Verifying SkyDNS endpoint
+  wait_for: port={{ common.ports.dns }} timeout=5
+
+- name:     Running local dig
+  command:  dig @localhost
+  register: dig_out
+
+- name: Verifying local dig
+  assert:
+    that:
+      - "'Got answer'                      in dig_out.stdout"
+      - "'QUESTION SECTION'                in dig_out.stdout"
+      - "'SERVER: 127.0.0.1#53(127.0.0.1)' in dig_out.stdout"

@@ -7,6 +7,10 @@ common: {
     secret:    '0600'
   },
 
+  ports: {
+    dns: 53
+  },
+
   # Whether roles should start services installed
   start_service: true
 }

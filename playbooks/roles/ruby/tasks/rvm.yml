@@ -33,7 +33,7 @@
     - { src: 'install-ruby.sh', dest: "{{ install_ruby }}" }
 
 - name:    Running RVM and Ruby installation script
-  command: "/bin/bash '{{ item }}'"
+  command: "{{ ubuntu.bash }} '{{ item }}'"
   with_items:
     - "{{ install_rvm  }}"
     - "{{ install_ruby }}"

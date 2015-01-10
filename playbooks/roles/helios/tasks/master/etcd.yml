@@ -1,7 +1,7 @@
 ---
-- set_fact: 
+- set_fact:
     etcd_dir: "{{ helios.master.etcd.dir_name | tokens( helios.master.etcd ) }}"
-- set_fact: 
+- set_fact:
     etcd_src: "{{ helios.master.etcd.home }}/{{ etcd_dir }}/etcd"
     etcd_bin: "{{ ubuntu.bin_dir }}/etcd"
 
@@ -22,7 +22,7 @@
 - name:     Running etcd
   command:  etcd --version
   register: etcd_out
-  
+
 - name: Verifying etcd version
   assert:
     that:
@@ -33,14 +33,14 @@
   template:
     src:  etcd-config
     dest: "{{ helios.master.etcd.config }}"
-    
+
 - name: Generating etcd upstart script
   template:
     src:  etcd-upstart
-    dest: "{{ ubuntu.init_dir }}/etcd.conf"  
+    dest: "{{ ubuntu.init_dir }}/etcd.conf"
 
 - name: Starting etcd service
-  service: name=etcd state=restarted enabled=yes
+  service: name=etcd state=started enabled=yes
 
 - name: Verifying etcd endpoint
   wait_for: port={{ registry_port }} timeout=3

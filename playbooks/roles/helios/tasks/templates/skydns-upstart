@@ -1,0 +1,15 @@
+description "skydns"
+
+start on runlevel [2345]
+stop  on runlevel [!2345]
+
+respawn
+respawn limit unlimited
+
+script
+    [ -r /etc/default/skydns ] && . /etc/default/skydns
+    {{ skydns_bin }} $SKYDNS_OPTS
+end script
+
+# prevent respawning more than once every second
+post-stop exec sleep 1
