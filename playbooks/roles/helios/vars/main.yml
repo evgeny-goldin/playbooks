@@ -31,11 +31,8 @@ helios: {
       config:   /etc/etcd/etcd.conf
     },
     skydns: {
-      version:  2.0.1a,
-      dir_name: skydns-<version>,
-      url:      'https://github.com/skynetservices/skydns/archive/<version>.tar.gz',
-      archive:  /opt/skydns-<version>.tar.gz,
-      home:     /opt/skydns,
+      url:    github.com/skynetservices/skydns,
+      go_src: src/github.com/skynetservices/skydns
     }
   },
   agent: {

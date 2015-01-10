@@ -1,0 +1,12 @@
+---
+go: {
+  version: latest, # 1.4 or latest
+  latest: {
+    command: "curl -s 'https://golang.org/dl/' | grep '.src.tar.gz' | sed -r 's/<[^>]+>//g' | sed 's/\\.src\\.tar\\.gz//g' | sed -r 's/go//' | awk '{print $1}' | head -1",
+    pattern: '^\d+\.\d+'
+  },
+  url:     'https://storage.googleapis.com/golang/go<version>.linux-amd64.tar.gz',
+  archive: /opt/go-<version>.tar.gz,
+  path:    /opt/golang,
+  bin_dir: /usr/local/go/bin
+}

@@ -1,0 +1,35 @@
+---
+- name: Calculating Go version
+  set_fact:
+    go_version: "{{ go.version | calculate( go.latest ) }}"
+
+- name: Installing Go packages
+  apt: name={{ item }}
+  with_items:
+    - mercurial
+
+- include: "{{ playbook_dir }}/roles/download-unpack.yml"
+  vars:
+    name:    Go
+    url:     "{{ go.url     | tokens( { 'version': go_version } ) }}" 
+    archive: "{{ go.archive | tokens( { 'version': go_version } ) }}" 
+    home:    "{{ go.bin_dir }}/../.."
+    clean:   no
+
+- file: path={{ go.path }} state=directory
+- name: Setting Go environment variables
+  template:
+    src:  golang.sh
+    dest: "{{ ubuntu.envs_dir }}/golang.sh"
+
+- name:     Running Go
+  command:  go version
+  register: go_out
+  environment:
+    PATH:   "{{ ansible_env.PATH }}:{{ go.bin_dir }}"
+
+- name: Verifying Go version
+  assert:
+    that:
+      - "'go version go{{ go_version }} ' in go_out.stdout"
+      - "'linux/amd64'                    in go_out.stdout"

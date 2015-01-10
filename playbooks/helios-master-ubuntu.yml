@@ -14,5 +14,6 @@
     - { role: run-before, period: daily  }
     - { role: base,       when: periodic }
     - { role: ansible,    when: periodic }
+    - { role: golang,     when: periodic }
     - { role: helios,     helios_role: master }
     - run-after

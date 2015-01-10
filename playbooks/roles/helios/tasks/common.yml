@@ -1,29 +1,16 @@
 ---
-# ----------------------------------------------
-# Common tasks between Helios master and agent
-# ----------------------------------------------
+# --------------------------------------------
+#   Common tasks for Helios master and agent
+# --------------------------------------------
 - name: Setting up Helios variables
   set_fact: helios_version="{{ helios.version | calculate( helios.latest ) }}"
   
-- name: Installing packages
-  apt: name={{ item }}
-  with_items:
-    - default-jdk
-    - golang
-
-- name:     Running Go
-  shell:    go version 2>&1
-  register: go_out
+- name: Installing Default JDK
+  apt: name=default-jdk state=latest force=yes
 
 - name:     Running Java
   shell:    java -version 2>&1
   register: java_out
-
-- name:  Verifying Go
-  assert:
-    that:
-      - "'go version' in go_out.stdout"
-      - "'linux'      in go_out.stdout"
 
 - name:  Verifying Java
   assert:
@@ -31,7 +18,7 @@
       - "'OpenJDK Runtime Environment' in java_out.stdout"
       - "'OpenJDK 64-Bit Server VM'    in java_out.stdout"
 
-- include: download-unpack.yml
+- include: "{{ playbook_dir }}/roles/download-unpack.yml"
   vars:
     name:    Helios 
     url:     "{{ helios.url     | tokens( { 'version': helios_version } ) }}" 

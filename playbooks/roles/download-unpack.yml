@@ -5,7 +5,12 @@
     url:  "{{ url }}"
     dest: "{{ archive }}"
 
+- debug: msg=Deleting '{{ home }}'!
+  when: clean | default(True)
+
 - file: path={{ home }} state=absent
+  when: clean | default(True)
+    
 - file: path={{ home }} state=directory
 
 - name: Unpacking {{ name }}

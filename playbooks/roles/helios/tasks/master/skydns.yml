@@ -1,8 +1,14 @@
 ---
-- include: ../download-unpack.yml
-  vars:
-    name:    SkyDNS
-    url:     "{{ helios.master.skydns.url     | tokens( helios.master.skydns ) }}"
-    archive: "{{ helios.master.skydns.archive | tokens( helios.master.skydns ) }}"
-    home:    "{{ helios.master.skydns.home }}"
+- name: Downloading SkyDNS
+  command: go get '{{ helios.master.skydns.url }}'
+  environment:
+    PATH:   "{{ ansible_env.PATH }}:{{ go.bin_dir }}"
+    GOPATH: "{{ go.path }}"
   
+- name: Building SkyDNS
+  command: go build -v
+  args:
+    chdir: "{{ go.path }}/{{ helios.master.skydns.go_src }}"
+  environment:
+    PATH:   "{{ ansible_env.PATH }}:{{ go.bin_dir }}"
+    GOPATH: "{{ go.path }}"
