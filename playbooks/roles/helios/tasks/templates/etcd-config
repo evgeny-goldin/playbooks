@@ -1,2 +1,2 @@
-addr      = "127.0.0.1:{{ registry_port }}"
-bind_addr = "0.0.0.0:{{ registry_port }}"
+addr      = "{{ common.net.localhost }}:{{ registry_port }}"
+bind_addr = "{{ common.net.any_ip }}:{{ registry_port }}"

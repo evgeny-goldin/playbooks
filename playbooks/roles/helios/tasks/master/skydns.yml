@@ -46,15 +46,15 @@
   service: name=skydns state=started enabled=yes
 
 - name: Verifying SkyDNS endpoint
-  wait_for: port={{ common.ports.dns }} timeout=5
+  wait_for: port={{ common.net.dns_port }} timeout=5
 
 - name:     Running local dig
-  command:  dig @127.0.0.1
+  command:  dig @{{ common.net.localhost }}
   register: dig_out
 
 - name: Verifying local dig
   assert:
     that:
-      - "'Got answer'                      in dig_out.stdout"
-      - "'QUESTION SECTION'                in dig_out.stdout"
-      - "'SERVER: 127.0.0.1#53(127.0.0.1)' in dig_out.stdout"
+      - "'Got answer'       in dig_out.stdout"
+      - "'QUESTION SECTION' in dig_out.stdout"
+      - "'SERVER: {{ common.net.localhost }}#{{ common.net.dns_port }}({{ common.net.localhost }})' in dig_out.stdout"

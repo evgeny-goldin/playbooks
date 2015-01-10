@@ -1,18 +1,19 @@
 ---
 common: {
   mode: {
-    directory: '0755',
-    script:    '0744',
-    file:      '0644',
-    secret:    '0600'
+    directory: 0755,
+    script:    0744,
+    file:      0644,
+    secret:    0600
   },
 
-  ports: {
-    dns: 53
+  net: {
+    dns_port:  53,
+    localhost: 127.0.0.1,
+    any_ip:    0.0.0.0,
+    # https://developers.google.com/speed/public-dns/
+    public_dns: "8.8.8.8:53,8.8.4.4:53",
   },
-
-  # https://developers.google.com/speed/public-dns/
-  public_dns: "8.8.8.8:53,8.8.4.4:53",
 
   # Whether roles should start services installed
   start_service: true

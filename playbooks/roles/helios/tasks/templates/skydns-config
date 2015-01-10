@@ -1,1 +1,1 @@
-SKYDNS_OPTS="-addr=0.0.0.0:{{ common.ports.dns }} -machines="127.0.0.1:{{ registry_port }}" -nameservers={{ common.public_dns }}"
+SKYDNS_OPTS="-addr={{ common.net.any_ip }}:{{ common.net.dns_port }} -machines="{{ common.net.localhost }}:{{ registry_port }}" -nameservers={{ common.net.public_dns }}"

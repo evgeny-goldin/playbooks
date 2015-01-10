@@ -20,7 +20,7 @@
 - name: Updating '{{ mysql.my_cnf }}'
   lineinfile:
     dest: "{{ mysql.my_cnf }}"
-    line: '# bind-address = 127.0.0.1'
+    line: '# bind-address = {{ common.net.localhost }}'
     regexp: ^bind-address\s+=
 
 - name: Updating '{{ mysql.my_cnf }}' for Docker
@@ -56,7 +56,7 @@
   shell: "mysql -u root -h localhost < {{ remote_access_script }}"
 
 - name:     Verifying MySQL databases
-  mysql_db: name={{ item }} state=present login_host=127.0.0.1 login_user=root login_password=''
+  mysql_db: name={{ item }} state=present login_host={{ common.net.localhost }} login_user=root login_password=''
   with_items:
     - mysql
     - information_schema
