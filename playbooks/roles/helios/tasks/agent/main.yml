@@ -5,9 +5,6 @@
 - debug: var=registry_port
 - debug: var=domain
 
-- name: Creating Helios home directory
-  file: path={{ helios.agent.home }} state=directory
-
 - set_fact:
     registrar_plugin_jar: "{{ helios.agent.registrar_plugin.jar | tokens( helios.agent.registrar_plugin ) }}"
 
@@ -23,6 +20,16 @@
   with_items:
     - { port: "{{ helios_master_port }}", status: 404 }
 
+- include: verify-registration.yml
+
+- name: Downloading registrar plugin
+  get_url:
+    url:  "{{ helios.agent.registrar_plugin.url | tokens( helios.agent.registrar_plugin ) }}"
+    dest: "{{ registrar_plugin_jar }}"
+
+- name: Creating Helios home directory
+  file: path={{ helios.agent.home }} state=directory
+
 - name: Copying Helios agent configs
   template:
     src:  "{{ item.from }}"
@@ -31,24 +38,8 @@
     - { from: 'agent-config',  to: "{{ helios.agent.config }}" }
     - { from: 'helios-config', to: "{{ helios.agent.home }}/config" }
 
-- name: Downloading registrar plugin
-  get_url:
-    url:  "{{ helios.agent.registrar_plugin.url | tokens( helios.agent.registrar_plugin ) }}"
-    dest: "{{ registrar_plugin_jar }}"
-
 - name: Installing Helios agent
   apt:  deb="{{ helios.home }}/helios-agent_{{ helios_version }}_all.deb"
 
 - name: Restarting Helios agent service
   service: name=helios-agent state=restarted enabled=yes
-
-- name:     Running Helios master dig
-  command:  dig @{{ helios_master }}
-  register: dig_out
-
-- name: Verifying Helios master dig
-  assert:
-    that:
-      - "'Got answer'       in dig_out.stdout"
-      - "'QUESTION SECTION' in dig_out.stdout"
-      - "'Query time'       in dig_out.stdout"

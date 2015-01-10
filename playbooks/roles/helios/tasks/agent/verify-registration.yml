@@ -1,0 +1,11 @@
+---
+- name:     Running Helios master dig
+  command:  dig @{{ helios_master }}
+  register: dig_out
+
+- name: Verifying Helios master dig
+  assert:
+    that:
+      - "'Got answer'       in dig_out.stdout"
+      - "'QUESTION SECTION' in dig_out.stdout"
+      - "'Query time'       in dig_out.stdout"
