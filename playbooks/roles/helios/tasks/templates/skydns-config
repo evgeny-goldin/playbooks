@@ -1,2 +1,1 @@
-SKYDNS_OPTS="-addr=0.0.0.0:53 -nameservers=8.8.8.8:53,8.8.4.4:53"
-ETCD_MACHINES="http://localhost:{{ registry_port }}"
+SKYDNS_OPTS="-addr=0.0.0.0:{{ common.ports.dns }} -machines="127.0.0.1:{{ registry_port }}" -nameservers={{ common.public_dns }}"

@@ -11,6 +11,9 @@ common: {
     dns: 53
   },
 
+  # https://developers.google.com/speed/public-dns/
+  public_dns: 8.8.8.8:53,8.8.4.4:53,
+
   # Whether roles should start services installed
   start_service: true
 }

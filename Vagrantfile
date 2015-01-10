@@ -5,10 +5,10 @@
 VAGRANTFILE_API_VERSION = '2'
 CPUS                    = '2'
 MEMORY                  = '1024'
-VAGRANT_DOMAIN          = 'vm' 
-ZOOKEEPER_PORT          = 2185
-HELIOS_MASTER_PORT      = 5805
-HELIOS_REGISTRY_PORT    = 4004
+VAGRANT_DOMAIN          = 'vm'
+ZOOKEEPER_PORT          = 2181
+HELIOS_MASTER_PORT      = 5801
+HELIOS_REGISTRY_PORT    = 4001
 WEB_PORT                = 8080
 HELIOS_AGENT_PROPERTIES = { playbook:           'helios-agent-ubuntu',
                             helios_master:      "helios-master.#{ VAGRANT_DOMAIN }",
@@ -36,10 +36,10 @@ BOXES                   = {
 
 Vagrant.require_version '>= 1.6.5'
 Vagrant.configure( VAGRANTFILE_API_VERSION ) do | config |
-  
+
   # https://github.com/phinze/landrush
   # vagrant plugin install landrush
-  # vagrant landrush start|stop|restart|status|ls|vms|help 
+  # vagrant landrush start|stop|restart|status|ls|vms|help
   # ~/.vagrant.d/data/landrush
   config.landrush.enabled = true
   config.landrush.tld     = VAGRANT_DOMAIN
@@ -55,7 +55,7 @@ Vagrant.configure( VAGRANTFILE_API_VERSION ) do | config |
                                        # 2) Landrush needs a proper hostname ending with config.landrush.tld
       b.vm.synced_folder 'playbooks', '/playbooks'
 
-      ( variables[ :ports ] || [] ).each { | port |  
+      ( variables[ :ports ] || [] ).each { | port |
         b.vm.network 'forwarded_port', guest: port, host: port, auto_correct: true
       }
 
