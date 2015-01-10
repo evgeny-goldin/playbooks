@@ -32,7 +32,7 @@ helios: {
     },
     skydns: {
       url:    github.com/skynetservices/skydns,
-      go_src: src/github.com/skynetservices/skydns
+      config: /etc/default/skydns
     }
   },
   agent: {

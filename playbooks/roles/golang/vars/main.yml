@@ -10,3 +10,8 @@ go: {
   path:    /opt/golang,
   bin_dir: /usr/local/go/bin
 }
+
+go_env: {
+  PATH:   "{{ ansible_env.PATH }}:{{ go.bin_dir }}",
+  GOPATH: "{{ go.path }}"
+}

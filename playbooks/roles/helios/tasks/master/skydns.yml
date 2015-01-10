@@ -2,13 +2,16 @@
 - name: Downloading SkyDNS
   command: go get '{{ helios.master.skydns.url }}'
   environment:
-    PATH:   "{{ ansible_env.PATH }}:{{ go.bin_dir }}"
-    GOPATH: "{{ go.path }}"
-  
+    "{{ go_env }}"
+
 - name: Building SkyDNS
   command: go build -v
   args:
-    chdir: "{{ go.path }}/{{ helios.master.skydns.go_src }}"
+    chdir: "{{ go.path }}/src/{{ helios.master.skydns.url }}"
   environment:
-    PATH:   "{{ ansible_env.PATH }}:{{ go.bin_dir }}"
-    GOPATH: "{{ go.path }}"
+    "{{ go_env }}"
+
+- name: Copying SkyDNS config
+  copy:
+    src:  skydns
+    dest: "{{ helios.master.skydns.config }}"

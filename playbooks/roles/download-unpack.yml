@@ -5,7 +5,7 @@
     url:  "{{ url }}"
     dest: "{{ archive }}"
 
-- debug: msg=Deleting '{{ home }}'!
+- debug: msg="Deleting '{{ home }}'!"
   when: clean | default(True)
 
 - file: path={{ home }} state=absent
