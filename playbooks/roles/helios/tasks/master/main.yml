@@ -24,3 +24,11 @@
 
 - name: Verifying Helios master HTTP endpoint
   uri:  url=http://{{ common.net.localhost }}:{{ helios_master_port }} status_code=404
+
+- include: "{{ playbook_dir }}/roles/skydns/register-host.yml"
+  vars:
+    etcd_host:   "{{ common.net.localhost }}"
+    etcd_port:   "{{ registrar_port }}"
+    skydns_host: "{{ common.net.localhost }}"
+    fqdn:        "{{ ansible_fqdn }}"
+    ip:          "{{ facter_ipaddress_eth1 }}"

@@ -29,7 +29,7 @@
       - "'Query time'       in dig_out.stdout"
 
 - set_fact:
-    self_registration_url: "{{ registrar_endpoint }}/v2/keys/skydns/{{ '/'.join( domain.split( '.' )[::-1] ) }}/{{ ansible_hostname }}"
+    self_registration_url: "{{ registrar_endpoint }}/v2/keys/skydns/{{ '/'.join( ansible_fqdn.split( '.' )[::-1] ) }}"
 
 - name: Sending a self-registration request
   command: "curl -XPUT '{{ self_registration_url }}' -d value='{ \"host\" : \"{{ facter_ipaddress_eth1 }}\" }'"
@@ -42,17 +42,17 @@
   #   timeout: 3
 
 - name:     Running Helions master self-dig
-  command:  dig @{{ helios_master }} '{{ ansible_hostname }}.{{ domain }}'
+  command:  dig @{{ helios_master }} '{{ ansible_fqdn }}'
   register: dig_out1
 
 - name:     Running self-dig
-  command:  dig '{{ ansible_hostname }}.{{ domain }}'
+  command:  dig '{{ ansible_fqdn }}'
   register: dig_out2
 
 - name: Verifying Helions master self-dig
   assert:
     that:
-      - "'{{ ansible_hostname }}'      in dig_out1.stdout"
+      - "'{{ ansible_fqdn }}'          in dig_out1.stdout"
       - "'{{ facter_ipaddress_eth1 }}' in dig_out1.stdout"
-      - "'{{ ansible_hostname }}'      in dig_out2.stdout"
+      - "'{{ ansible_fqdn }}'          in dig_out2.stdout"
       - "'{{ facter_ipaddress_eth1 }}' in dig_out2.stdout"
