@@ -11,4 +11,4 @@ dataDir={{ zookeeper.data_dir }}
 # Place the dataLogDir to a separate physical disc for better performance
 # dataLogDir=/disk2/zookeeper
 # the port at which the clients will connect
-clientPort={{ zk_port }}
+clientPort={{ zookeeper_port }}

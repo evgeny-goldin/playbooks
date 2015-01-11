@@ -8,4 +8,4 @@ stop  on shutdown
 respawn
 respawn limit 5 5
 
-exec {{ ubuntu.bash }} -c "{{ zk_server }} start-foreground >> '{{ ubuntu.log_dir }}/zookeeper.log' 2>&1"
+exec {{ ubuntu.bash }} -c "{{ zookeeper_server }} start-foreground >> '{{ ubuntu.log_dir }}/zookeeper.log' 2>&1"

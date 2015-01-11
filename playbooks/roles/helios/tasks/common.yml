@@ -11,8 +11,9 @@
 - debug: var=ansible_fqdn
 - debug: var=facter_ipaddress_eth1
 
-- name: Setting up Helios variables
-  set_fact: helios_version="{{ helios.version | calculate( helios.latest ) }}"
+- set_fact:
+    helios_version:     "{{ helios.version     | calculate( helios.latest ) }}"
+    helios_master_port: "{{ helios_master_port | default( helios.master.port ) }}"
 
 - include: "{{ playbook_dir }}/roles/download-unpack.yml"
   vars:

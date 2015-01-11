@@ -1,9 +1,10 @@
 ---
 - set_fact:
-    etcd_dir: "{{ etcd.dir_name | tokens( etcd ) }}"
+    etcd_dir:  "{{ etcd.dir_name | tokens( etcd ) }}"
 - set_fact:
-    etcd_src: "{{ etcd.home }}/{{ etcd_dir }}/etcd"
-    etcd_bin: "{{ ubuntu.bin_dir }}/etcd"
+    etcd_port: "{{ etcd_port | default( etcd.port ) }}"
+    etcd_src:  "{{ etcd.home }}/{{ etcd_dir }}/etcd"
+    etcd_bin:  "{{ ubuntu.bin_dir }}/etcd"
 
 - include: "{{ playbook_dir }}/roles/download-unpack.yml"
   vars:

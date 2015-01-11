@@ -1,10 +1,10 @@
 ---
 - set_fact:
-    zk_home:   "{{ zookeeper.home }}/zookeeper-{{ zookeeper.version }}"
-    zk_port:   "{{ zookeeper_port | default( zookeeper.port ) }}"
+    zookeeper_home:   "{{ zookeeper.home }}/zookeeper-{{ zookeeper.version }}"
 - set_fact:
-    zk_server: "{{ zk_home }}/bin/zkServer.sh"
-    zk_config: "{{ zk_home }}/conf/zoo.cfg"
+    zookeeper_port:   "{{ zookeeper_port | default( zookeeper.port ) }}"
+    zookeeper_server: "{{ zookeeper_home }}/bin/zkServer.sh"
+    zookeeper_config: "{{ zookeeper_home }}/conf/zoo.cfg"
 
 - name: Stopping ZooKeeper service
   service: name=zookeeper state=stopped
@@ -19,12 +19,12 @@
 
 - include: "{{ playbook_dir }}/roles/mkdir.yml"
   vars:
-    file:  "{{ zk_config }}"
+    file:  "{{ zookeeper_config }}"
 
 - name: Generating ZooKeeper config
   template:
     src:  zookeeper-config
-    dest: "{{ zk_config }}"
+    dest: "{{ zookeeper_config }}"
 
 - name: Generating ZooKeeper upstart script
   template:
@@ -35,12 +35,12 @@
   service: name=zookeeper state=started enabled=yes
 
 - name: Verifying ZooKeeper endpoint
-  wait_for: port={{ zk_port }} timeout=3
+  wait_for: port={{ zookeeper_port }} timeout=3
 
 - name: Running zkCli
-  shell:    "echo 'ls /' | {{ zk_home }}/bin/zkCli.sh -server {{ common.net.localhost }}:{{ zk_port }}"
+  shell:    "echo 'ls /' | {{ zookeeper_home }}/bin/zkCli.sh -server {{ common.net.localhost }}:{{ zookeeper_port }}"
   register: zk_out
 
 - name: Verifying zkCli
   fail: msg="Failed to execute zkCli - {{ zk_out }}"
-  when: "'{{ common.net.localhost }}:{{ zk_port }}(CONNECTED)' not in zk_out.stdout"
+  when: "'{{ common.net.localhost }}:{{ zookeeper_port }}(CONNECTED)' not in zk_out.stdout"

@@ -9,6 +9,7 @@ helios: {
     pattern: '^\d+\.\d+\.\d+$'
   },
   master: {
+    port:   5801,
     config: "{{ ubuntu.etc_default }}/helios-master"
   },
   agent: {
