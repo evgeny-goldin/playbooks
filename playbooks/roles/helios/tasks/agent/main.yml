@@ -4,6 +4,8 @@
 - debug: var=zookeeper_port
 - debug: var=registrar_port
 - debug: var=domain
+- debug: var=ansible_fqdn
+- debug: var=facter_ipaddress_eth1
 
 - set_fact:
     registrar_plugin:   "{{ helios.agent.registrar_plugin.jar | tokens( helios.agent.registrar_plugin ) }}"

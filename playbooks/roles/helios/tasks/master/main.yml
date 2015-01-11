@@ -4,6 +4,8 @@
 - debug: var=registrar_port
 - debug: var=exhibitor_port
 - debug: var=domain
+- debug: var=ansible_fqdn
+- debug: var=facter_ipaddress_eth1
 
 - include: zookeeper.yml
 - include: exhibitor.yml

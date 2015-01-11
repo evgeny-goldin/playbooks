@@ -28,31 +28,10 @@
       - "'QUESTION SECTION' in dig_out.stdout"
       - "'Query time'       in dig_out.stdout"
 
-- set_fact:
-    self_registration_url: "{{ registrar_endpoint }}/v2/keys/skydns/{{ '/'.join( ansible_fqdn.split( '.' )[::-1] ) }}"
-
-- name: Sending a self-registration request
-  command: "curl -XPUT '{{ self_registration_url }}' -d value='{ \"host\" : \"{{ facter_ipaddress_eth1 }}\" }'"
-
-  # https://github.com/ansible/ansible-modules-core/issues/265
-  # uri:
-  #   method:  POST
-  #   url:     "{{ self_registration_url }}"
-  #   body:    "{ 'host' : '{{ facter_ipaddress_eth1 }}' }"
-  #   timeout: 3
-
-- name:     Running Helions master self-dig
-  command:  dig @{{ helios_master }} '{{ ansible_fqdn }}'
-  register: dig_out1
-
-- name:     Running self-dig
-  command:  dig '{{ ansible_fqdn }}'
-  register: dig_out2
-
-- name: Verifying Helions master self-dig
-  assert:
-    that:
-      - "'{{ ansible_fqdn }}'          in dig_out1.stdout"
-      - "'{{ facter_ipaddress_eth1 }}' in dig_out1.stdout"
-      - "'{{ ansible_fqdn }}'          in dig_out2.stdout"
-      - "'{{ facter_ipaddress_eth1 }}' in dig_out2.stdout"
+- include: "{{ playbook_dir }}/roles/skydns/register-host.yml"
+  vars:
+    etcd_host:   "{{ helios_master }}"
+    etcd_port:   "{{ registrar_port }}"
+    skydns_host: "{{ helios_master }}"
+    fqdn:        "{{ ansible_fqdn }}"
+    ip:          "{{ facter_ipaddress_eth1 }}"

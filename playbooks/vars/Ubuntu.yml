@@ -13,5 +13,6 @@ ubuntu: {
   local_dir:    /usr/local,
   sudoers:      /etc/sudoers,
   sources_list: /etc/apt/sources.list,
-  etc_default:  /etc/default
+  etc_default:  /etc/default,
+  resolv_conf:  /etc/resolv.conf
 }

@@ -2,6 +2,7 @@
 # ---------------------------------------------------------
 # Called by other roles to register a host with SkyDNS
 # ---------------------------------------------------------
+- debug: msg="Sending registration request to '{{ etcd_host }}' for '{{ fqdn }}' => '{{ ip }}'"
 - debug: var=etcd_host
 - debug: var=etcd_port
 - debug: var=skydns_host
@@ -10,11 +11,13 @@
 
 - set_fact:
     registration_url: "http://{{ etcd_host }}:{{ etcd_port }}/v2/keys/skydns/{{ '/'.join( fqdn.split( '.' )[::-1] ) }}"
+- set_fact:
+    registration_command: "curl -XPUT '{{ registration_url }}' -d value='{ \"host\" : \"{{ ip }}\" }'"
 
-- debug: msg="Sending registration request to '{{ registration_url }}' for '{{ ip }}'"
+- debug: msg="Running '{{ registration_command }}'"
 
-- name: Sending registration request
-  command: "curl -XPUT '{{ registration_url }}' -d value='{ \"host\" : \"{{ ip }}\" }'"
+- name:    Sending registration request
+  command: "{{ registration_command }}"
 
   # https://github.com/ansible/ansible-modules-core/issues/265
   # uri:
