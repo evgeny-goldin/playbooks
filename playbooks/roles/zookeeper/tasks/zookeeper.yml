@@ -1,20 +1,46 @@
 ---
+- set_fact:
+    zk_home:   "{{ zookeeper.home }}/zookeeper-{{ zookeeper.version }}"
+    zk_port:   "{{ zookeeper_port | default( zookeeper.port ) }}"
+- set_fact:
+    zk_server: "{{ zk_home }}/bin/zkServer.sh"
+    zk_config: "{{ zk_home }}/conf/zoo.cfg"
+
 - name: Stopping ZooKeeper service
-  service: name=zookeeperd state=stopped
+  service: name=zookeeper state=stopped
   ignore_errors: yes
 
-- name: Installing ZooKeeper service
-  apt:  name=zookeeperd state=latest force=yes
+- include: "{{ playbook_dir }}/roles/download-unpack.yml"
+  vars:
+    name:    ZooKeeper
+    url:     "{{ zookeeper.url     | tokens( zookeeper ) }}"
+    archive: "{{ zookeeper.archive | tokens( zookeeper ) }}"
+    home:    "{{ zookeeper.home }}"
 
-- name: Setting up ZooKeeper port
-  # http://zookeeper.apache.org/doc/r3.4.6/zookeeperAdmin.html#sc_zkMulitServerSetup
-  lineinfile:
-    dest:   "{{ zookeeper.config }}"
-    line:   "clientPort={{ zookeeper_port }}"
-    regexp: '^clientPort=\d+$'
+- include: "{{ playbook_dir }}/roles/mkdir.yml"
+  vars:
+    file:  "{{ zk_config }}"
+
+- name: Generating ZooKeeper config
+  template:
+    src:  zookeeper-config
+    dest: "{{ zk_config }}"
+
+- name: Generating ZooKeeper upstart script
+  template:
+    src:  zookeeper-upstart
+    dest: "{{ ubuntu.init_dir }}/zookeeper.conf"
 
 - name:    Starting ZooKeeper service
   service: name=zookeeper state=started enabled=yes
 
 - name: Verifying ZooKeeper endpoint
-  wait_for: port={{ zookeeper_port }} timeout=3
+  wait_for: port={{ zk_port }} timeout=3
+
+- name: Running zkCli
+  shell:    "echo 'ls /' | {{ zk_home }}/bin/zkCli.sh -server {{ common.net.localhost }}:{{ zk_port }}"
+  register: zk_out
+
+- name: Verifying zkCli
+  fail: msg="Failed to execute zkCli - {{ zk_out }}"
+  when: "'{{ common.net.localhost }}:{{ zk_port }}(CONNECTED)' not in zk_out.stdout"

@@ -27,7 +27,10 @@
   fail: msg="Expected etcd version '{{ etcd.version }}', read '{{ etcd_out.stdout }}' instead"
   when: "'{{ etcd.version }}' not in etcd_out.stdout"
 
-- command: mkdir -p $(dirname '{{ etcd.config }}')
+- include: "{{ playbook_dir }}/roles/mkdir.yml"
+  vars:
+    file:  "{{ etcd.config }}"
+
 - name: Generating etcd config
   template:
     src:  etcd-config

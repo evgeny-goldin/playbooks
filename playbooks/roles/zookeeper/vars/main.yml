@@ -1,10 +1,16 @@
 ---
 zookeeper: {
-  config: /etc/zookeeper/conf/zoo.cfg
+  version:  3.4.6, # http://apache.mirrors.spacedump.net/zookeeper/
+  port:     2181,
+  url:      'http://apache.mirrors.spacedump.net/zookeeper/zookeeper-<version>/zookeeper-<version>.tar.gz',
+  archive:  /opt/zookeeper-<version>.tar.gz,
+  home:     /opt/zookeeper,
+  data_dir: /var/lib/zookeeper
 }
 
 exhibitor: {
   version: latest, # 1.5.2 or latest
+  port:    8080,
   gradle_provider: '{{ common.github }}/evgeny-goldin/gradle-provider.git',
   home:            /opt/exhibitor,
   latest: {

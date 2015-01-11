@@ -1,0 +1,3 @@
+---
+# Creates parent directory of the file specified
+- command: mkdir -p "$(dirname '{{ file }}')"

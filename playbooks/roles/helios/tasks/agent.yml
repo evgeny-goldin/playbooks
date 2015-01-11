@@ -13,11 +13,9 @@
     url:  "{{ helios.agent.registrar_plugin.url | tokens( helios.agent.registrar_plugin ) }}"
     dest: "{{ registrar_plugin }}"
 
-- name: Creating Helios agent config directories
-  command: mkdir -p $(dirname '{{ item }}')
-  with_items:
-    - "{{ helios.agent.config }}"
-    - "{{ helios.agent.config_endpoints }}"
+- include: "{{ playbook_dir }}/roles/mkdir.yml"
+  vars:
+    file:  "{{ helios.agent.config_endpoints }}"
 
 - name: Copying Helios agent configs
   template:

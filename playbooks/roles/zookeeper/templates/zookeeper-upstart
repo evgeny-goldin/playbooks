@@ -1,0 +1,11 @@
+#!upstart
+description "ZooKeeper"
+
+start on started mountall
+stop  on shutdown
+
+# Automatically Respawn:
+respawn
+respawn limit 5 5
+
+exec {{ ubuntu.bash }} -c "{{ zk_server }} start-foreground >> '{{ ubuntu.log_dir }}/zookeeper.log' 2>&1"
