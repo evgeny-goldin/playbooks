@@ -28,9 +28,35 @@
       - "'QUESTION SECTION' in dig_out.stdout"
       - "'Query time'       in dig_out.stdout"
 
-# - name: Sending self-registration request
-#   uri:
-#     method:  POST
-#     url:     "{{ registrar_endpoint }}/v2/keys/skydns/local/skydns/{{ ansible_hostname }}"
-#     body:    " 'host' : '{{ facter_ipaddress_eth1 }}' "
-#     timeout: 3
+- set_fact:
+    self_registration_url: "{{ registrar_endpoint }}/v2/keys/skydns/{{ '/'.join( domain.split( '.' )[::-1] ) }}/{{ ansible_hostname }}"
+
+- name: Sending a self-registration request
+  command: "curl -XPUT '{{ self_registration_url }}' -d value='{ \"host\" : \"{{ facter_ipaddress_eth1 }}\" }'"
+
+  # https://github.com/ansible/ansible-modules-core/issues/265
+  # uri:
+  #   method:  POST
+  #   url:     "{{ self_registration_url }}"
+  #   body:    "{ 'host' : '{{ facter_ipaddress_eth1 }}' }"
+  #   timeout: 3
+
+- name:     Running Helions master self-dig
+  command:  dig @{{ helios_master }} '{{ ansible_hostname }}.{{ domain }}'
+  register: dig_out1
+
+- name: Verifying Helions master self-dig
+  assert:
+    that:
+      - "'{{ ansible_hostname }}'      in dig_out1.stdout"
+      - "'{{ facter_ipaddress_eth1 }}' in dig_out1.stdout"
+
+- name:     Running self-dig
+  command:  dig '{{ ansible_hostname }}.{{ domain }}'
+  register: dig_out2
+
+- name: Verifying self-dig
+  assert:
+    that:
+      - "'{{ ansible_hostname }}'      in dig_out2.stdout"
+      - "'{{ facter_ipaddress_eth1 }}' in dig_out2.stdout"

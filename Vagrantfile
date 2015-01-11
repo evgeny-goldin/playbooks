@@ -24,11 +24,12 @@ BOXES                   = {
   'helios-master'  => { helios_master_port: HELIOS_MASTER_PORT,
                         zookeeper_port:     ZOOKEEPER_PORT,
                         registrar_port:     HELIOS_ETCD_PORT,
+                        domain:             VAGRANT_DOMAIN,
                         ports:              [ ZOOKEEPER_PORT,
                                               HELIOS_MASTER_PORT,
                                               HELIOS_ETCD_PORT,
                                               WEB_PORT, # Netflix Exhibitor
-                                              DNS_PORT ]}, 
+                                              DNS_PORT ]},
   'helios-agent-1' => HELIOS_AGENT_PROPERTIES,
   'helios-agent-2' => HELIOS_AGENT_PROPERTIES,
   # jenkins:            { ports: [ WEB_PORT ]},
