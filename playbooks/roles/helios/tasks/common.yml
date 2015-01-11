@@ -4,8 +4,8 @@
 # --------------------------------------------
 - name: Setting up Helios variables
   set_fact: helios_version="{{ helios.version | calculate( helios.latest ) }}"
-  
-- name: Installing Default JDK
+
+- name: Installing JDK
   apt: name=default-jdk state=latest force=yes
 
 - name:     Running Java
@@ -20,9 +20,9 @@
 
 - include: "{{ playbook_dir }}/roles/download-unpack.yml"
   vars:
-    name:    Helios 
-    url:     "{{ helios.url     | tokens( { 'version': helios_version } ) }}" 
-    archive: "{{ helios.archive | tokens( { 'version': helios_version } ) }}" 
+    name:    Helios
+    url:     "{{ helios.url     | tokens( { 'version': helios_version } ) }}"
+    archive: "{{ helios.archive | tokens( { 'version': helios_version } ) }}"
     home:    "{{ helios.home }}"
 
 - name: Installing Helios services
