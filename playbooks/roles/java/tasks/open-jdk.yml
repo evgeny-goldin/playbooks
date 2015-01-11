@@ -1,5 +1,5 @@
 ---
-- name: Installing Default JDK
+- name: Installing OpenJDK
   apt: name=default-jdk state=latest force=yes
 
 - name:     Running Java

@@ -12,7 +12,6 @@ ETCD_PORT               = 4001
 WEB_PORT                = 8080
 EXHIBITOR_PORT          = WEB_PORT
 DNS_PORT                = 53
-
 HELIOS_PROPERTIES       = { helios_master:      "helios-master.#{ VAGRANT_DOMAIN }",
                             helios_master_port: HELIOS_MASTER_PORT,
                             zookeeper_port:     ZOOKEEPER_PORT,
@@ -20,16 +19,12 @@ HELIOS_PROPERTIES       = { helios_master:      "helios-master.#{ VAGRANT_DOMAIN
                             exhibitor_port:     EXHIBITOR_PORT,
                             domain:             VAGRANT_DOMAIN }
 
-HELIOS_AGENT_PROPERTIES  = HELIOS_PROPERTIES.merge( playbook: 'helios-agent-ubuntu' )
-HELIOS_MASTER_PROPERTIES = HELIOS_PROPERTIES.merge( ports: [ DNS_PORT, ZOOKEEPER_PORT,
-                                                             HELIOS_MASTER_PORT,
-                                                             ETCD_PORT, EXHIBITOR_PORT ])
-
 BOXES = {
   # Name of the box (and corresponding playbook) => { playbook's extra variables, :ports is respected by Vagrant }
-  'helios-master'  => HELIOS_MASTER_PROPERTIES,
-  'helios-agent-1' => HELIOS_AGENT_PROPERTIES,
-  'helios-agent-2' => HELIOS_AGENT_PROPERTIES,
+  'helios-master'  => HELIOS_PROPERTIES.merge(
+    ports: [ DNS_PORT, ZOOKEEPER_PORT, HELIOS_MASTER_PORT, ETCD_PORT, EXHIBITOR_PORT ]),
+  'helios-agent'   => HELIOS_PROPERTIES,
+  artifactory:          { ports: [ WEB_PORT ]},
   # packer:             {},
   # ruby:               {},
   # jenkins:            { ports: [ WEB_PORT ]},

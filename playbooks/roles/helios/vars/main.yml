@@ -1,6 +1,6 @@
 ---
 helios: {
-  version: latest, # 0.8.138 or latest
+  version: latest, # 0.8.138 or latest - https://github.com/spotify/helios/releases
   url:     '{{ common.github }}/spotify/helios/releases/download/<version>/helios-debs.tar.gz',
   archive: /opt/helios-<version>.tar.gz,
   home:    /opt/helios,

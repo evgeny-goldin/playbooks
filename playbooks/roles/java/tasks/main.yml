@@ -2,35 +2,35 @@
 # https://help.ubuntu.com/community/Java
 - debug: var=java_distribution
 
-- name:    Running JRE installer
-  include: jre.yml
-  when:    java_distribution == 'jre'
+- name:    Running Oracle JRE installer
+  include: oracle-jre.yml
+  when:    java_distribution == 'oracle-jre'
 
-- name:    Running JDK installer
-  include: jdk.yml
-  when:    java_distribution == 'jdk'
+- name:    Running Oracle JDK installer
+  include: oracle-jdk.yml
+  when:    java_distribution == 'oracle-jdk'
 
-- name:    Running JDK installer
-  include: default-jdk.yml
-  when:    java_distribution == 'default-jdk'
+- name:    Running OpenJDK installer
+  include: open-jdk.yml
+  when:    java_distribution == 'open-jdk'
 
 - name:     Running Java
   shell:    java -version 2>&1
   register: java_out
 - debug:    var=java_out.stdout
-  when:     java_distribution in [ 'jre', 'jdk' ]
+  when:     java_distribution in [ 'oracle-jre', 'oracle-jdk' ]
 
 - name:  Verifying Java version
   assert:
     that:
       - "'1.{{ java.version }}'            in java_out.stdout"
       - "'Java(TM) SE Runtime Environment' in java_out.stdout"
-  when:     java_distribution in [ 'jre', 'jdk' ]
+  when:     java_distribution in [ 'oracle-jre', 'oracle-jdk' ]
 
 - name:     Running Javac
   shell:    javac -help 2>&1
   register: javac_out
-  when:     java_distribution in [ 'jdk', 'default-jdk' ]
+  when:     java_distribution in [ 'oracle-jdk', 'open-jdk' ]
 
 - name:  Verifying Javac
   assert:
@@ -38,4 +38,4 @@
       - "'Usage'                in javac_out.stdout"
       - "'-bootclasspath'       in javac_out.stdout"
       - "'Generate no warnings' in javac_out.stdout"
-  when: java_distribution in [ 'jdk', 'default-jdk' ]
+  when: java_distribution in [ 'oracle-jdk', 'open-jdk' ]

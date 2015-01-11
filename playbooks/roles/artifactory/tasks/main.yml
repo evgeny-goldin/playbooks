@@ -1,0 +1,11 @@
+---
+- name: Calculating Artifactory version
+  set_fact:
+    artifactory_version: "{{ artifactory.version | calculate( artifactory.latest ) }}"
+
+- include: "{{ common.download_unpack }}"
+  vars:
+    name:    Artifactory
+    url:     "{{ artifactory.url     | tokens({ 'version': artifactory_version }) }}"
+    archive: "{{ artifactory.archive | tokens({ 'version': artifactory_version }) }}"
+    home:    "{{ artifactory.home }}"

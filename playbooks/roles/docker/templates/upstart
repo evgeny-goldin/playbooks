@@ -9,4 +9,4 @@ stop  on shutdown
 respawn
 respawn limit 5 5
 
-exec {{ ubuntu.bash }} -c "sleep 20; ( echo '--'; date; echo '--'; set -x; {{ docker_commands | join( '; ' ) }} ) >> '{{ ubuntu.log_dir }}/{{ app_name }}.log' 2>&1"
+exec {{ ubuntu.bash }} -c "sleep 20; ( echo '--'; date; echo '--'; set -x; {{ docker_commands | join( '; ' ) }}) >> '{{ ubuntu.log_dir }}/{{ app_name }}.log' 2>&1"

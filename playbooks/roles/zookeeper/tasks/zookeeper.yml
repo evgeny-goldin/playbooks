@@ -10,14 +10,14 @@
   service: name=zookeeper state=stopped
   ignore_errors: yes
 
-- include: "{{ playbook_dir }}/roles/download-unpack.yml"
+- include: "{{ common.download_unpack }}"
   vars:
     name:    ZooKeeper
     url:     "{{ zookeeper.url     | tokens( zookeeper ) }}"
     archive: "{{ zookeeper.archive | tokens( zookeeper ) }}"
     home:    "{{ zookeeper.home }}"
 
-- include: "{{ playbook_dir }}/roles/mkdir.yml"
+- include: "{{ common.mkdir }}"
   vars:
     file:  "{{ zookeeper_config }}"
 

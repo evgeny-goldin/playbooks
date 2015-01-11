@@ -15,7 +15,7 @@
     helios_version:     "{{ helios.version     | calculate( helios.latest ) }}"
     helios_master_port: "{{ helios_master_port | default( helios.master.port ) }}"
 
-- include: "{{ playbook_dir }}/roles/download-unpack.yml"
+- include: "{{ common.download_unpack }}"
   vars:
     name:    Helios
     url:     "{{ helios.url     | tokens({ 'version': helios_version }) }}"

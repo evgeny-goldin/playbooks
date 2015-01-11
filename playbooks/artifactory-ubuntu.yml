@@ -1,8 +1,8 @@
 ---
-# Helios Master playbook for Ubuntu
-# https://github.com/spotify/helios
+# Artifactory playbook for Ubuntu
+# http://www.jfrog.com/artifactory/
 
-- name:  Helios Agent
+- name:  Artifactory
   hosts: all
   sudo:  yes
 
@@ -14,6 +14,6 @@
     - { role: run-before, period: daily  }
     - { role: base,       when: periodic }
     - { role: ansible,    when: periodic }
-    - { role: java,       when: periodic, java_distribution: 'open-jdk' }
-    - { role: helios,     helios_role: agent }
+    - { role: java,       when: periodic }
+    - artifactory
     - run-after

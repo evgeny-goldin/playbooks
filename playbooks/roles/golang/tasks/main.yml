@@ -8,11 +8,11 @@
   with_items:
     - mercurial
 
-- include: "{{ playbook_dir }}/roles/download-unpack.yml"
+- include: "{{ common.download_unpack }}"
   vars:
     name:    Go
-    url:     "{{ go.url     | tokens( { 'version': go_version } ) }}" 
-    archive: "{{ go.archive | tokens( { 'version': go_version } ) }}" 
+    url:     "{{ go.url     | tokens({ 'version': go_version }) }}" 
+    archive: "{{ go.archive | tokens({ 'version': go_version }) }}" 
     home:    "{{ go.bin_dir }}/../.."
     clean:   no
 

@@ -6,10 +6,10 @@
     etcd_src:  "{{ etcd.home }}/{{ etcd_dir }}/etcd"
     etcd_bin:  "{{ ubuntu.bin_dir }}/etcd"
 
-- include: "{{ playbook_dir }}/roles/download-unpack.yml"
+- include: "{{ common.download_unpack }}"
   vars:
     name:    etcd
-    url:     "{{ etcd.url     | tokens( { 'dir_name': etcd_dir, 'version': etcd.version }) }}"
+    url:     "{{ etcd.url     | tokens({ 'dir_name': etcd_dir, 'version': etcd.version }) }}"
     archive: "{{ etcd.archive | tokens( etcd ) }}"
     home:    "{{ etcd.home }}"
 
@@ -28,7 +28,7 @@
   fail: msg="Expected etcd version '{{ etcd.version }}', read '{{ etcd_out.stdout }}' instead"
   when: "'{{ etcd.version }}' not in etcd_out.stdout"
 
-- include: "{{ playbook_dir }}/roles/mkdir.yml"
+- include: "{{ common.mkdir }}"
   vars:
     file:  "{{ etcd.config }}"
 

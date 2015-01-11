@@ -1,5 +1,7 @@
 ---
 # Downloads {{ url }} to {{ archive }} and unpacks it to {{ home }} directory
+- debug: msg="Downloading '{{ url }}' to '{{ archive }}' and unpacking it to '{{ home }}'"
+
 - name: Downloading {{ name }}
   get_url:
     url:  "{{ url }}"
@@ -10,7 +12,7 @@
 
 - file: path={{ home }} state=absent
   when: clean | default(True)
-    
+
 - file: path={{ home }} state=directory
 
 - name: Unpacking {{ name }}
