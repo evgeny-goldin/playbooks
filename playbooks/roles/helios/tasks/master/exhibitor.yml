@@ -7,6 +7,10 @@
 - stat: path={{ exhibitor_jar }}
   register: exhibitor_jar_stat
 
+- name: Stopping Exhibitor service
+  service: name=exhibitor state=stopped
+  ignore_errors: yes
+
 - name: Cloning Gradle provider
   git:
     repo: "{{ helios.master.exhibitor.gradle_provider }}"
@@ -43,3 +47,17 @@
 
 - name: Starting Exhibitor service
   service: name=exhibitor state=started enabled=yes
+
+- name: Verifying Exhibitor endpoint
+  wait_for: port={{ exhibitor_port }} timeout=10
+
+- name: Verifying Exhibitor HTTP endpoint
+  uri:  url="http://{{ common.net.localhost }}:{{ exhibitor_port }}/exhibitor/v1/ui/index.html" return_content=yes
+  register: exhibitor_out
+
+- name: Verifying Exhibitor HTTP endpoint
+  assert:
+    that:
+      - "'Exhibitor for ZooKeeper' in exhibitor_out.content"
+      - "'Control Panel'           in exhibitor_out.content"
+      - "'Backup and Restore'      in exhibitor_out.content"

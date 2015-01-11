@@ -1,16 +1,16 @@
 ---
 - set_fact:
-    etcd_dir: "{{ helios.master.etcd.dir_name | tokens( helios.master.etcd ) }}"
+    etcd_dir: "{{ etcd.dir_name | tokens( etcd ) }}"
 - set_fact:
-    etcd_src: "{{ helios.master.etcd.home }}/{{ etcd_dir }}/etcd"
+    etcd_src: "{{ etcd.home }}/{{ etcd_dir }}/etcd"
     etcd_bin: "{{ ubuntu.bin_dir }}/etcd"
 
 - include: "{{ playbook_dir }}/roles/download-unpack.yml"
   vars:
     name:    etcd
-    url:     "{{ helios.master.etcd.url     | tokens( { 'dir_name': etcd_dir, 'version': helios.master.etcd.version }) }}"
-    archive: "{{ helios.master.etcd.archive | tokens( helios.master.etcd ) }}"
-    home:    "{{ helios.master.etcd.home }}"
+    url:     "{{ etcd.url     | tokens( { 'dir_name': etcd_dir, 'version': etcd.version }) }}"
+    archive: "{{ etcd.archive | tokens( etcd ) }}"
+    home:    "{{ etcd.home }}"
 
 - name: Stopping etcd service
   service: name=etcd state=stopped
@@ -24,14 +24,14 @@
   register: etcd_out
 
 - name: Verifying etcd version
-  fail: msg="Expected etcd version '{{ helios.master.etcd.version }}', read '{{ etcd_out.stdout }}' instead"
-  when: "'{{ helios.master.etcd.version }}' not in etcd_out.stdout"
+  fail: msg="Expected etcd version '{{ etcd.version }}', read '{{ etcd_out.stdout }}' instead"
+  when: "'{{ etcd.version }}' not in etcd_out.stdout"
 
-- command: mkdir -p $(dirname '{{ helios.master.etcd.config }}')
+- command: mkdir -p $(dirname '{{ etcd.config }}')
 - name: Generating etcd config
   template:
     src:  etcd-config
-    dest: "{{ helios.master.etcd.config }}"
+    dest: "{{ etcd.config }}"
 
 - name: Generating etcd upstart script
   template:
@@ -48,6 +48,6 @@
   uri:  url="http://{{ common.net.localhost }}:{{ registrar_port }}/version" return_content=yes
   register: etcd_version
 
-- name: Verifying etcd version
-  fail: msg="Expected etcd version '{{ helios.master.etcd.version }}', read '{{ etcd_version.content }}' instead"
-  when: "'{{ helios.master.etcd.version }}' not in '{{ etcd_version.content }}'"
+- name: Verifying etcd HTTP endpoint
+  fail: msg="Expected etcd version '{{ etcd.version }}', read '{{ etcd_version.content }}' instead"
+  when: "'{{ etcd.version }}' not in '{{ etcd_version.content }}'"

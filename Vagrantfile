@@ -24,6 +24,7 @@ BOXES                   = {
   'helios-master'  => { helios_master_port: HELIOS_MASTER_PORT,
                         zookeeper_port:     ZOOKEEPER_PORT,
                         registrar_port:     HELIOS_ETCD_PORT,
+                        exhibitor_port:     WEB_PORT,
                         domain:             VAGRANT_DOMAIN,
                         ports:              [ ZOOKEEPER_PORT,
                                               HELIOS_MASTER_PORT,

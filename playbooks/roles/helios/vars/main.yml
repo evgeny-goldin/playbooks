@@ -21,25 +21,12 @@ helios: {
     },
     zookeeper: {
       config: /etc/zookeeper/conf/zoo.cfg
-    },
-    etcd: {
-      version:  2.0.0-rc.1, # https://github.com/coreos/etcd/releases
-      dir_name: etcd-v<version>-linux-amd64,
-      url:      '{{ common.github }}/coreos/etcd/releases/download/v<version>/<dir_name>.tar.gz',
-      archive:  /opt/etcd-<version>.tar.gz,
-      home:     /opt/etcd,
-      config:   "{{ ubuntu.etc_default }}/etcd"
-    },
-    skydns: {
-      version: 2.0.1d, # https://github.com/skynetservices/skydns/releases
-      url:     github.com/skynetservices/skydns,
-      config:  "{{ ubuntu.etc_default }}/skydns"
     }
   },
   agent: {
-    home:      ~/.helios,
-    config:    "{{ ubuntu.etc_default }}/helios-agent",
-    state_dir: /var/lib/helios-agent,
+    config:           "{{ ubuntu.etc_default }}/helios-agent",
+    config_endpoints: ~/.helios/config,
+    state_dir:        /var/lib/helios-agent,
     registrar_plugin: {
       version: 0.1, # https://github.com/spotify/helios-skydns/releases
       url:     '{{ common.github }}/spotify/helios-skydns/releases/download/<version>/helios-skydns-<version>.jar',

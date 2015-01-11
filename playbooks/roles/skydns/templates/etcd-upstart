@@ -7,7 +7,7 @@ respawn
 respawn limit unlimited
 
 script
-    [ -r {{ helios.master.etcd.config }} ] && . {{ helios.master.etcd.config }}
+    [ -r {{ etcd.config }} ] && . {{ etcd.config }}
     {{ etcd_bin }} $ETCD_OPTS
 end script
 

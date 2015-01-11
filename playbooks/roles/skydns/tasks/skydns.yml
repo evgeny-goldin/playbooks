@@ -1,15 +1,15 @@
 ---
 - set_fact:
-    skydns_root: "{{ go.path }}/src/{{ helios.master.skydns.url }}"
+    skydns_root: "{{ go.path }}/src/{{ skydns.url }}"
     skydns_bin:  "{{ ubuntu.bin_dir }}/skydns"
 
 - name: Downloading SkyDNS
-  command: go get '{{ helios.master.skydns.url }}'
+  command: go get '{{ skydns.url }}'
   environment:
     "{{ go_env }}"
 
 - name: Switching SkyDNS version
-  command: git checkout '{{ helios.master.skydns.version }}'
+  command: git checkout '{{ skydns.version }}'
   args:
     chdir: "{{ skydns_root }}"
 
@@ -23,7 +23,7 @@
 - name: Copying SkyDNS config
   template:
     src:  skydns-config
-    dest: "{{ helios.master.skydns.config }}"
+    dest: "{{ skydns.config }}"
 
 - name: Stopping SkyDNS service
   service: name=skydns state=stopped

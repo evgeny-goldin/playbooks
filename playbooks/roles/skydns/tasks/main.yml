@@ -1,0 +1,6 @@
+---
+- debug: var=registrar_port
+- debug: var=domain
+
+- include: etcd.yml
+- include: skydns.yml
