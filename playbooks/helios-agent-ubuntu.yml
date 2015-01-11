@@ -14,5 +14,6 @@
     - { role: run-before, period: daily  }
     - { role: base,       when: periodic }
     - { role: ansible,    when: periodic }
+    - { role: java,       when: periodic, java_distribution: 'default-jdk' }
     - { role: helios,     helios_role: agent }
     - run-after
