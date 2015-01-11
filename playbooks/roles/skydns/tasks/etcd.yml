@@ -42,10 +42,10 @@
   service: name=etcd state=started enabled=yes
 
 - name: Verifying etcd endpoint
-  wait_for: port={{ registrar_port }} timeout=3
+  wait_for: port={{ etcd_port }} timeout=3
 
 - name: Verifying etcd HTTP endpoint
-  uri:  url="http://{{ common.net.localhost }}:{{ registrar_port }}/version" return_content=yes
+  uri:  url="http://{{ common.net.localhost }}:{{ etcd_port }}/version" return_content=yes
   register: etcd_version
 
 - name: Verifying etcd HTTP endpoint

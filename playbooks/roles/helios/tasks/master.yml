@@ -1,0 +1,18 @@
+---
+- name: Stopping Helios master service
+  service: name=helios-master state=stopped
+  ignore_errors: yes
+
+- name: Copying Helios master config
+  template:
+    src:  master-config
+    dest: "{{ helios.master.config }}"
+
+- name: Installing Helios master
+  apt:  deb="{{ helios.home }}/helios-master_{{ helios_version }}_all.deb"
+
+- name: Starting Helios master service
+  service: name=helios-master state=started enabled=yes
+
+- include: verify-master.yml master={{ common.net.localhost }}
+- include: verify-master.yml master={{ helios_master }}

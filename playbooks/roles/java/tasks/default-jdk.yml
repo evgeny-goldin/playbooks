@@ -1,0 +1,13 @@
+---
+- name: Installing Default JDK
+  apt: name=default-jdk state=latest force=yes
+
+- name:     Running Java
+  shell:    java -version 2>&1
+  register: java_out
+
+- name:  Verifying Java
+  assert:
+    that:
+      - "'OpenJDK Runtime Environment' in java_out.stdout"
+      - "'OpenJDK 64-Bit Server VM'    in java_out.stdout"

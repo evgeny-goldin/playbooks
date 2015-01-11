@@ -8,31 +8,30 @@ MEMORY                  = '1024'
 VAGRANT_DOMAIN          = 'vm'
 ZOOKEEPER_PORT          = 2181
 HELIOS_MASTER_PORT      = 5801
-HELIOS_ETCD_PORT        = 4001
+ETCD_PORT               = 4001
 WEB_PORT                = 8080
+EXHIBITOR_PORT          = WEB_PORT
 DNS_PORT                = 53
-HELIOS_AGENT_PROPERTIES = { playbook:           'helios-agent-ubuntu',
-                            helios_master:      "helios-master.#{ VAGRANT_DOMAIN }",
+
+HELIOS_PROPERTIES       = { helios_master:      "helios-master.#{ VAGRANT_DOMAIN }",
                             helios_master_port: HELIOS_MASTER_PORT,
                             zookeeper_port:     ZOOKEEPER_PORT,
-                            registrar_port:     HELIOS_ETCD_PORT,
+                            etcd_port:          ETCD_PORT,
+                            exhibitor_port:     EXHIBITOR_PORT,
                             domain:             VAGRANT_DOMAIN }
-BOXES                   = {
+
+HELIOS_AGENT_PROPERTIES  = HELIOS_PROPERTIES.merge( playbook: 'helios-agent-ubuntu' )
+HELIOS_MASTER_PROPERTIES = HELIOS_PROPERTIES.merge( ports: [ DNS_PORT, ZOOKEEPER_PORT,
+                                                             HELIOS_MASTER_PORT,
+                                                             ETCD_PORT, EXHIBITOR_PORT ])
+
+BOXES = {
   # Name of the box (and corresponding playbook) => { playbook's extra variables, :ports is respected by Vagrant }
-  # packer:             {},
-  # ruby:               {},
-  'helios-master'  => { helios_master_port: HELIOS_MASTER_PORT,
-                        zookeeper_port:     ZOOKEEPER_PORT,
-                        registrar_port:     HELIOS_ETCD_PORT,
-                        exhibitor_port:     WEB_PORT,
-                        domain:             VAGRANT_DOMAIN,
-                        ports:              [ ZOOKEEPER_PORT,
-                                              HELIOS_MASTER_PORT,
-                                              HELIOS_ETCD_PORT,
-                                              WEB_PORT, # Netflix Exhibitor
-                                              DNS_PORT ]},
+  'helios-master'  => HELIOS_MASTER_PROPERTIES,
   'helios-agent-1' => HELIOS_AGENT_PROPERTIES,
   'helios-agent-2' => HELIOS_AGENT_PROPERTIES,
+  # packer:             {},
+  # ruby:               {},
   # jenkins:            { ports: [ WEB_PORT ]},
   # asgard:             { ports: [ WEB_PORT ]},
   # mysql:              { ports: [ 3306 ]},

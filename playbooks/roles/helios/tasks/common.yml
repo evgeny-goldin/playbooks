@@ -2,27 +2,23 @@
 # --------------------------------------------
 #   Common tasks for Helios master and agent
 # --------------------------------------------
+- debug: var=helios_master
+- debug: var=helios_master_port
+- debug: var=zookeeper_port
+- debug: var=etcd_port
+- debug: var=exhibitor_port
+- debug: var=domain
+- debug: var=ansible_fqdn
+- debug: var=facter_ipaddress_eth1
+
 - name: Setting up Helios variables
   set_fact: helios_version="{{ helios.version | calculate( helios.latest ) }}"
-
-- name: Installing JDK
-  apt: name=default-jdk state=latest force=yes
-
-- name:     Running Java
-  shell:    java -version 2>&1
-  register: java_out
-
-- name:  Verifying Java
-  assert:
-    that:
-      - "'OpenJDK Runtime Environment' in java_out.stdout"
-      - "'OpenJDK 64-Bit Server VM'    in java_out.stdout"
 
 - include: "{{ playbook_dir }}/roles/download-unpack.yml"
   vars:
     name:    Helios
-    url:     "{{ helios.url     | tokens( { 'version': helios_version } ) }}"
-    archive: "{{ helios.archive | tokens( { 'version': helios_version } ) }}"
+    url:     "{{ helios.url     | tokens({ 'version': helios_version }) }}"
+    archive: "{{ helios.archive | tokens({ 'version': helios_version }) }}"
     home:    "{{ helios.home }}"
 
 - name: Installing Helios services

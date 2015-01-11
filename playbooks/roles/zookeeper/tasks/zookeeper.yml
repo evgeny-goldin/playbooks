@@ -1,16 +1,20 @@
 ---
+- name: Stopping ZooKeeper service
+  service: name=zookeeperd state=stopped
+  ignore_errors: yes
+
 - name: Installing ZooKeeper service
-  apt:  name=zookeeperd
+  apt:  name=zookeeperd state=latest force=yes
 
 - name: Setting up ZooKeeper port
   # http://zookeeper.apache.org/doc/r3.4.6/zookeeperAdmin.html#sc_zkMulitServerSetup
   lineinfile:
-    dest:   "{{ helios.master.zookeeper.config }}"
+    dest:   "{{ zookeeper.config }}"
     line:   "clientPort={{ zookeeper_port }}"
     regexp: '^clientPort=\d+$'
 
-- name:    Restarting ZooKeeper service
-  service: name=zookeeper state=restarted enabled=yes
+- name:    Starting ZooKeeper service
+  service: name=zookeeper state=started enabled=yes
 
 - name: Verifying ZooKeeper endpoint
   wait_for: port={{ zookeeper_port }} timeout=3

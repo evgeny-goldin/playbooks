@@ -1,8 +1,8 @@
 ---
 - include: common.yml
 
-- include: master/main.yml
+- include: master.yml
   when:    helios_role == 'master'
 
-- include: agent/main.yml
+- include: agent.yml
   when:    helios_role == 'agent'

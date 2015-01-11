@@ -1,32 +1,33 @@
 ---
 - name: Setting up Exhibitor variables
   set_fact:
-    exhibitor_version: "{{ helios.master.exhibitor.version | calculate( helios.master.exhibitor.latest ) }}"
+    exhibitor_version: "{{ exhibitor.version | calculate( exhibitor.latest ) }}"
 - set_fact:
-    exhibitor_jar:     "{{ helios.master.exhibitor.home }}/build/libs/exhibitor-{{ exhibitor_version }}.jar"
-- stat: path={{ exhibitor_jar }}
-  register: exhibitor_jar_stat
+    exhibitor_jar:     "{{ exhibitor.home }}/build/libs/exhibitor-{{ exhibitor_version }}.jar"
 
 - name: Stopping Exhibitor service
   service: name=exhibitor state=stopped
   ignore_errors: yes
 
+- stat: path={{ exhibitor_jar }}
+  register: exhibitor_jar_stat
+
 - name: Cloning Gradle provider
   git:
-    repo: "{{ helios.master.exhibitor.gradle_provider }}"
-    dest: "{{ helios.master.exhibitor.home }}"
+    repo: "{{ exhibitor.gradle_provider }}"
+    dest: "{{ exhibitor.home }}"
   when: ( not exhibitor_jar_stat.stat.exists | bool )
 
 - name: Writing Exhibitor build file
   template:
     src:  exhibitor-build.gradle
-    dest: "{{ helios.master.exhibitor.home }}/build.gradle"
+    dest: "{{ exhibitor.home }}/build.gradle"
   when: ( not exhibitor_jar_stat.stat.exists | bool )
 
 - name: Building Exhibitor standalone
   command: ./gradlew clean jar
   args:
-    chdir: "{{ helios.master.exhibitor.home }}"
+    chdir: "{{ exhibitor.home }}"
   when: ( not exhibitor_jar_stat.stat.exists | bool )
 
 - name:     Running Exhibitor standalone help

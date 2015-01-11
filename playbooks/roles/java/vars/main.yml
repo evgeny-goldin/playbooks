@@ -1,7 +1,6 @@
 ---
 java: {
-  version: 8,      # 7 or 8
-  jre_or_jdk: jre, # jre or jdk
+  version: 8, # 7 or 8, applies only to 'jre' and 'jdk' distributions
   jre: {
     redownload:       false,
     installer_url:    'http://www.duinsoft.nl/pkg/pool/all/update-sun-jre.bin',
@@ -11,5 +10,10 @@ java: {
   },
   jdk: {
 
+  },
+  default-jdk: {
+
   }
 }
+
+java_distribution: default-jdk

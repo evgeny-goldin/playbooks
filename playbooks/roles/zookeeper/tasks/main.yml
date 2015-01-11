@@ -1,0 +1,5 @@
+---
+- include: zookeeper.yml
+
+- include: exhibitor.yml
+  when:    install_exhibitor | default(False)

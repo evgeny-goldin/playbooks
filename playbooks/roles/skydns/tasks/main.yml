@@ -1,5 +1,5 @@
 ---
-- debug: var=registrar_port
+- debug: var=etcd_port
 - debug: var=domain
 
 - include: etcd.yml

@@ -15,7 +15,8 @@ common: {
     public_dns: "8.8.8.8:53,8.8.4.4:53",
   },
 
-  github: 'https://github.com',
+  github:  'https://github.com',
+  bintray: 'https://jcenter.bintray.com',
 
   # Whether roles should start services installed
   start_service: true

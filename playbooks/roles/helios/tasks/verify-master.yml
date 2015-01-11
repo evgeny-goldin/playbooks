@@ -1,0 +1,26 @@
+---
+# ---------------------------------------------
+# Verifies connectivity with Helios master
+# ---------------------------------------------
+- debug: msg="Verifying Helios master '{{ master }}' endpoints"
+
+- name: Verifying Helios master ports
+  wait_for: host={{ master }} port={{ item }} timeout=3
+  with_items:
+    - "{{ common.net.dns_port }}"
+    - "{{ zookeeper_port }}"
+    - "{{ etcd_port }}"
+    - "{{ helios_master_port }}"
+
+- name: Verifying Helios master HTTP endpoints
+  uri:  url=http://{{ master }}:{{ item.port }}{{ item.path }} status_code={{ item.status }}
+  with_items:
+    - { port: "{{ etcd_port }}",          path: '/version', status: 200 }
+    - { port: "{{ helios_master_port }}", path: '',         status: 404 }
+
+- include: "{{ playbook_dir }}/roles/skydns/register-host.yml"
+  vars:
+    etcd_host:   "{{ master }}"
+    skydns_host: "{{ master }}"
+    fqdn:        "{{ ansible_fqdn }}"
+    ip:          "{{ facter_ipaddress_eth1 }}"

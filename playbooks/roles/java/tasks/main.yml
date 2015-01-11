@@ -1,29 +1,36 @@
 ---
 # https://help.ubuntu.com/community/Java
+- debug: var=java_distribution
 
 - name:    Running JRE installer
   include: jre.yml
-  when:    java.jre_or_jdk == 'jre'
+  when:    java_distribution == 'jre'
 
 - name:    Running JDK installer
   include: jdk.yml
-  when:    java.jre_or_jdk == 'jdk'
+  when:    java_distribution == 'jdk'
+
+- name:    Running JDK installer
+  include: default-jdk.yml
+  when:    java_distribution == 'default-jdk'
 
 - name:     Running Java
   shell:    java -version 2>&1
   register: java_out
 - debug:    var=java_out.stdout
+  when:     java_distribution in [ 'jre', 'jdk' ]
 
 - name:  Verifying Java version
   assert:
     that:
       - "'1.{{ java.version }}'            in java_out.stdout"
       - "'Java(TM) SE Runtime Environment' in java_out.stdout"
+  when:     java_distribution in [ 'jre', 'jdk' ]
 
 - name:     Running Javac
   shell:    javac -help 2>&1
   register: javac_out
-  when:     java.jre_or_jdk == 'jdk'
+  when:     java_distribution in [ 'jdk', 'default-jdk' ]
 
 - name:  Verifying Javac
   assert:
@@ -31,4 +38,4 @@
       - "'Usage'                in javac_out.stdout"
       - "'-bootclasspath'       in javac_out.stdout"
       - "'Generate no warnings' in javac_out.stdout"
-  when: java.jre_or_jdk == 'jdk'
+  when: java_distribution in [ 'jdk', 'default-jdk' ]
