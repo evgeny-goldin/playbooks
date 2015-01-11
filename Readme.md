@@ -24,7 +24,17 @@ This repo contains **Ansible** [Playbooks](https://github.com/evgeny-goldin/play
 
 #### Usage
 
-* `<box>` is one of `asgard | docker | helios-master | helios-agent-1 | jenkins | mysql | packer | ruby`
+* `<box>` is one of:
+
+    * `asgard`
+    * `docker`
+    * `helios-master`
+    * `helios-agent-1`
+    * `jenkins`
+    * `mysql`
+    * `packer`
+    * `ruby`
+    
 
 * You can create Ubuntu VMs if **Vagrant** and **VirtualBox** are installed:
 
