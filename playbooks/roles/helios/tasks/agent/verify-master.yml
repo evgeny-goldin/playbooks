@@ -45,18 +45,14 @@
   command:  dig @{{ helios_master }} '{{ ansible_hostname }}.{{ domain }}'
   register: dig_out1
 
+- name:     Running self-dig
+  command:  dig '{{ ansible_hostname }}.{{ domain }}'
+  register: dig_out2
+
 - name: Verifying Helions master self-dig
   assert:
     that:
       - "'{{ ansible_hostname }}'      in dig_out1.stdout"
       - "'{{ facter_ipaddress_eth1 }}' in dig_out1.stdout"
-
-- name:     Running self-dig
-  command:  dig '{{ ansible_hostname }}.{{ domain }}'
-  register: dig_out2
-
-- name: Verifying self-dig
-  assert:
-    that:
       - "'{{ ansible_hostname }}'      in dig_out2.stdout"
       - "'{{ facter_ipaddress_eth1 }}' in dig_out2.stdout"
