@@ -7,18 +7,24 @@ This repo contains **Ansible** [Playbooks](https://github.com/evgeny-goldin/play
 * [Ansible](http://www.ansible.com/)
 * [Asgard](https://github.com/Netflix/asgard)
 * [Docker](https://www.docker.com/)
+* [Exhibitor](https://github.com/Netflix/exhibitor)
+* [etcd](https://github.com/coreos/etcd)
+* [Go](https://golang.org/)
+* [Helios](https://github.com/spotify/helios)
 * [Java](http://www.oracle.com/technetwork/java/index.html)
 * [Jenkins](http://jenkins-ci.org/)
 * [MySQL](http://www.mysql.com/)
 * [Node.js](http://nodejs.org/)
 * [Packer](http://www.packer.io/)
 * [Ruby](https://www.ruby-lang.org/en/)
+* [SkyDNS](https://github.com/skynetservices/skydns)
 * [Vagrant](http://www.vagrantup.com/)
 * [VirtualBox](https://www.virtualbox.org/)
+* [ZooKeeper](https://zookeeper.apache.org/)
 
 #### Usage
 
-* `<box>` is one of `asgard | docker | jenkins | mysql | packer | ruby`
+* `<box>` is one of `asgard | docker | helios-master | helios-agent-1 | jenkins | mysql | packer | ruby`
 
 * You can create Ubuntu VMs if **Vagrant** and **VirtualBox** are installed:
 
