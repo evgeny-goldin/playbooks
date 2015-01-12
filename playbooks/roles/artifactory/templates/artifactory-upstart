@@ -1,0 +1,11 @@
+#!upstart
+description "Artifactory"
+
+start on started mountall
+stop  on shutdown
+
+# Automatically Respawn:
+respawn
+respawn limit 5 5
+
+exec {{ ubuntu.bash }} -c "{{ artifactory }} >> '{{ ubuntu.log_dir }}/artifactory.log' 2>&1"

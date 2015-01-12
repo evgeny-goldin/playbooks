@@ -2,6 +2,13 @@
 - name: Calculating Artifactory version
   set_fact:
     artifactory_version: "{{ artifactory.version | calculate( artifactory.latest ) }}"
+- set_fact:
+    artifactory_port:    "{{ artifactory_port    | default( artifactory.port ) }}"
+    artifactory_home:    "{{ artifactory.home }}/artifactory-{{ artifactory_version }}"
+
+- name: Stopping Artifactory service
+  service: name=artifactory state=stopped
+  ignore_errors: yes
 
 - include: "{{ common.download_unpack }}"
   vars:
@@ -9,3 +16,9 @@
     url:     "{{ artifactory.url     | tokens({ 'version': artifactory_version }) }}"
     archive: "{{ artifactory.archive | tokens({ 'version': artifactory_version }) }}"
     home:    "{{ artifactory.home }}"
+
+- name: Configuring Artifactory port
+  lineinfile:
+    dest:   "{{ artifactory_home }}/tomcat/conf/server.xml"
+    line:   '        <Connector port="{{ artifactory_port }}"/>'
+    regexp: '<Connector port="\d+?"/>'

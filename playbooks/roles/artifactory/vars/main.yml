@@ -1,6 +1,7 @@
 ---
 artifactory: {
   version: latest, # 3.4.2 or latest - https://dl.bintray.com/jfrog/artifactory/
+  port:    8080,
   latest: {
     command: "curl -s '{{ common.bintray }}/jfrog/artifactory/' | grep '<pre>' | grep 'artifactory-' | sed -r 's/<[^>]+>//g' | sed 's/artifactory-//' | sed 's/\\.zip$//' | tail -1",
     pattern: '^\d+\.\d+\.\d+$'

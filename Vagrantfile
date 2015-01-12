@@ -11,6 +11,7 @@ HELIOS_MASTER_PORT      = 5801
 ETCD_PORT               = 4001
 WEB_PORT                = 8080
 EXHIBITOR_PORT          = WEB_PORT
+ARTIFACTORY_PORT        = WEB_PORT
 DNS_PORT                = 53
 HELIOS_PROPERTIES       = { helios_master:      "helios-master.#{ VAGRANT_DOMAIN }",
                             helios_master_port: HELIOS_MASTER_PORT,
@@ -24,7 +25,7 @@ BOXES = {
   'helios-master'  => HELIOS_PROPERTIES.merge(
     ports: [ DNS_PORT, ZOOKEEPER_PORT, HELIOS_MASTER_PORT, ETCD_PORT, EXHIBITOR_PORT ]),
   'helios-agent'   => HELIOS_PROPERTIES,
-  artifactory:          { ports: [ WEB_PORT ]},
+  artifactory:          { artifactory_port: ARTIFACTORY_PORT, ports: [ ARTIFACTORY_PORT ]},
   # packer:             {},
   # ruby:               {},
   # jenkins:            { ports: [ WEB_PORT ]},
