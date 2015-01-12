@@ -13,7 +13,7 @@
     url:  "{{ helios.agent.registrar_plugin.url | tokens( helios.agent.registrar_plugin ) }}"
     dest: "{{ registrar_plugin }}"
 
-- include: "{{ common.path.mkdir }}"
+- include: "{{ common.utils.mkdir }}"
   vars:
     file:  "{{ helios.agent.config_endpoints }}"
 

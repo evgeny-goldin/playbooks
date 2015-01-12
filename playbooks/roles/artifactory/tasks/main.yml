@@ -5,37 +5,20 @@
 - set_fact:
     artifactory_port:    "{{ artifactory_port    | default( artifactory.port ) }}"
     artifactory_home:    "{{ artifactory.home }}/artifactory-{{ artifactory_version }}"
-- set_fact:
-    artifactory_config:  "{{ artifactory_home }}/tomcat/conf/server.xml"
-    artifactory_sh:      "{{ artifactory_home }}/bin/artifactory.sh"
 
-- name: Stopping Artifactory service
-  service: name=artifactory state=stopped
-  ignore_errors: yes
-
-- include: "{{ common.path.download_unpack }}"
+- include: "{{ common.utils.service }}"
   vars:
-    name:    Artifactory
-    url:     "{{ artifactory.url     | tokens({ 'version': artifactory_version }) }}"
-    archive: "{{ artifactory.archive | tokens({ 'version': artifactory_version }) }}"
-    home:    "{{ artifactory.home }}"
-
-- name: Configuring Artifactory port
-  lineinfile:
-    dest:   "{{ artifactory_config }}"
-    line:   '        <Connector port="{{ artifactory_port }}"/>'
-    regexp: '<Connector port="\d+?"/>'
-
-- name: Generating Artifactory upstart script
-  template:
-    src:  artifactory-upstart
-    dest: "{{ ubuntu.init_dir }}/artifactory.conf"
-
-- name: Starting Artifactory service
-  service: name=artifactory state=started enabled=yes
-
-- name: Verifying Artifactory endpoint
-  wait_for: port={{ artifactory_port }} timeout=30
+    name:        Artifactory
+    service:     artifactory
+    url:         "{{ artifactory.url     | tokens({ 'version': artifactory_version }) }}"
+    archive:     "{{ artifactory.archive | tokens({ 'version': artifactory_version }) }}"
+    home:        "{{ artifactory.home }}"
+    config_src:  "{{ playbook_dir }}/roles/artifactory/templates/server.xml"
+    config_dest: "{{ artifactory_home }}/tomcat/conf/server.xml"
+    command:     "{{ artifactory_home }}/bin/artifactory.sh"
+    port:        "{{ artifactory_port }}"
+    status:      200
+    content:     '0;URL=/artifactory'
 
 - name:     Waiting for Artifactory to start
   command:  curl http://{{ common.net.localhost }}:{{ artifactory_port }}/artifactory/api/system/ping
@@ -47,8 +30,8 @@
 - name: Verifying Artifactory HTTP endpoints
   uri:  url="http://{{ common.net.localhost }}:{{ artifactory_port }}{{ item.path }}"
   with_items:
-    - { path: '' }
-    - { path: '/artifactory/api/application.wadl' }
     - { path: '/artifactory/api/system/ping' }
+    - { path: '/artifactory/api/application.wadl' }
+    - { path: '/artifactory/api/search/artifact?name=name' }
     - { path: '/artifactory/webapp/home.html' }
     - { path: '/artifactory/webapp/browserepo.html' }

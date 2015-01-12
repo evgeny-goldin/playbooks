@@ -1,0 +1,88 @@
+---
+# ================================================================================
+# - Stops service {{ service }}
+# - Downloads {{ url }} to {{ archive }} and unpacks it to {{ home }} directory
+#   {{ home }} is deleted before unpack, unless {{ clean }} is False
+# - Writes {{ config_src }} template to {{ config_dest }}
+# - Creates an upstart script to run {{ command }} as service {{ service }} and starts it
+#   upstart script attempts to load {{ env_config }} and writes log to /var/log/{{ service }}.log
+# - Verifies service endpoint responds at {{ port }} within {{ timeout }} seconds
+# - Verifies http://127.0.0.1:{{ port }}{{ path }} to return {{ status }} code and {{ content }}
+# ================================================================================
+# - Required variables: service, url, archive, home, command. Other are optional.
+# ================================================================================
+- debug: var=service
+- debug: var=url
+- debug: var=archive
+- debug: var=home
+- debug: var=command
+
+- debug: msg="config_src = '{{ config_src | default('') }}'"
+- debug: msg="config_dest = '{{ config_dest | default('') }}'"
+- debug: msg="env_config = '{{ env_config | default('') }}'"
+- debug: msg="port = '{{ port | default('') }}'"
+- debug: msg="timeout = '{{ timeout | default('') }}'"
+- debug: msg="path = '{{ path | default('') }}'"
+- debug: msg="status = '{{ status | default('') }}'"
+- debug: msg="content = '{{ content | default('') }}'"
+
+
+- set_fact: name="{{ name | default( service ) }}"
+
+- name: Stopping service {{ name }}
+  service: name={{ service }} state=stopped
+  ignore_errors: yes
+
+- name: Downloading {{ name }}
+  get_url:
+    url:  "{{ url }}"
+    dest: "{{ archive }}"
+
+- debug: msg="Deleting '{{ home }}'!"
+  when: clean | default(True)
+
+- file: path={{ home }} state=absent
+  when: clean | default(True)
+
+- file: path={{ home }} state=directory
+
+- name: Unpacking {{ name }}
+  unarchive:
+    src:  "{{ archive }}"
+    dest: "{{ home }}"
+    copy: false
+
+- include: "{{ common.utils.mkdir }}"
+  vars:
+    file:  "{{ config_dest }}"
+  when: config_dest is defined
+
+- name: Generating {{ name }} config
+  template:
+    src:  "{{ config_src  }}"
+    dest: "{{ config_dest }}"
+  when: ( config_src is defined ) and ( config_dest is defined )
+
+- name: Generating {{ name }} upstart script
+  template:
+    src:  "{{ playbook_dir }}/utils/templates/upstart"
+    dest: "{{ ubuntu.init_dir }}/{{ service }}.conf"
+
+- name: Starting {{ name }} service
+  service: name={{ service }} state=started enabled=yes
+
+- name: Verifying {{ name }} endpoint
+  wait_for: port={{ port }} timeout={{ timeout | default(5) }}
+  when: port is defined
+
+- name: Verifying {{ name }} HTTP endpoint
+  uri:
+    url:            "http://{{ common.net.localhost }}:{{ port }}{{ path | default( '' ) }}"
+    status_code:    "{{ status | default( 200 )}}"
+    return_content: yes
+  register: http_out
+  when: ( port is defined ) and (( path is defined ) or ( status is defined ))
+
+- name: Verifying {{ name }} HTTP endpoint content
+  fail: msg="Expected output '{{ http_out.content }}', to contain '{{ content }}', but it didn't"
+  when: ( port is defined ) and ( content is defined ) and ( '{{ content }}' not in '{{ http_out.content }}' )
