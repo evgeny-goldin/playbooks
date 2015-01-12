@@ -6,7 +6,7 @@
     etcd_src:  "{{ etcd.home }}/{{ etcd_dir }}/etcd"
     etcd_bin:  "{{ ubuntu.bin_dir }}/etcd"
 
-- include: "{{ common.download_unpack }}"
+- include: "{{ common.path.download_unpack }}"
   vars:
     name:    etcd
     url:     "{{ etcd.url     | tokens({ 'dir_name': etcd_dir, 'version': etcd.version }) }}"
@@ -28,7 +28,7 @@
   fail: msg="Expected etcd version '{{ etcd.version }}', read '{{ etcd_out.stdout }}' instead"
   when: "'{{ etcd.version }}' not in etcd_out.stdout"
 
-- include: "{{ common.mkdir }}"
+- include: "{{ common.path.mkdir }}"
   vars:
     file:  "{{ etcd.config }}"
 

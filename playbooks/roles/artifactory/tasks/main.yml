@@ -13,7 +13,7 @@
   service: name=artifactory state=stopped
   ignore_errors: yes
 
-- include: "{{ common.download_unpack }}"
+- include: "{{ common.path.download_unpack }}"
   vars:
     name:    Artifactory
     url:     "{{ artifactory.url     | tokens({ 'version': artifactory_version }) }}"

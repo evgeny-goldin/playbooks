@@ -8,7 +8,7 @@
   with_items:
     - mercurial
 
-- include: "{{ common.download_unpack }}"
+- include: "{{ common.path.download_unpack }}"
   vars:
     name:    Go
     url:     "{{ go.url     | tokens({ 'version': go_version }) }}" 

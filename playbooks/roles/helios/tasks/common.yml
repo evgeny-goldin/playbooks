@@ -15,7 +15,7 @@
     helios_version:     "{{ helios.version     | calculate( helios.latest ) }}"
     helios_master_port: "{{ helios_master_port | default( helios.master.port ) }}"
 
-- include: "{{ common.download_unpack }}"
+- include: "{{ common.path.download_unpack }}"
   vars:
     name:    Helios
     url:     "{{ helios.url     | tokens({ 'version': helios_version }) }}"

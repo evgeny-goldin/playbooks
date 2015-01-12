@@ -11,10 +11,10 @@ zookeeper: {
 exhibitor: {
   version: latest, # 1.5.2 or latest - https://github.com/Netflix/exhibitor/releases
   port:    8080,
-  gradle_provider: '{{ common.github }}/evgeny-goldin/gradle-provider.git',
+  gradle_provider: '{{ common.repo.github }}/evgeny-goldin/gradle-provider.git',
   home:            /opt/exhibitor,
   latest: {
-    command: "curl -s '{{ common.jcenter }}/com/netflix/exhibitor/exhibitor-standalone/' | grep '<pre>' | grep -v 'maven-metadata.xml' | sed -r 's/<[^>]+>//g' | tr -d '/' | tail -1",
+    command: "curl -s '{{ common.repo.jcenter }}/com/netflix/exhibitor/exhibitor-standalone/' | grep '<pre>' | grep -v 'maven-metadata.xml' | sed -r 's/<[^>]+>//g' | tr -d '/' | tail -1",
     pattern: '^\d+\.\d+\.\d+$'
   }
 }

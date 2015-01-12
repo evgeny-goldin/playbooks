@@ -10,14 +10,14 @@
   service: name=zookeeper state=stopped
   ignore_errors: yes
 
-- include: "{{ common.download_unpack }}"
+- include: "{{ common.path.download_unpack }}"
   vars:
     name:    ZooKeeper
     url:     "{{ zookeeper.url     | tokens( zookeeper ) }}"
     archive: "{{ zookeeper.archive | tokens( zookeeper ) }}"
     home:    "{{ zookeeper.home }}"
 
-- include: "{{ common.mkdir }}"
+- include: "{{ common.path.mkdir }}"
   vars:
     file:  "{{ zookeeper_config }}"
 
