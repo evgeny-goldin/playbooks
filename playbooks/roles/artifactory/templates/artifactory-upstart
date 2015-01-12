@@ -8,4 +8,4 @@ stop  on shutdown
 respawn
 respawn limit 5 5
 
-exec {{ ubuntu.bash }} -c "{{ artifactory }} >> '{{ ubuntu.log_dir }}/artifactory.log' 2>&1"
+exec {{ ubuntu.bash }} -c "{{ artifactory_sh }} >> '{{ ubuntu.log_dir }}/artifactory.log' 2>&1"

@@ -5,6 +5,9 @@
 - set_fact:
     artifactory_port:    "{{ artifactory_port    | default( artifactory.port ) }}"
     artifactory_home:    "{{ artifactory.home }}/artifactory-{{ artifactory_version }}"
+- set_fact:
+    artifactory_config:  "{{ artifactory_home }}/tomcat/conf/server.xml"
+    artifactory_sh:      "{{ artifactory_home }}/bin/artifactory.sh"
 
 - name: Stopping Artifactory service
   service: name=artifactory state=stopped
@@ -19,6 +22,20 @@
 
 - name: Configuring Artifactory port
   lineinfile:
-    dest:   "{{ artifactory_home }}/tomcat/conf/server.xml"
+    dest:   "{{ artifactory_config }}"
     line:   '        <Connector port="{{ artifactory_port }}"/>'
     regexp: '<Connector port="\d+?"/>'
+
+- name: Generating Artifactory upstart script
+  template:
+    src:  artifactory-upstart
+    dest: "{{ ubuntu.init_dir }}/artifactory.conf"
+
+- name: Starting Artifactory service
+  service: name=artifactory state=started enabled=yes
+
+- name: Verifying Artifactory endpoint
+  wait_for: port={{ artifactory_port }} timeout=3
+
+- name: Verifying Artifactory HTTP endpoint
+  uri:  url="http://{{ common.net.localhost }}:{{ artifactory_port }}"
