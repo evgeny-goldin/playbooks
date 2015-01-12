@@ -35,7 +35,20 @@
   service: name=artifactory state=started enabled=yes
 
 - name: Verifying Artifactory endpoint
-  wait_for: port={{ artifactory_port }} timeout=3
+  wait_for: port={{ artifactory_port }} timeout=30
 
-- name: Verifying Artifactory HTTP endpoint
-  uri:  url="http://{{ common.net.localhost }}:{{ artifactory_port }}"
+- name:     Waiting for Artifactory to start
+  command:  curl http://{{ common.net.localhost }}:{{ artifactory_port }}/artifactory/api/system/ping
+  register: ping_result
+  until:    ping_result.stdout == 'OK'
+  retries:  20
+  delay:    3
+
+- name: Verifying Artifactory HTTP endpoints
+  uri:  url="http://{{ common.net.localhost }}:{{ artifactory_port }}{{ item.path }}"
+  with_items:
+    - { path: '' }
+    - { path: '/artifactory/api/application.wadl' }
+    - { path: '/artifactory/api/system/ping' }
+    - { path: '/artifactory/webapp/home.html' }
+    - { path: '/artifactory/webapp/browserepo.html' }
