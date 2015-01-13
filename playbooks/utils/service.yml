@@ -1,22 +1,25 @@
 ---
-# ================================================================================
-# - Stops service {{ service }}
-# - Downloads {{ url }} to {{ archive }} and unpacks it to {{ home }} directory
+# ===================================================================================================
+# Downloads, unpacks, installs, starts and checks a service {{ service }}, titled {{ title }}
+# ===================================================================================================
+# - Downloads {{ url }} to {{ archive }}, unpacks it to {{ home }} directory
 #   {{ home }} is deleted before unpack, unless {{ clean }} is False
 # - Writes {{ config_src }} template to {{ config_dest }}
 # - Creates an upstart script to run {{ command }} as service {{ service }} and starts it
 #   upstart script attempts to load {{ env_config }} and writes log to /var/log/{{ service }}.log
 # - Verifies service endpoint responds at {{ port }} within {{ timeout }} seconds
 # - Verifies http://127.0.0.1:{{ port }}{{ path }} to return {{ status }} code and {{ content }}
-# ================================================================================
-# - Required variables: service, url, archive, home, command. Other are optional.
-# ================================================================================
+# ===================================================================================================
+# - Required variables are: service, title, url, archive, home, command. Other are optional.
+# ===================================================================================================
 - debug: var=service
+- debug: var=title
 - debug: var=url
 - debug: var=archive
 - debug: var=home
 - debug: var=command
 
+- debug: msg="test = {{ test | default({}) }}"
 - debug: msg="config_src = '{{ config_src | default('') }}'"
 - debug: msg="config_dest = '{{ config_dest | default('') }}'"
 - debug: msg="env_config = '{{ env_config | default('') }}'"
@@ -26,14 +29,11 @@
 - debug: msg="status = '{{ status | default('') }}'"
 - debug: msg="content = '{{ content | default('') }}'"
 
-
-- set_fact: name="{{ name | default( service ) }}"
-
-- name: Stopping service {{ name }}
+- name: Stopping service {{ title }}
   service: name={{ service }} state=stopped
   ignore_errors: yes
 
-- name: Downloading {{ name }}
+- name: Downloading {{ title }}
   get_url:
     url:  "{{ url }}"
     dest: "{{ archive }}"
@@ -46,43 +46,52 @@
 
 - file: path={{ home }} state=directory
 
-- name: Unpacking {{ name }}
+- name: Unpacking {{ title }}
   unarchive:
     src:  "{{ archive }}"
     dest: "{{ home }}"
     copy: false
+
+- name:     Running {{ title }} test
+  command:  "{{ test.run }}"
+  register: test_out
+  when:     test is defined 
+
+- name: Verifying {{ title }} test
+  fail: msg="Expected to find '{{ test.expect }}' in '{{ test_out.stdout }}', but didn't."
+  when: ( test is defined ) and ( '{{ test.expect }}' not in '{{ test_out.stdout }}' )
 
 - include: "{{ common.utils.mkdir }}"
   vars:
     file:  "{{ config_dest }}"
   when: config_dest is defined
 
-- name: Generating {{ name }} config
+- name: Generating {{ title }} config
   template:
     src:  "{{ config_src  }}"
     dest: "{{ config_dest }}"
   when: ( config_src is defined ) and ( config_dest is defined )
 
-- name: Generating {{ name }} upstart script
+- name: Generating {{ title }} upstart script
   template:
     src:  "{{ playbook_dir }}/utils/templates/upstart"
     dest: "{{ ubuntu.init_dir }}/{{ service }}.conf"
 
-- name: Starting {{ name }} service
+- name: Starting {{ title }} service
   service: name={{ service }} state=started enabled=yes
 
-- name: Verifying {{ name }} endpoint
+- name: Verifying {{ title }} endpoint
   wait_for: port={{ port }} timeout={{ timeout | default(5) }}
   when: port is defined
 
-- name: Verifying {{ name }} HTTP endpoint
+- name: Verifying {{ title }} HTTP endpoint
   uri:
     url:            "http://{{ common.net.localhost }}:{{ port }}{{ path | default( '' ) }}"
     status_code:    "{{ status | default( 200 )}}"
     return_content: yes
   register: http_out
-  when: ( port is defined ) and (( path is defined ) or ( status is defined ))
+  when: ( port is defined ) and (( path is defined ) or ( status is defined ) or ( content is defined ))
 
-- name: Verifying {{ name }} HTTP endpoint content
-  fail: msg="Expected output '{{ http_out.content }}', to contain '{{ content }}', but it didn't"
+- name: Verifying {{ title }} HTTP endpoint content
+  fail: msg="Expected to find '{{ http_out.content }}' in '{{ content }}', but didn't."
   when: ( port is defined ) and ( content is defined ) and ( '{{ content }}' not in '{{ http_out.content }}' )

@@ -11,7 +11,8 @@
 - debug: var=ansible_fqdn
 - debug: var=facter_ipaddress_eth1
 
-- set_fact:
+- name: Calculating Helios version
+  set_fact:
     helios_version:     "{{ helios.version     | calculate( helios.latest ) }}"
     helios_master_port: "{{ helios_master_port | default( helios.master.port ) }}"
 

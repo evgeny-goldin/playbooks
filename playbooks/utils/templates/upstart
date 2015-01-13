@@ -10,7 +10,7 @@ script
     {% if env_config is defined %}
     [ -r '{{ env_config }}' ] && . '{{ env_config }}'
     {% endif %}
-    exec {{ ubuntu.bash }} -c "'{{ command }}' >> '{{ ubuntu.log_dir }}/{{ service }}.log' 2>&1"
+    exec {{ ubuntu.bash }} -c "{{ command }} >> '{{ ubuntu.log_dir }}/{{ service }}.log' 2>&1"
 end script
 
 # prevent respawning more than once every second

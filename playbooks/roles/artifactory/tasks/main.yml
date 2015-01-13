@@ -8,8 +8,8 @@
 
 - include: "{{ common.utils.service }}"
   vars:
-    name:        Artifactory
     service:     artifactory
+    title:       Artifactory
     url:         "{{ artifactory.url     | tokens({ 'version': artifactory_version }) }}"
     archive:     "{{ artifactory.archive | tokens({ 'version': artifactory_version }) }}"
     home:        "{{ artifactory.home }}"
@@ -17,7 +17,6 @@
     config_dest: "{{ artifactory_home }}/tomcat/conf/server.xml"
     command:     "{{ artifactory_home }}/bin/artifactory.sh"
     port:        "{{ artifactory_port }}"
-    status:      200
     content:     '0;URL=/artifactory'
 
 - name:     Waiting for Artifactory to start

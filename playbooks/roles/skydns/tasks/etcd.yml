@@ -1,57 +1,23 @@
 ---
 - set_fact:
-    etcd_dir:  "{{ etcd.dir_name | tokens( etcd ) }}"
+    etcd_dir: "{{ etcd.dir_name | tokens( etcd ) }}"
 - set_fact:
-    etcd_port: "{{ etcd_port | default( etcd.port ) }}"
-    etcd_src:  "{{ etcd.home }}/{{ etcd_dir }}/etcd"
-    etcd_bin:  "{{ ubuntu.bin_dir }}/etcd"
+    etcd_bin: "{{ etcd.home }}/{{ etcd_dir }}/etcd"
 
-- include: "{{ common.utils.download }}"
+- include: "{{ common.utils.service }}"
   vars:
-    name:    etcd
-    url:     "{{ etcd.url     | tokens({ 'dir_name': etcd_dir, 'version': etcd.version }) }}"
-    archive: "{{ etcd.archive | tokens( etcd ) }}"
-    home:    "{{ etcd.home }}"
+    service:     etcd
+    title:       etcd
+    url:         "{{ etcd.url     | tokens({ 'dir_name': etcd_dir, 'version': etcd.version }) }}"
+    archive:     "{{ etcd.archive | tokens( etcd ) }}"
+    home:        "{{ etcd.home }}"
+    config_src:  "{{ playbook_dir }}/roles/skydns/templates/etcd-config"
+    config_dest: "{{ etcd.config }}"
+    env_config:  "{{ etcd.config }}"
+    test:        { run: "{{ etcd_bin }} --version", expect: "{{ etcd.version }}" }
+    command:     "{{ etcd_bin }} $ETCD_OPTS"
+    port:        "{{ etcd_port | default( etcd.port ) }}"
+    path:        '/version'
+    content:     "{{ etcd.version }}"
 
-- name: Stopping etcd service
-  service: name=etcd state=stopped
-  ignore_errors: yes
-
-- name: Copying etcd executable
-  command: cp "{{ etcd_src }}" "{{ etcd_bin }}"
-
-- name:     Running etcd
-  command:  etcd --version
-  register: etcd_out
-
-- name: Verifying etcd version
-  fail: msg="Expected etcd version '{{ etcd.version }}', read '{{ etcd_out.stdout }}' instead"
-  when: "'{{ etcd.version }}' not in etcd_out.stdout"
-
-- include: "{{ common.utils.mkdir }}"
-  vars:
-    file:  "{{ etcd.config }}"
-
-- name: Generating etcd config
-  template:
-    src:  etcd-config
-    dest: "{{ etcd.config }}"
-
-- name: Generating etcd upstart script
-  template:
-    src:  etcd-upstart
-    dest: "{{ ubuntu.init_dir }}/etcd.conf"
-
-- name: Starting etcd service
-  service: name=etcd state=started enabled=yes
-
-- name: Verifying etcd endpoint
-  wait_for: port={{ etcd_port }} timeout=3
-
-- name: Verifying etcd HTTP endpoint
-  uri:  url="http://{{ common.net.localhost }}:{{ etcd_port }}/version" return_content=yes
-  register: etcd_version
-
-- name: Verifying etcd HTTP endpoint
-  fail: msg="Expected etcd version '{{ etcd.version }}', read '{{ etcd_version.content }}' instead"
-  when: "'{{ etcd.version }}' not in '{{ etcd_version.content }}'"
+# Multiple configs
