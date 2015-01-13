@@ -11,13 +11,11 @@
     url:         "{{ etcd.url     | tokens({ 'dir_name': etcd_dir, 'version': etcd.version }) }}"
     archive:     "{{ etcd.archive | tokens( etcd ) }}"
     home:        "{{ etcd.home }}"
-    config_src:  "{{ playbook_dir }}/roles/skydns/templates/etcd-config"
-    config_dest: "{{ etcd.config }}"
+    configs:
+      - { from: "{{ playbook_dir }}/roles/skydns/templates/etcd-config", to: "{{ etcd.config }}" }
     env_config:  "{{ etcd.config }}"
     test:        { run: "{{ etcd_bin }} --version", expect: "{{ etcd.version }}" }
     command:     "{{ etcd_bin }} $ETCD_OPTS"
     port:        "{{ etcd_port | default( etcd.port ) }}"
     path:        '/version'
     content:     "{{ etcd.version }}"
-
-# Multiple configs

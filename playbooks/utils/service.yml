@@ -4,7 +4,7 @@
 # ===================================================================================================
 # - Downloads {{ url }} to {{ archive }}, unpacks it to {{ home }} directory
 #   {{ home }} is deleted before unpack, unless {{ clean }} is False
-# - Writes {{ config_src }} template to {{ config_dest }}
+# - Writes {{ configs }}
 # - Creates an upstart script to run {{ command }} as service {{ service }} and starts it
 #   upstart script attempts to load {{ env_config }} and writes log to /var/log/{{ service }}.log
 # - Verifies service endpoint responds at {{ port }} within {{ timeout }} seconds
@@ -20,9 +20,7 @@
 - debug: var=command
 
 - debug: msg="test = {{ test | default({}) }}"
-- debug: msg="config_src = '{{ config_src | default('') }}'"
-- debug: msg="config_dest = '{{ config_dest | default('') }}'"
-- debug: msg="env_config = '{{ env_config | default('') }}'"
+- debug: msg="configs = '{{ configs | default({}) }}'"
 - debug: msg="port = '{{ port | default('') }}'"
 - debug: msg="timeout = '{{ timeout | default('') }}'"
 - debug: msg="path = '{{ path | default('') }}'"
@@ -55,22 +53,24 @@
 - name:     Running {{ title }} test
   command:  "{{ test.run }}"
   register: test_out
-  when:     test is defined 
+  when:     test is defined
 
 - name: Verifying {{ title }} test
   fail: msg="Expected to find '{{ test.expect }}' in '{{ test_out.stdout }}', but didn't."
   when: ( test is defined ) and ( '{{ test.expect }}' not in '{{ test_out.stdout }}' )
 
-- include: "{{ common.utils.mkdir }}"
-  vars:
-    file:  "{{ config_dest }}"
-  when: config_dest is defined
+- file: path={{ item.to }} state=directory
+  with_items:
+    - "{{ configs }}"
+  when: configs is defined    
 
-- name: Generating {{ title }} config
+- name: Generating {{ title }} configs
   template:
-    src:  "{{ config_src  }}"
-    dest: "{{ config_dest }}"
-  when: ( config_src is defined ) and ( config_dest is defined )
+    src:  "{{ item.from  }}"
+    dest: "{{ item.to }}"
+  with_items:
+    - "{{ configs }}"
+  when: configs is defined
 
 - name: Generating {{ title }} upstart script
   template:
