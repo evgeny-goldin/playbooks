@@ -21,6 +21,7 @@
 
 - debug: msg="test = {{ test | default({}) }}"
 - debug: msg="configs = '{{ configs | default({}) }}'"
+- debug: msg="env_config = '{{ env_config | default('') }}'"
 - debug: msg="port = '{{ port | default('') }}'"
 - debug: msg="timeout = '{{ timeout | default('') }}'"
 - debug: msg="path = '{{ path | default('') }}'"
@@ -56,13 +57,17 @@
   when:     test is defined
 
 - name: Verifying {{ title }} test
-  fail: msg="Expected to find '{{ test.expect }}' in '{{ test_out.stdout }}', but didn't."
-  when: ( test is defined ) and ( '{{ test.expect }}' not in '{{ test_out.stdout }}' )
+  assert:
+    that:
+      - "'{{ test.expect }}' in '{{ test_out.stdout }}'"
+  when: test is defined
+
+  # fail: msg="Expected to find '{{ test.expect }}' in '{{ test_out.stdout }}', but didn't."
 
 - file: path={{ item.to }} state=directory
   with_items:
     - "{{ configs }}"
-  when: configs is defined    
+  when: configs is defined
 
 - name: Generating {{ title }} configs
   template:
