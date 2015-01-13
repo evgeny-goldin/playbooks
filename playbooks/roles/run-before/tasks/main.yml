@@ -38,11 +38,14 @@
 
 - debug: var=periodic
 
+- debug: msg="Successful periodic run was never performed on this instance"
+  when:  not touch.stat.exists
+
 - debug: msg="Last successful periodic run was on {{ touch.stat.ctime | strftime }}, {{ seconds_since_last_periodic | explain }} ago"
   when: touch.stat.exists
 
-- debug: msg="Next periodic run - now!"
-  when: periodic
+- debug: msg="Periodic run - now!"
+  when:  periodic
 
 - debug: msg="Next periodic run will be on {{ ( touch.stat.ctime|int + period_sec|int ) | strftime }}, in {{ ( period_sec|int - seconds_since_last_periodic|int ) | explain }}"
   when: ( touch.stat.exists and ( not periodic|bool ))

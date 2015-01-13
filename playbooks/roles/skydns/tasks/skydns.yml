@@ -1,14 +1,15 @@
 ---
 - set_fact:
     skydns_root: "{{ go.path }}/src/{{ skydns.url }}"
-    skydns_bin:  "{{ ubuntu.bin_dir }}/skydns"
+- set_fact:
+    skydns_bin:  "{{ skydns_root }}/skydns"
 
 - name: Downloading SkyDNS
   command: go get '{{ skydns.url }}'
   environment:
     "{{ go_env }}"
 
-- name: Switching SkyDNS version
+- name: Switching SkyDNS tag
   command: git checkout '{{ skydns.version }}'
   args:
     chdir: "{{ skydns_root }}"
@@ -20,37 +21,15 @@
   environment:
     "{{ go_env }}"
 
-- name: Copying SkyDNS config
-  template:
-    src:  skydns-config
-    dest: "{{ skydns.config }}"
-
-- name: Stopping SkyDNS service
-  service: name=skydns state=stopped
-  ignore_errors: yes
-
-- name: Copying SkyDNS executable
-  command: cp "{{ skydns_root }}/skydns" "{{ skydns_bin }}"
-
-- name:     Running SkyDNS
-  command:  "{{ ubuntu.bash }} -c 'skydns --help 2>&1; exit 0'"
-  register: skydns_out
-  ignore_errors: yes
-
-- name: Verifying SkyDNS run
-  fail: msg="Unknown output of 'skydns --help' - {{ skydns_out.stdout }}"
-  when: "'Usage of skydns' not in skydns_out.stdout"
-
-- name: Generating SkyDNS upstart script
-  template:
-    src:  skydns-upstart
-    dest: "{{ ubuntu.init_dir }}/skydns.conf"
-
-- name: Starting SkyDNS service
-  service: name=skydns state=started enabled=yes
-
-- name: Verifying SkyDNS endpoint
-  wait_for: port={{ common.net.dns_port }} timeout=5
+- include: "{{ common.utils.service }}"
+  vars:
+    service:     skydns
+    title:       SkyDNS
+    configs:
+      - { from: "{{ playbook_dir }}/roles/skydns/templates/skydns-config", to: "{{ skydns.config }}" }
+    env_config: "{{ skydns.config }}"
+    command:    "{{ skydns_bin }} $SKYDNS_OPTS"
+    port:       "{{ common.net.dns_port }}"
 
 - name:     Running local dig
   command:  dig @{{ common.net.localhost }}
