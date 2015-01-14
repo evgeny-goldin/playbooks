@@ -2,7 +2,7 @@
 # Downloads {{ url }} to {{ archive }} and unpacks it to {{ home }} directory
 - debug: msg="Downloading '{{ url }}' to '{{ archive }}' and unpacking it to '{{ home }}'"
 
-- name: Downloading {{ name }}
+- name: Downloading {{ title }}
   get_url:
     url:  "{{ url }}"
     dest: "{{ archive }}"
@@ -15,8 +15,38 @@
 
 - file: path={{ home }} state=directory
 
-- name: Unpacking {{ name }}
+- name: Unpacking {{ title }}
   unarchive:
     src:  "{{ archive }}"
     dest: "{{ home }}"
     copy: false
+    
+- name:     Running {{ title }} test
+  command:  "{{ test.run }}"
+  register: test_out
+  ignore_errors: yes # So we don't fail when test command sends output to stderr
+  when: test is defined
+
+- name: Verifying {{ title }} test
+  assert:
+    that:
+      - "'{{ test.expect }}' in '{{ test_out.stdout }}'"
+  when: test is defined
+
+- command: mkdir -p $(dirname {{ item.to }})
+  with_items:
+    - "{{ configs }}"
+  when: configs is defined
+
+- name: Generating {{ title }} configs
+  template:
+    src:  "{{ item.from }}"
+    dest: "{{ item.to   }}"
+  with_items:
+    - "{{ configs }}"
+  when: configs is defined
+
+- name: Running {{ title }} cleanup commands
+  command: "{{ item }}"
+  with_items:
+    - "{{ cleanup }}"

@@ -18,7 +18,7 @@
 
 - include: "{{ common.utils.download }}"
   vars:
-    name:    Helios
+    title:   Helios
     url:     "{{ helios.url     | tokens({ 'version': helios_version }) }}"
     archive: "{{ helios.archive | tokens({ 'version': helios_version }) }}"
     home:    "{{ helios.home }}"

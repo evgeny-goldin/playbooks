@@ -1,0 +1,12 @@
+---
+tomcat: {
+  version: latest, # 8.0.15 or latest - https://tomcat.apache.org/download-80.cgi
+  latest: {
+    command: "curl -s 'https://tomcat.apache.org/download-80.cgi' | grep 'apache-tomcat-' | grep '.zip' | head -1 | sed -E 's/.+apache-tomcat-//' | sed -E 's/\\.zip.+//'",
+    pattern: '^\d+\.\d+\.\d+$'
+  },  
+  url:     'http://www.eu.apache.org/dist/tomcat/tomcat-8/v<version>/bin/apache-tomcat-<version>.tar.gz',
+  port:    8080,
+  archive: /opt/tomcat-<version>.tar.gz,
+  home:    /opt/tomcat
+}

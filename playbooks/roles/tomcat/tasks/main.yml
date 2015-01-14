@@ -1,0 +1,21 @@
+---
+- name: Calculating Tomcat version
+  set_fact:
+    tomcat_version: "{{ tomcat.version | calculate( tomcat.latest ) }}"
+- set_fact:
+    tomcat_port:    "{{ tomcat_port | default( tomcat.port ) }}"
+    tomcat_home:    "{{ tomcat.home }}/apache-tomcat-{{ tomcat_version }}"
+
+- include: "{{ common.utils.download }}"
+  vars:
+    title:   Tomcat
+    url:     "{{ tomcat.url     | tokens({ 'version': tomcat_version }) }}"
+    archive: "{{ tomcat.archive | tokens({ 'version': tomcat_version }) }}"
+    home:    "{{ tomcat.home }}"
+    configs:
+      - { from: "{{ playbook_dir }}/roles/tomcat/templates/server.xml",
+          to:   "{{ tomcat_home }}/conf/server.xml" }
+    cleanup: 
+      - rm -rf '{{ tomcat_home }}/temp' '{{ tomcat_home }}/webapps' '{{ tomcat_home }}/work'
+      - mkdir  '{{ tomcat_home }}/temp' '{{ tomcat_home }}/webapps' '{{ tomcat_home }}/work'
+            

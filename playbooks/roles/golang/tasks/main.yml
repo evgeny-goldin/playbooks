@@ -10,7 +10,7 @@
 
 - include: "{{ common.utils.download }}"
   vars:
-    name:    Go
+    title:   Go
     url:     "{{ go.url     | tokens({ 'version': go_version }) }}" 
     archive: "{{ go.archive | tokens({ 'version': go_version }) }}" 
     home:    "{{ go.bin_dir }}/../.."

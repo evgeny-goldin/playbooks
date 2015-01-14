@@ -13,14 +13,15 @@ This repo contains **Ansible** [Playbooks](https://github.com/evgeny-goldin/play
 * [Go](https://golang.org/)
 * [Helios](https://github.com/spotify/helios)
 * [Java](http://www.oracle.com/technetwork/java/index.html)
-* [Jenkins](http://jenkins-ci.org/)
-* [MySQL](http://www.mysql.com/)
+* [Jenkins](https://jenkins-ci.org/)
+* [MySQL](https://www.mysql.com/)
 * [Nexus](http://www.sonatype.org/nexus/)
-* [Node.js](http://nodejs.org/)
-* [Packer](http://www.packer.io/)
+* [Node.js](https://nodejs.org/)
+* [Packer](https://www.packer.io/)
 * [Ruby](https://www.ruby-lang.org/en/)
 * [SkyDNS](https://github.com/skynetservices/skydns)
-* [Vagrant](http://www.vagrantup.com/)
+* [Tomcat](https://tomcat.apache.org/)
+* [Vagrant](https://www.vagrantup.com/)
 * [VirtualBox](https://www.virtualbox.org/)
 * [ZooKeeper](https://zookeeper.apache.org/)
 
@@ -47,23 +48,6 @@ This repo contains **Ansible** [Playbooks](https://github.com/evgeny-goldin/play
 
   * `vagrant ssh <box>`
   * `ansible-playbook /playbooks/<box>-ubuntu.yml -s -c local`
-
-#### Playbooks
-
-* [`"asgard"`](https://github.com/evgeny-goldin/playbooks/blob/master/playbooks/asgard-ubuntu.yml) playbook installs Java and runs Asgard as an `"asgard"` service.
-
-* [`"docker"`](https://github.com/evgeny-goldin/playbooks/blob/master/playbooks/docker-ubuntu.yml) playbook installs Docker.
-
-* [`"jenkins"`](https://github.com/evgeny-goldin/playbooks/blob/master/playbooks/jenkins-ubuntu.yml) playbook installs Java, Node.js, Npm, Grunt, Bower and Jenkins running as a `"jenkins"` service. Jenkins plugins to install are [configurable](https://github.com/evgeny-goldin/playbooks/blob/master/playbooks/roles/jenkins/vars/main.yml).
-
-* [`"mysql"`](https://github.com/evgeny-goldin/playbooks/blob/master/playbooks/mysql-ubuntu.yml) playbook installs MySQL 5.6 running as `"mysql"` service accepting any remote connections. User is "root" with an empty password.
-
-* [`"packer"`](https://github.com/evgeny-goldin/playbooks/blob/master/playbooks/packer-ubuntu.yml) playbook installs Docker, Vagrant, VirtualBox, Ruby and Packer.
-
-* [`"ruby"`](https://github.com/evgeny-goldin/playbooks/blob/master/playbooks/ruby-ubuntu.yml) playbook installs Ruby.
-
-* Packages installed are usually of the latest version, review each role's `"vars/main.yml"` for fine-tuning. Most roles also allow explicit versioning of the package installed.
-
 
 #### Docker
 
