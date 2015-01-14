@@ -12,6 +12,7 @@ ETCD_PORT               = 4001
 WEB_PORT                = 8080
 EXHIBITOR_PORT          = WEB_PORT
 ARTIFACTORY_PORT        = WEB_PORT
+NEXUS_PORT              = WEB_PORT + 1
 DNS_PORT                = 53
 HELIOS_PROPERTIES       = { helios_master:      "helios-master.#{ VAGRANT_DOMAIN }",
                             helios_master_port: HELIOS_MASTER_PORT,
@@ -26,6 +27,7 @@ BOXES = {
     ports: [ DNS_PORT, ZOOKEEPER_PORT, HELIOS_MASTER_PORT, ETCD_PORT, EXHIBITOR_PORT ]),
   'helios-agent'   => HELIOS_PROPERTIES,
   artifactory:          { artifactory_port: ARTIFACTORY_PORT, ports: [ ARTIFACTORY_PORT ]},
+  nexus:                { nexus_port:       NEXUS_PORT,       ports: [ NEXUS_PORT ]},
   # packer:             {},
   # ruby:               {},
   # jenkins:            { ports: [ WEB_PORT ]},

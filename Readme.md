@@ -5,6 +5,7 @@
 This repo contains **Ansible** [Playbooks](https://github.com/evgeny-goldin/playbooks/tree/master/playbooks) and [Roles](https://github.com/evgeny-goldin/playbooks/tree/master/playbooks/roles) for installing the following packages on Ubuntu:
 
 * [Ansible](http://www.ansible.com/)
+* [Artifactory](http://www.jfrog.com/artifactory/)
 * [Asgard](https://github.com/Netflix/asgard)
 * [Docker](https://www.docker.com/)
 * [Exhibitor](https://github.com/Netflix/exhibitor)
@@ -14,6 +15,7 @@ This repo contains **Ansible** [Playbooks](https://github.com/evgeny-goldin/play
 * [Java](http://www.oracle.com/technetwork/java/index.html)
 * [Jenkins](http://jenkins-ci.org/)
 * [MySQL](http://www.mysql.com/)
+* [Nexus](http://www.sonatype.org/nexus/)
 * [Node.js](http://nodejs.org/)
 * [Packer](http://www.packer.io/)
 * [Ruby](https://www.ruby-lang.org/en/)
@@ -26,15 +28,16 @@ This repo contains **Ansible** [Playbooks](https://github.com/evgeny-goldin/play
 
 * `<box>` is one of:
 
+    * `artifactory`
     * `asgard`
     * `docker`
     * `helios-master`
-    * `helios-agent-1`
+    * `helios-agent`
     * `jenkins`
     * `mysql`
+    * `nexus`
     * `packer`
     * `ruby`
-    
 
 * You can create Ubuntu VMs if **Vagrant** and **VirtualBox** are installed:
 

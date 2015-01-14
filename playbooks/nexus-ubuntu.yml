@@ -1,0 +1,19 @@
+---
+# Nexus playbook for Ubuntu
+# http://www.sonatype.org/nexus/
+
+- name:  Nexus
+  hosts: all
+  sudo:  yes
+
+  vars_files:
+    - vars/common.yml
+    - vars/{{ ansible_distribution }}.yml
+
+  roles:
+    - { role: run-before, period: daily  }
+    - { role: base,       when: periodic }
+    - { role: ansible,    when: periodic }
+    - { role: java,       when: periodic }
+    # - nexus
+    - run-after

@@ -1,0 +1,13 @@
+---
+- set_fact:
+    nexus_port: "{{ nexus_port | default( nexus.port ) }}"
+
+- include: "{{ common.utils.service }}"
+  vars:
+    service:     nexus
+    title:       Nexus
+    url:         "{{ nexus.url     | tokens( nexus ) }}"
+    archive:     "{{ nexus.archive | tokens( nexus ) }}"
+    home:        "{{ nexus.home }}"
+    command:     "{{ nexus.home }}/nexus-{{ nexus.version }}-bundle/nexus-{{ nexus.version }}/bin/nexus"
+    port:        "{{ nexus_port }}"
