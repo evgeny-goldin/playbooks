@@ -5,17 +5,17 @@
 This repo contains **Ansible** [Playbooks](https://github.com/evgeny-goldin/playbooks/tree/master/playbooks) and [Roles](https://github.com/evgeny-goldin/playbooks/tree/master/playbooks/roles) for installing the following packages on Ubuntu:
 
 * [Ansible](http://www.ansible.com/)
-* [Artifactory](http://www.jfrog.com/artifactory/)
+* [Artifactory](http://www.jfrog.com/artifactory/) _(standalone or Tomcat)_
 * [Asgard](https://github.com/Netflix/asgard)
 * [Docker](https://www.docker.com/)
 * [Exhibitor](https://github.com/Netflix/exhibitor)
 * [etcd](https://github.com/coreos/etcd)
 * [Go](https://golang.org/)
 * [Helios](https://github.com/spotify/helios)
-* [Java](http://www.oracle.com/technetwork/java/index.html)
+* [Java](http://www.oracle.com/technetwork/java/index.html) _(Oracle JRE, Oracle JDK, DefaultJDK)_
 * [Jenkins](https://jenkins-ci.org/)
 * [MySQL](https://www.mysql.com/)
-* [Nexus](http://www.sonatype.org/nexus/)
+* [Nexus](http://www.sonatype.org/nexus/) _(standalone or Tomcat)_
 * [Node.js](https://nodejs.org/)
 * [Packer](https://www.packer.io/)
 * [Ruby](https://www.ruby-lang.org/en/)

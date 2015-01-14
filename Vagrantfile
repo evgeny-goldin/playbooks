@@ -27,7 +27,7 @@ BOXES = {
     ports: [ DNS_PORT, ZOOKEEPER_PORT, HELIOS_MASTER_PORT, ETCD_PORT, EXHIBITOR_PORT ]),
   'helios-agent'   => HELIOS_PROPERTIES,
   artifactory:          { artifactory_port: ARTIFACTORY_PORT, ports: [ ARTIFACTORY_PORT ]},
-  nexus:                { tomcat_port:      NEXUS_PORT,       ports: [ NEXUS_PORT ]},
+  nexus:                { nexus_port:       NEXUS_PORT,       ports: [ NEXUS_PORT ]},
   # packer:             {},
   # ruby:               {},
   # jenkins:            { ports: [ WEB_PORT ]},
@@ -38,7 +38,7 @@ BOXES = {
   #                                        env_file: '/playbooks/todo-sample-app.env' }
 }
 
-Vagrant.require_version '>= 1.6.5'
+Vagrant.require_version '>= 1.7.0'
 Vagrant.configure( VAGRANTFILE_API_VERSION ) do | config |
 
   # https://github.com/phinze/landrush

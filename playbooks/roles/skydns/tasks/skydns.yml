@@ -26,7 +26,7 @@
     service:     skydns
     title:       SkyDNS
     configs:
-      - { from: "{{ playbook_dir }}/roles/skydns/templates/skydns-config", to: "{{ skydns.config }}" }
+      - { from: skydns-config, to: "{{ skydns.config }}" }
     env_config: "{{ skydns.config }}"
     command:    "{{ skydns_bin }} $SKYDNS_OPTS"
     port:       "{{ common.net.dns_port }}"

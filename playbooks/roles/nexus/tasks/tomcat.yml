@@ -1,0 +1,10 @@
+---
+- include: "{{ common.utils.service }}"
+  vars:
+    service:  nexus
+    title:    Nexus
+    url:      "{{ nexus.url     | tokens( nexus ) }}"
+    archive:  "{{ nexus.archive | tokens( nexus ) }}"
+    home:     "{{ tomcat_root_app }}"
+    command:  "{{ tomcat_run  }}"
+    port:     "{{ tomcat_port }}"

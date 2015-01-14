@@ -40,8 +40,8 @@
 
 - name: Generating {{ title }} configs
   template:
-    src:  "{{ item.from }}"
-    dest: "{{ item.to   }}"
+    src:  "{{ playbook_dir }}/roles/{{ item.role | default( service ) }}/templates/{{ item.from  }}"
+    dest: "{{ item.to }}"
   with_items:
     - "{{ configs }}"
   when: configs is defined

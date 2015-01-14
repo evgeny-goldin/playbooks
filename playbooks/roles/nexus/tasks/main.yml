@@ -1,22 +1,6 @@
 ---
-- set_fact:
-    nexus_home: "{{ nexus.home }}/nexus-{{ nexus.version }}"
+- include: standalone.yml
+  when:    nexus.standalone
 
-- include: "{{ common.utils.service }}"
-  vars:
-    service:     nexus
-    title:       Nexus
-    url:         "{{ nexus.url     | tokens( nexus ) }}"
-    archive:     "{{ nexus.archive | tokens( nexus ) }}"
-    home:        "{{ nexus.home }}"
-    configs:
-      - { from: "{{ playbook_dir }}/roles/nexus/templates/nexus.properties", 
-          to:   "{{ tomcat_home }}/lib" }
-    # Copying Nexus to webapps/ROOT. That would be easier if you kept the freaking war, Sonatype.
-    cleanup:
-      - rm -rf "{{ tomcat_root_app }}"
-      - cp     {{ nexus_home }}/lib/*.jar "{{ tomcat_home }}/lib" 
-      - cp -R  "{{ nexus_home }}/nexus"     "{{ tomcat_webapps }}"
-      - mv     "{{ tomcat_webapps }}/nexus" "{{ tomcat_root_app }}"
-    command:   "{{ tomcat_home }}/bin/catalina.sh run"
-    port:      "{{ tomcat_port }}"
+- include: tomcat.yml
+  when:    not nexus.standalone

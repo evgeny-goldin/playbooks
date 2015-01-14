@@ -1,8 +1,15 @@
 ---
 nexus: {
-  version: '2.11.1-01',
-  url:     'http://download.sonatype.com/nexus/oss/nexus-<version>-bundle.tar.gz',
-  port:    8081,
-  archive: /opt/nexus-<version>.tar.gz,
-  home:    /opt/nexus
+  version:    '2.11.1-01',
+  port:       8080,
+  standalone: yes,
+  standalone: {
+    url:     '{{ common.repo.sonatype }}/nexus/oss/nexus-<version>-bundle.tar.gz',
+    archive: '/opt/nexus-<version>.tar.gz',
+    home:    /opt/nexus
+  },
+  war: {
+    url:     '{{ common.repo.jcenter }}/org/sonatype/nexus/nexus-webapp/<version>/nexus-webapp-<version>.war',
+    archive: '/opt/nexus-<version>.war'   
+  }
 }

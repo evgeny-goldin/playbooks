@@ -14,8 +14,7 @@
     archive:     "{{ artifactory.archive | tokens({ 'version': artifactory_version }) }}"
     home:        "{{ artifactory.home }}"
     configs:
-      - { from: "{{ playbook_dir }}/roles/artifactory/templates/server.xml",
-          to:   "{{ artifactory_home }}/tomcat/conf/server.xml" }
+      - { from: server.xml, to: "{{ artifactory_home }}/tomcat/conf/server.xml" }
     command:     "{{ artifactory_home }}/bin/artifactory.sh"
     port:        "{{ artifactory_port }}"
     content:     '0;URL=/artifactory'

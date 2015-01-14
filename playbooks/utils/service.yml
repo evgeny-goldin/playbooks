@@ -23,6 +23,7 @@
 - debug: msg="test = {{ test | default({}) }}"
 - debug: msg="configs = '{{ configs | default({}) }}'"
 - debug: msg="env_config = '{{ env_config | default('') }}'"
+- debug: msg="cleanup = '{{ cleanup | default([]) }}'"
 - debug: msg="port = '{{ port | default('') }}'"
 - debug: msg="timeout = '{{ timeout | default('') }}'"
 - debug: msg="path = '{{ path | default('') }}'"
@@ -74,7 +75,7 @@
 
 - name: Generating {{ title }} configs
   template:
-    src:  "{{ item.from  }}"
+    src:  "{{ playbook_dir }}/roles/{{ item.role | default( service ) }}/templates/{{ item.from  }}"
     dest: "{{ item.to }}"
   with_items:
     - "{{ configs }}"
@@ -84,6 +85,7 @@
   command: "{{ ubuntu.bash }} -c '{{ item }}'"
   with_items:
     - "{{ cleanup }}"
+  when: cleanup is defined
 
 - name: Generating {{ title }} upstart script
   template:

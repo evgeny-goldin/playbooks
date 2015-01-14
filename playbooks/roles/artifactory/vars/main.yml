@@ -6,7 +6,13 @@ artifactory: {
     command: "curl -s '{{ common.repo.bintray }}/jfrog/artifactory/' | grep '<pre>' | grep 'artifactory-' | sed -r 's/<[^>]+>//g' | sed 's/artifactory-//' | sed 's/\\.zip$//' | tail -1",
     pattern: '^\d+\.\d+\.\d+$'
   },
-  url:     '{{ common.repo.bintray }}/jfrog/artifactory/artifactory-<version>.zip',
-  archive: /opt/artifactory-<version>.zip,
+  url: {
+    war:        '{{ common.repo.jfrog }}/artifactory/libs-releases/org/artifactory/artifactory-web-war/<version>/artifactory-web-war-<version>.war',
+    standalone: '{{ common.repo.bintray }}/jfrog/artifactory/artifactory-<version>.zip',
+  },
+  archive: {
+    war:        /opt/artifactory-<version>.war,
+    standalone: /opt/artifactory-<version>.zip
+  },
   home:    /opt/artifactory
 }

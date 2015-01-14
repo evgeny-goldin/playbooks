@@ -8,17 +8,17 @@
 - set_fact:    
     tomcat_webapps:  "{{ tomcat_home }}/webapps" 
     tomcat_root_app: "{{ tomcat_home }}/webapps/ROOT"
+    tomcat_run:      "{{ tomcat_home }}/bin/catalina.sh run"
 
 - include: "{{ common.utils.download }}"
   vars:
     title:   Tomcat
     url:     "{{ tomcat.url     | tokens({ 'version': tomcat_version, 
-                                           'N'      : 7 if tomcat_version.startswith('7') else 8 }) }}"
+                                           'N'      : 7 if tomcat_version.startswith( '7' ) else 8 }) }}"
     archive: "{{ tomcat.archive | tokens({ 'version': tomcat_version }) }}"
     home:    "{{ tomcat.home }}"
     configs:
-      - { from: "{{ playbook_dir }}/roles/tomcat/templates/server.xml",
-          to:   "{{ tomcat_home }}/conf/server.xml" }
+      - { role: tomcat, from: server.xml, to: "{{ tomcat_home }}/conf/server.xml" }
     cleanup: 
       - rm    -rf '{{ tomcat_webapps }}'  '{{ tomcat_home }}/temp' '{{ tomcat_home }}/work'
       - mkdir -p  '{{ tomcat_root_app }}' '{{ tomcat_home }}/temp' '{{ tomcat_home }}/work'
