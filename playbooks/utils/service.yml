@@ -5,6 +5,7 @@
 # - Downloads {{ url }} to {{ archive }}, unpacks it to {{ home }} directory
 #   {{ home }} is deleted before unpack, unless {{ clean }} is False
 # - Writes {{ configs }}
+# - Executes {{ cleanup }} commands
 # - Creates an upstart script to run {{ command }} as service {{ service }} and starts it
 #   upstart script attempts to load {{ env_config }} and writes log to /var/log/{{ service }}.log
 # - Verifies service endpoint responds at {{ port }} within {{ timeout }} seconds
@@ -78,6 +79,11 @@
   with_items:
     - "{{ configs }}"
   when: configs is defined
+
+- name: Running {{ title }} cleanup commands
+  command: "{{ ubuntu.bash }} -c '{{ item }}'"
+  with_items:
+    - "{{ cleanup }}"
 
 - name: Generating {{ title }} upstart script
   template:

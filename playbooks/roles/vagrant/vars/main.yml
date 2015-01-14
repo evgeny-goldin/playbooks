@@ -1,6 +1,6 @@
 ---
 vagrant: {
-  version: latest, # 1.7.2 or latest - https://www.vagrantup.com/downloads.html
+  version: latest, # 1.7.2, latest - https://www.vagrantup.com/downloads.html
   latest: {
     command: "curl -s 'https://dl.bintray.com/mitchellh/vagrant/' | grep vagrant | grep '.deb' | tail -1 | cut -d_ -f5",
     pattern: '^\d+\.\d+\.\d+$'

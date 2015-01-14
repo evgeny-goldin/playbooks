@@ -15,5 +15,5 @@
     - { role: base,       when: periodic }
     - { role: ansible,    when: periodic }
     - { role: java,       when: periodic }
-    - tomcat
+    - nexus
     - run-after

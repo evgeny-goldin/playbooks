@@ -14,7 +14,6 @@
     - { role: run-before, period: daily  }
     - { role: base,       when: periodic }
     - { role: ansible,    when: periodic }
-    - { role: java,       when: periodic, java_distribution: 'open-jdk' }
     - { role: zookeeper,  when: periodic, install_exhibitor: yes }
     - { role: golang,     when: periodic }
     - { role: skydns,     when: periodic }

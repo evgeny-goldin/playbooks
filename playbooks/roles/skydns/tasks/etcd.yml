@@ -12,7 +12,8 @@
     archive:     "{{ etcd.archive | tokens( etcd ) }}"
     home:        "{{ etcd.home }}"
     configs:
-      - { from: "{{ playbook_dir }}/roles/skydns/templates/etcd-config", to: "{{ etcd.config }}" }
+      - { from: "{{ playbook_dir }}/roles/skydns/templates/etcd-config", 
+          to:   "{{ etcd.config }}" }
     env_config:  "{{ etcd.config }}"
     test:        { run: "{{ etcd_bin }} --version", expect: "{{ etcd.version }}" }
     command:     "{{ etcd_bin }} $ETCD_OPTS"
