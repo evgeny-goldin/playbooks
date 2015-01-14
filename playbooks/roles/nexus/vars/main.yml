@@ -1,7 +1,7 @@
 ---
 nexus: {
   version: '2.11.1-01',
-  url:     'http://download.sonatype.com/nexus/oss/nexus-<version>-bundle.tar.gz'
+  url:     'http://download.sonatype.com/nexus/oss/nexus-<version>-bundle.tar.gz',
   port:    8081,
   archive: /opt/nexus-<version>.tar.gz,
   home:    /opt/nexus

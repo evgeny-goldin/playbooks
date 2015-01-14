@@ -9,5 +9,5 @@
     url:         "{{ nexus.url     | tokens( nexus ) }}"
     archive:     "{{ nexus.archive | tokens( nexus ) }}"
     home:        "{{ nexus.home }}"
-    command:     "{{ nexus.home }}/nexus-{{ nexus.version }}-bundle/nexus-{{ nexus.version }}/bin/nexus"
+    command:     "{{ nexus.home }}/nexus-{{ nexus.version }}/bin/nexus start"
     port:        "{{ nexus_port }}"
