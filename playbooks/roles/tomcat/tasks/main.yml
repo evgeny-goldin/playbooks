@@ -1,24 +1,27 @@
 ---
+# When this role is imported - we need to explicitly include our own vars
+- include_vars: "{{ playbook_dir }}/roles/tomcat/vars/main.yml"
+
 - name: Calculating Tomcat version
-  set_fact: 
+  set_fact:
     tomcat_version:  "{{ tomcat_version | default( tomcat.version ) | calculate( tomcat.latest ) }}"
 - set_fact:
     tomcat_port:     "{{ tomcat_port | default( tomcat.port ) }}"
     tomcat_home:     "{{ tomcat.home }}/apache-tomcat-{{ tomcat_version }}"
-- set_fact:    
-    tomcat_webapps:  "{{ tomcat_home }}/webapps" 
+- set_fact:
+    tomcat_webapps:  "{{ tomcat_home }}/webapps"
     tomcat_root_app: "{{ tomcat_home }}/webapps/ROOT"
     tomcat_run:      "{{ tomcat_home }}/bin/catalina.sh run"
 
 - include: "{{ common.utils.download }}"
   vars:
     title:   Tomcat
-    url:     "{{ tomcat.url     | tokens({ 'version': tomcat_version, 
+    url:     "{{ tomcat.url     | tokens({ 'version': tomcat_version,
                                            'N'      : 7 if tomcat_version.startswith( '7' ) else 8 }) }}"
     archive: "{{ tomcat.archive | tokens({ 'version': tomcat_version }) }}"
     home:    "{{ tomcat.home }}"
     configs:
       - { role: tomcat, from: server.xml, to: "{{ tomcat_home }}/conf/server.xml" }
-    cleanup: 
+    cleanup:
       - rm    -rf '{{ tomcat_webapps }}'  '{{ tomcat_home }}/temp' '{{ tomcat_home }}/work'
       - mkdir -p  '{{ tomcat_root_app }}' '{{ tomcat_home }}/temp' '{{ tomcat_home }}/work'

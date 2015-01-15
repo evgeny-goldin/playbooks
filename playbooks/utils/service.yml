@@ -17,19 +17,6 @@
 - debug: var=title
 - debug: var=command
 
-- debug: msg="url = {{ url | default('') }}"
-- debug: msg="archive = {{ archive | default('') }}"
-- debug: msg="home = {{ home | default('') }}"
-- debug: msg="test = {{ test | default({}) }}"
-- debug: msg="configs = '{{ configs | default({}) }}'"
-- debug: msg="env_config = '{{ env_config | default('') }}'"
-- debug: msg="cleanup = '{{ cleanup | default([]) }}'"
-- debug: msg="port = '{{ port | default('') }}'"
-- debug: msg="timeout = '{{ timeout | default('') }}'"
-- debug: msg="path = '{{ path | default('') }}'"
-- debug: msg="status = '{{ status | default('') }}'"
-- debug: msg="content = '{{ content | default('') }}'"
-
 - name: Stopping service {{ title }}
   service: name={{ service }} state=stopped
   ignore_errors: yes
@@ -59,7 +46,7 @@
 - name:     Running {{ title }} test
   command:  "{{ test.run }}"
   register: test_out
-  ignore_errors: yes # We don't want to fail if test command sends some output to stderr
+  ignore_errors: yes # We don't want to fail for non-zero exit code
   when: test is defined
 
 - name: Verifying {{ title }} test
@@ -96,19 +83,29 @@
   service: name={{ service }} state=started enabled=yes
 
 - name: Verifying {{ title }} endpoint
-  wait_for: port={{ port }} timeout={{ timeout | default(5) }}
+  wait_for: port={{ port }} timeout={{ timeout | default( 5 ) }}
   when: port is defined
+
+- name: Waiting for {{ title }} HTTP endpoint
+  uri:
+    url:            "http://{{ common.net.localhost }}:{{ port }}{{ item.path | default( '' )}}"
+    status_code:    "{{ item.status | default( 200 )}}"
+    return_content: yes
+  register: http_wait_out
+  until:    item.content in http_wait_out.content
+  retries:  "{{ ( timeout | default( 5 )) / 3 }}"
+  delay:    3
+  with_items:
+    - "{{ wait_for }}"
+  when: ( port is defined ) and ( wait_for is defined )
 
 - name: Verifying {{ title }} HTTP endpoint
   uri:
-    url:            "http://{{ common.net.localhost }}:{{ port }}{{ path | default( '' ) }}"
-    status_code:    "{{ status | default( 200 )}}"
+    url:            "http://{{ common.net.localhost }}:{{ port }}{{ item.path | default( '' )}}"
+    status_code:    "{{ item.status | default( 200 )}}"
     return_content: yes
-  register: http_out
-  when: ( port is defined ) and (( path is defined ) or ( status is defined ) or ( content is defined ))
-
-- name: Verifying {{ title }} HTTP endpoint content
-  assert:
-    that:
-      - "'{{ content }}' in '{{ http_out.content }}'"
-  when: ( content is defined ) and ( http_out is defined )
+  register: http_verify_out
+  with_items:
+    - "{{ verify }}"
+  failed_when: item.content not in http_verify_out.content
+  when:        ( port is defined ) and ( verify is defined )

@@ -4,7 +4,7 @@ tomcat: {
   latest: {
     command: "curl -s 'https://tomcat.apache.org/download-80.cgi' | grep 'apache-tomcat-' | grep '.zip' | head -1 | sed -r 's/.+apache-tomcat-//' | sed -r 's/\\.zip.+//'",
     pattern: '^\d+\.\d+\.\d+$'
-  },  
+  },
   url:     'http://www.eu.apache.org/dist/tomcat/tomcat-<N>/v<version>/bin/apache-tomcat-<version>.tar.gz',
   port:    8080,
   archive: /opt/tomcat-<version>.tar.gz,
