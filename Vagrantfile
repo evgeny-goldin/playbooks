@@ -53,7 +53,7 @@ Vagrant.configure( VAGRANTFILE_API_VERSION ) do | config |
     box_name = "#{ box }.#{ VAGRANT_DOMAIN }"
 
     config.vm.define box do | b |
-      b.vm.box              = 'java'#'ubuntu/trusty64'
+      b.vm.box              = 'ubuntu/trusty64'
       b.vm.box_check_update = true
       b.vm.hostname         = box_name # 1) Vagrant will cut out everything starting from the first dot but ..
                                        # 2) Landrush needs a proper hostname ending with config.landrush.tld
