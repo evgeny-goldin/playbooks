@@ -4,33 +4,64 @@
     artifactory_version: "{{ artifactory.version | calculate( artifactory.latest ) }}"
 - set_fact:
     artifactory_port:    "{{ artifactory_port    | default( artifactory.port ) }}"
-    artifactory_home:    "{{ artifactory.home }}/artifactory-{{ artifactory_version }}"
+
+  # -----------------------
+  # Standalone
+  # -----------------------
+
+- set_fact:
+    artifactory_home:    "{{ artifactory.standalone.home }}/artifactory-{{ artifactory_version }}"
+  when: artifactory.run == 'standalone'
 
 - include: "{{ common.utils.service }}"
   vars:
     service:     artifactory
     title:       Artifactory
-    url:         "{{ artifactory.url     | tokens({ 'version': artifactory_version }) }}"
-    archive:     "{{ artifactory.archive | tokens({ 'version': artifactory_version }) }}"
-    home:        "{{ artifactory.home }}"
+    url:         "{{ artifactory.standalone.url     | tokens({ 'version': artifactory_version }) }}"
+    archive:     "{{ artifactory.standalone.archive | tokens({ 'version': artifactory_version }) }}"
+    home:        "{{ artifactory.standalone.home }}"
     configs:
       - { from: server.xml, to: "{{ artifactory_home }}/tomcat/conf/server.xml" }
-    command:     "{{ artifactory_home }}/bin/artifactory.sh"
-    port:        "{{ artifactory_port }}"
-    content:     '0;URL=/artifactory'
+    command: "{{ artifactory_home }}/bin/artifactory.sh"
+    port:    "{{ artifactory_port }}"
+    timeout: "{{ artifactory.timeout }}"
+    wait_for:
+      - { content: '0;URL=/artifactory' }
+      - { path:    /artifactory/api/system/ping, content: OK }
+    verify:
+      - { path: /artifactory/api/system/ping }
+      - { path: /artifactory/api/application.wadl }
+      - { path: /artifactory/api/search/artifact?name=name }
+      - { path: /artifactory/webapp/home.html }
+      - { path: /artifactory/webapp/browserepo.html }
+  when: artifactory.run == 'standalone'
 
-- name:     Waiting for Artifactory to start
-  command:  curl 'http://{{ common.net.localhost }}:{{ artifactory_port }}/artifactory/api/system/ping'
-  register: ping_result
-  until:    ping_result.stdout == 'OK'
-  retries:  20
-  delay:    3
+  # -----------------------
+  # War
+  # -----------------------
 
-- name: Verifying Artifactory HTTP endpoints
-  uri:  url="http://{{ common.net.localhost }}:{{ artifactory_port }}{{ item.path }}"
-  with_items:
-    - { path: "/artifactory/api/system/ping" }
-    - { path: "/artifactory/api/application.wadl" }
-    - { path: "/artifactory/api/search/artifact?name=name" }
-    - { path: "/artifactory/webapp/home.html" }
-    - { path: "/artifactory/webapp/browserepo.html" }
+- include: "{{ common.utils.tomcat }}"
+  vars:
+    tomcat_port: "{{ artifactory_port }}"
+  when: artifactory.run == 'war'
+
+- include: "{{ common.utils.service }}"
+  vars:
+    service:  artifactory
+    title:    Artifactory
+    url:      "{{ artifactory.war.url     | tokens({ 'version': artifactory_version }) }}"
+    archive:  "{{ artifactory.war.archive | tokens({ 'version': artifactory_version }) }}"
+    home:     "{{ tomcat_root_app }}"
+    command:  "{{ tomcat_run  }}"
+    port:     "{{ artifactory_port }}"
+    timeout:  "{{ artifactory.timeout }}"
+    wait_for:
+      - { content: '0;URL=/artifactory' }
+      - { path:    /artifactory/api/system/ping, content: OK }
+    verify:
+      - { path: /artifactory/api/system/ping }
+      - { path: /artifactory/api/application.wadl }
+      - { path: /artifactory/api/search/artifact?name=name }
+      - { path: /artifactory/webapp/home.html }
+      - { path: /artifactory/webapp/browserepo.html }
+  when: artifactory.run == 'war'

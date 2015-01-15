@@ -23,16 +23,17 @@
     env_config: "{{ ubuntu.envs_dir }}/nexus.sh"
     command:    "{{ nexus_home }}/bin/nexus console"
     port:       "{{ nexus_port }}"
-    timeout:    60
+    timeout:    "{{ nexus.timeout }}"
     verify:
       - { path: "/nexus", content: "nexusVersion={{ nexus.version }}" }
+      - { path: "/nexus", content: "Sonatype Nexus" }
   when: nexus.run == 'standalone'
 
   # -----------------------
   # War
   # -----------------------
 
-- include: "{{ playbook_dir }}/roles/tomcat/tasks/main.yml"
+- include: "{{ common.utils.tomcat }}"
   vars:
     tomcat_port: "{{ nexus_port }}"
   when: nexus.run == 'war'
@@ -46,7 +47,7 @@
     home:     "{{ tomcat_root_app }}"
     command:  "{{ tomcat_run  }}"
     port:     "{{ nexus_port }}"
-    timeout:  60
+    timeout:  "{{ nexus.timeout }}"
     wait_for:
       - { content: "nexusVersion={{ nexus.version }}" }
     verify:

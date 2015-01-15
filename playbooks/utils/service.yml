@@ -44,11 +44,11 @@
 
 - name: Verifying {{ title }} HTTP endpoint
   uri:
-    url:            "http://{{ common.net.localhost }}:{{ port }}{{ item.path | default( '' )}}"
+    url:            "http://{{ common.net.localhost }}:{{ port }}{{ item.path | default('')}}"
     status_code:    "{{ item.status | default( 200 )}}"
     return_content: yes
   register: http_verify_out
   with_items:
     - "{{ verify }}"
-  failed_when: item.content not in http_verify_out.content
+  failed_when: {{ item.content | default('') }} not in http_verify_out.content
   when:        ( port is defined ) and ( verify is defined )
