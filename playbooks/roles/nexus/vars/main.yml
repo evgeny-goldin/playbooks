@@ -2,8 +2,8 @@
 nexus: {
   version: '2.11.1-01',
   port:    8080,
-  run:     standalone, # standalone, war
   timeout: 60,         # in seconds
+  run:     standalone, # standalone, war
   standalone: {
     url:     '{{ common.repo.sonatype }}/nexus/oss/nexus-<version>-bundle.tar.gz',
     archive: '/opt/nexus-<version>.tar.gz',

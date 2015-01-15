@@ -36,8 +36,9 @@
     return_content: yes
   register: http_wait_out
   until:    item.content in http_wait_out.content
-  retries:  "{{ ( timeout | default( 5 )) / 3 }}"
-  delay:    3
+  # https://github.com/ansible/ansible/issues/5865
+  retries: 20 # "{{ timeout | default( 5 ) | int // 3 }}"
+  delay:   3
   with_items:
     - "{{ wait }}"
   when: ( port is defined ) and ( wait is defined )
@@ -50,5 +51,5 @@
   register: http_verify_out
   with_items:
     - "{{ verify }}"
-  failed_when: "{{ item.content | default('') }} not in http_verify_out.content"
+  failed_when: "'{{ item.content | default('') }}' not in http_verify_out.content"
   when:        ( port is defined ) and ( verify is defined )
