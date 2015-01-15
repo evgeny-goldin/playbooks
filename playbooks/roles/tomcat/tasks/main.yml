@@ -23,5 +23,5 @@
     configs:
       - { role: tomcat, from: server.xml, to: "{{ tomcat_home }}/conf/server.xml" }
     cleanup:
-      - rm    -rf '{{ tomcat_webapps }}'  '{{ tomcat_home }}/temp' '{{ tomcat_home }}/work'
-      - mkdir -p  '{{ tomcat_root_app }}' '{{ tomcat_home }}/temp' '{{ tomcat_home }}/work'
+      - rm    -rf '{{ tomcat_webapps }}' '{{ tomcat_home }}/temp' '{{ tomcat_home }}/work'
+      - mkdir -p  '{{ tomcat_webapps }}' '{{ tomcat_home }}/temp' '{{ tomcat_home }}/work'

@@ -6,11 +6,18 @@ nexus: {
   run:     standalone, # standalone, war
   standalone: {
     url:     '{{ common.repo.sonatype }}/nexus/oss/nexus-<version>-bundle.tar.gz',
-    archive: '/opt/nexus-<version>.tar.gz',
+    archive: /opt/nexus-<version>.tar.gz,
     home:    /opt/nexus
   },
   war: {
     url:     '{{ common.repo.jcenter }}/org/sonatype/nexus/nexus-webapp/<version>/nexus-webapp-<version>.war',
-    archive: '/opt/nexus-<version>.war'
-  }
+    archive: /opt/nexus-<version>.war,
+    home:    nexus
+  },
+  wait: [
+    { path: /nexus, content: nexusVersion= }
+  ],
+  verify: [
+    { path: /nexus, content: Sonatype Nexus }
+  ]
 }

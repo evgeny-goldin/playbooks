@@ -2,7 +2,7 @@
 # ===================================================================================================
 # Downloads and unpacks an archive, installs, and starts a service {{ service }}, titled {{ title }}
 # ===================================================================================================
-# - Runs download.yml if {{ url }}, {{ archive }}, and {{ home }} are defined
+# - Runs download.yml if {{ url }} and {{ archive }} are defined
 # - Creates an upstart script to run {{ command }} as service {{ service }} and starts it
 #   upstart script attempts to load {{ env_config }} and writes log to /var/log/{{ service }}.log
 # - Verifies service endpoint reachable at {{ port }} within {{ timeout }} seconds
@@ -13,9 +13,12 @@
 # ===================================================================================================
 
 - include: download.yml
-  when:    ( url is defined ) and ( archive is defined ) and ( home is defined )
+  when:    ( url is defined ) and ( archive is defined )
 
-- debug: msg="Starting {{ title }} service '{{ service }}' with '{{ command }}'"
+- set_fact:
+    upstart_script: "{{ ubuntu.init_dir }}/{{ service }}.conf"
+
+- debug: msg="Starting {{ title }} service '{{ service }}' with '{{ command }}' in '{{ upstart_script }}'"
 
 - name: Generating {{ title }} upstart script
   template:

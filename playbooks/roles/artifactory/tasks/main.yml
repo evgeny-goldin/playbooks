@@ -25,15 +25,8 @@
     command: "{{ artifactory_home }}/bin/artifactory.sh"
     port:    "{{ artifactory_port }}"
     timeout: "{{ artifactory.timeout }}"
-    wait:
-      - { content: '0;URL=/artifactory' }
-      - { path:    '/artifactory/api/system/ping', content: 'OK' }
-    verify:
-      - { path: '/artifactory/api/system/ping',               content: 'OK' }
-      - { path: '/artifactory/api/application.wadl',          content: '</application>' }
-      - { path: '/artifactory/api/search/artifact?name=name', content: '"results"' }
-      - { path: '/artifactory/webapp/home.html',              content: "Artifactory {{ artifactory_version }}" }
-      - { path: '/artifactory/webapp/browserepo.html',        content: "Artifactory {{ artifactory_version }}" }
+    wait:    "{{ artifactory.wait }}"
+    verify:  "{{ artifactory.verify }}"
   when: artifactory.run == 'standalone'
 
   # -----------------------
@@ -51,17 +44,10 @@
     title:    Artifactory
     url:      "{{ artifactory.war.url     | tokens({ 'version': artifactory_version }) }}"
     archive:  "{{ artifactory.war.archive | tokens({ 'version': artifactory_version }) }}"
-    home:     "{{ tomcat_root_app }}"
+    home:     "{{ tomcat_webapps }}/{{ artifactory.war.home }}"
     command:  "{{ tomcat_run  }}"
     port:     "{{ artifactory_port }}"
     timeout:  "{{ artifactory.timeout }}"
-    wait_for:
-      - { content: '0;URL=/artifactory' }
-      - { path:    /artifactory/api/system/ping, content: OK }
-    verify:
-      - { path: /artifactory/api/system/ping }
-      - { path: /artifactory/api/application.wadl }
-      - { path: '/artifactory/api/search/artifact?name=name' }
-      - { path: /artifactory/webapp/home.html }
-      - { path: /artifactory/webapp/browserepo.html }
+    wait:     "{{ artifactory.wait }}"
+    verify:   "{{ artifactory.verify }}"
   when: artifactory.run == 'war'

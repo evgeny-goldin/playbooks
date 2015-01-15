@@ -14,8 +14,8 @@ EXHIBITOR_PORT          = WEB_PORT
 ARTIFACTORY_PORT        = WEB_PORT
 NEXUS_PORT              = WEB_PORT + 1
 DNS_PORT                = 53
-PERIODIC                = true # Whether periodic check should be performed
-VERBOSE                 = ''   # Ansible verbosity level: '', 'v', 'vv', 'vvv', 'vvvv'
+PERIODIC                = '' # Whether periodic check should be enforced
+VERBOSE                 = '' # Ansible verbosity level: '', 'v', 'vv', 'vvv', 'vvvv'
 HELIOS_PROPERTIES       = { helios_master:      "helios-master.#{ VAGRANT_DOMAIN }",
                             helios_master_port: HELIOS_MASTER_PORT,
                             zookeeper_port:     ZOOKEEPER_PORT,
@@ -79,7 +79,7 @@ Vagrant.configure( VAGRANTFILE_API_VERSION ) do | config |
           # Uncomment and set to true to forcefully update all packages
           # Uncomment and set to false to disable periodic run
           # Otherwise (when commented out) packages are updated automatically once a day
-          periodic: PERIODIC
+          periodic: ( PERIODIC == '' ? nil : PERIODIC )
         })
       end
     end

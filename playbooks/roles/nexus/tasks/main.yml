@@ -24,9 +24,8 @@
     command:    "{{ nexus_home }}/bin/nexus console"
     port:       "{{ nexus_port }}"
     timeout:    "{{ nexus.timeout }}"
-    verify:
-      - { path: "/nexus", content: "nexusVersion={{ nexus.version }}" }
-      - { path: "/nexus", content: "Sonatype Nexus" }
+    wait:       "{{ nexus.wait }}"
+    verify:     "{{ nexus.verify }}"
   when: nexus.run == 'standalone'
 
   # -----------------------
@@ -44,12 +43,10 @@
     title:    Nexus
     url:      "{{ nexus.war.url     | tokens( nexus ) }}"
     archive:  "{{ nexus.war.archive | tokens( nexus ) }}"
-    home:     "{{ tomcat_root_app }}"
+    home:     "{{ tomcat_webapps }}/{{ nexus.war.home }}"
     command:  "{{ tomcat_run  }}"
     port:     "{{ nexus_port }}"
     timeout:  "{{ nexus.timeout }}"
-    wait:
-      - { content: "nexusVersion={{ nexus.version }}" }
-    verify:
-      - { content: "Sonatype Nexus" }
+    wait:     "{{ nexus.wait }}"
+    verify:   "{{ nexus.verify }}"
   when: nexus.run == 'war'

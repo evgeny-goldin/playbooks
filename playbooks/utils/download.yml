@@ -2,17 +2,21 @@
 # ===================================================================================================
 # Downloads and unpacks an archive
 # ===================================================================================================
-# - Downloads {{ url }} to {{ archive }}, unpacks it to {{ home }} directory
+# - Downloads {{ url }} to {{ archive }}
+# - Unpacks {{ archive }} to {{ home }} directory if {{ home }} is defined
 #   {{ home }} is deleted before unpack operation, unless {{ clean }} is False
-# - Runs {{ tests }}
+# - Runs {{ tests }} commands
 # - Generates {{ configs }}
-# - Runs {{ cleanup commands }}
-# 
+# - Runs {{ cleanup }} commands
 # ===================================================================================================
-# - Required variables are: url, archive, home. Others are optional.
+# - Required variables are: url, archive. Others are optional.
 # ===================================================================================================
 
+- debug: msg="Downloading '{{ url }}' => '{{ archive }}'"
+  when:  home is not defined
+
 - debug: msg="Downloading '{{ url }}' => '{{ archive }}' => '{{ home }}'"
+  when:  home is defined
 
 - name: Downloading {{ title }}
   get_url:
@@ -20,19 +24,21 @@
     dest: "{{ archive }}"
 
 - debug: msg="Deleting '{{ home }}'!"
-  when: clean | default(True)
+  when: home is defined and ( clean | default(True))
 
 - file: path={{ home }} state=absent
-  when: clean | default(True)
+  when: home is defined and ( clean | default(True))
 
 - file: path={{ home }} state=directory
+  when: home is defined
 
 - name: Unpacking {{ title }}
   unarchive:
     src:  "{{ archive }}"
     dest: "{{ home }}"
     copy: false
-    
+  when: home is defined
+
 - name:     Running {{ title }} tests
   command:  "{{ item.run }}"
   register: test_out
