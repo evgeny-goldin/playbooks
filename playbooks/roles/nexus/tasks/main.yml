@@ -48,7 +48,7 @@
     command:  "{{ tomcat_run  }}"
     port:     "{{ nexus_port }}"
     timeout:  "{{ nexus.timeout }}"
-    wait_for:
+    wait:
       - { content: "nexusVersion={{ nexus.version }}" }
     verify:
       - { content: "Sonatype Nexus" }

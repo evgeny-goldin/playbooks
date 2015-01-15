@@ -31,7 +31,7 @@
 
 - name: Waiting for {{ title }} HTTP endpoint
   uri:
-    url:            "http://{{ common.net.localhost }}:{{ port }}{{ item.path | default( '' )}}"
+    url:            "http://{{ common.net.localhost }}:{{ port }}{{ item.path | default('')}}"
     status_code:    "{{ item.status | default( 200 )}}"
     return_content: yes
   register: http_wait_out
@@ -39,8 +39,8 @@
   retries:  "{{ ( timeout | default( 5 )) / 3 }}"
   delay:    3
   with_items:
-    - "{{ wait_for }}"
-  when: ( port is defined ) and ( wait_for is defined )
+    - "{{ wait }}"
+  when: ( port is defined ) and ( wait is defined )
 
 - name: Verifying {{ title }} HTTP endpoint
   uri:
@@ -50,5 +50,5 @@
   register: http_verify_out
   with_items:
     - "{{ verify }}"
-  failed_when: {{ item.content | default('') }} not in http_verify_out.content
+  failed_when: "{{ item.content | default('') }} not in http_verify_out.content"
   when:        ( port is defined ) and ( verify is defined )

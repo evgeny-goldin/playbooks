@@ -25,13 +25,13 @@
     command: "{{ artifactory_home }}/bin/artifactory.sh"
     port:    "{{ artifactory_port }}"
     timeout: "{{ artifactory.timeout }}"
-    wait_for:
+    wait:
       - { content: '0;URL=/artifactory' }
-      - { path:    /artifactory/api/system/ping, content: OK }
+      - { path:    '/artifactory/api/system/ping', content: 'OK' }
     verify:
       - { path: /artifactory/api/system/ping }
       - { path: /artifactory/api/application.wadl }
-      - { path: /artifactory/api/search/artifact?name=name }
+      - { path: '/artifactory/api/search/artifact?name=name' }
       - { path: /artifactory/webapp/home.html }
       - { path: /artifactory/webapp/browserepo.html }
   when: artifactory.run == 'standalone'
@@ -61,7 +61,7 @@
     verify:
       - { path: /artifactory/api/system/ping }
       - { path: /artifactory/api/application.wadl }
-      - { path: /artifactory/api/search/artifact?name=name }
+      - { path: '/artifactory/api/search/artifact?name=name' }
       - { path: /artifactory/webapp/home.html }
       - { path: /artifactory/webapp/browserepo.html }
   when: artifactory.run == 'war'
