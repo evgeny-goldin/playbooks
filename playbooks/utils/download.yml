@@ -1,6 +1,18 @@
 ---
-# Downloads {{ url }} to {{ archive }} and unpacks it to {{ home }} directory
-- debug: msg="Downloading '{{ url }}' to '{{ archive }}' and unpacking it to '{{ home }}'"
+# ===================================================================================================
+# Downloads and unpacks an archive
+# ===================================================================================================
+# - Downloads {{ url }} to {{ archive }}, unpacks it to {{ home }} directory
+#   {{ home }} is deleted before unpack operation, unless {{ clean }} is False
+# - Runs {{ tests }}
+# - Generates {{ configs }}
+# - Runs {{ cleanup commands }}
+# 
+# ===================================================================================================
+# - Required variables are: url, archive, home. Others are optional.
+# ===================================================================================================
+
+- debug: msg="Downloading '{{ url }}' => '{{ archive }}' => '{{ home }}'"
 
 - name: Downloading {{ title }}
   get_url:
@@ -21,17 +33,14 @@
     dest: "{{ home }}"
     copy: false
     
-- name:     Running {{ title }} test
-  command:  "{{ test.run }}"
+- name:     Running {{ title }} tests
+  command:  "{{ item.run }}"
   register: test_out
-  ignore_errors: yes # So we don't fail when test command sends output to stderr
-  when: test is defined
-
-- name: Verifying {{ title }} test
-  assert:
-    that:
-      - "'{{ test.expect }}' in '{{ test_out.stdout }}'"
-  when: test is defined
+  ignore_errors: yes # So we don't fail for non-zero exit code
+  failed_when:   item.expect not in test_out.stdout
+  with_items:
+    - "{{ tests }}"
+  when: tests is defined
 
 - command: mkdir -p $(dirname {{ item.to }})
   with_items:
@@ -47,6 +56,7 @@
   when: configs is defined
 
 - name: Running {{ title }} cleanup commands
-  command: "{{ item }}"
+  command: "{{ ubuntu.bash }} -c '{{ item }}'"
   with_items:
     - "{{ cleanup }}"
+  when: cleanup is defined

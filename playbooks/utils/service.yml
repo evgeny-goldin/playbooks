@@ -1,88 +1,31 @@
 ---
 # ===================================================================================================
-# Downloads, unpacks, installs, starts and checks a service {{ service }}, titled {{ title }}
+# Downloads and unpacks an archive, installs, and starts a service {{ service }}, titled {{ title }}
 # ===================================================================================================
-# - Downloads {{ url }} to {{ archive }}, unpacks it to {{ home }} directory
-#   {{ home }} is deleted before unpack, unless {{ clean }} is False
-# - Writes {{ configs }}
-# - Executes {{ cleanup }} commands
+# - Runs download.yml if {{ url }}, {{ archive }}, and {{ home }} are defined
 # - Creates an upstart script to run {{ command }} as service {{ service }} and starts it
 #   upstart script attempts to load {{ env_config }} and writes log to /var/log/{{ service }}.log
-# - Verifies service endpoint responds at {{ port }} within {{ timeout }} seconds
-# - Verifies http://127.0.0.1:{{ port }}{{ path }} to return {{ status }} code and {{ content }}
+# - Verifies service endpoint reachable at {{ port }} within {{ timeout }} seconds
+# - Waits for HTTP endpoint to respond with {{ wait_for }}
+# - Verifies HTTP endpoint content with {{ verify }}
 # ===================================================================================================
-# - Required variables are: service, title, command. Other are optional.
+# - Required variables are: service, title, command. Others are optional.
 # ===================================================================================================
-- debug: var=service
-- debug: var=title
-- debug: var=command
 
-- name: Stopping service {{ title }}
-  service: name={{ service }} state=stopped
-  ignore_errors: yes
+- include: download.yml
+  when:    ( url is defined ) and ( archive is defined ) and ( home is defined )
 
-- name: Downloading {{ title }}
-  get_url:
-    url:  "{{ url }}"
-    dest: "{{ archive }}"
-  when: ( url is defined ) and ( archive is defined )
-
-- debug: msg="Deleting '{{ home }}'!"
-  when: ( home is defined ) and ( clean | default(True))
-
-- file: path={{ home }} state=absent
-  when: ( home is defined ) and ( clean | default(True))
-
-- file: path={{ home }} state=directory
-  when: home is defined
-
-- name: Unpacking {{ title }}
-  unarchive:
-    src:  "{{ archive }}"
-    dest: "{{ home }}"
-    copy: false
-  when: ( archive is defined ) and ( home is defined )
-
-- name:     Running {{ title }} test
-  command:  "{{ test.run }}"
-  register: test_out
-  ignore_errors: yes # We don't want to fail for non-zero exit code
-  when: test is defined
-
-- name: Verifying {{ title }} test
-  assert:
-    that:
-      - "'{{ test.expect }}' in '{{ test_out.stdout }}'"
-  when: test is defined
-
-- command: mkdir -p $(dirname {{ item.to }})
-  with_items:
-    - "{{ configs }}"
-  when: configs is defined
-
-- name: Generating {{ title }} configs
-  template:
-    src:  "{{ playbook_dir }}/roles/{{ item.role | default( service ) }}/templates/{{ item.from  }}"
-    dest: "{{ item.to }}"
-  with_items:
-    - "{{ configs }}"
-  when: configs is defined
-
-- name: Running {{ title }} cleanup commands
-  command: "{{ ubuntu.bash }} -c '{{ item }}'"
-  with_items:
-    - "{{ cleanup }}"
-  when: cleanup is defined
+- debug: msg="Starting {{ title }} service '{{ service }}' with '{{ command }}'"
 
 - name: Generating {{ title }} upstart script
   template:
     src:  "{{ playbook_dir }}/utils/templates/upstart"
     dest: "{{ ubuntu.init_dir }}/{{ service }}.conf"
 
-- name: Starting {{ title }} service
-  service: name={{ service }} state=started enabled=yes
+- name:    Restarting {{ title }} service
+  service: name={{ service }} state=restarted enabled=yes
 
-- name: Verifying {{ title }} endpoint
+- name: Waiting for {{ title }} endpoint
   wait_for: port={{ port }} timeout={{ timeout | default( 5 ) }}
   when: port is defined
 

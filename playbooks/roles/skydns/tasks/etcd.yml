@@ -14,7 +14,8 @@
     configs:
       - { role: skydns, from: etcd-config, to: "{{ etcd.config }}" }
     env_config:  "{{ etcd.config }}"
-    test:        { run: "{{ etcd_bin }} --version", expect: "{{ etcd.version }}" }
+    tests:        
+      - { run: "{{ etcd_bin }} --version", expect: "{{ etcd.version }}" }
     command:     "{{ etcd_bin }} $ETCD_OPTS"
     port:        "{{ etcd_port | default( etcd.port ) }}"
     path:        '/version'
