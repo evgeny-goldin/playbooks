@@ -18,6 +18,8 @@ nexus: {
     { path: /nexus, content: nexusVersion= }
   ],
   verify: [
-    { path: /nexus, content: Sonatype Nexus }
+    { path: /nexus, content: Sonatype Nexus },
+    { path: /nexus, content: Loading Nexus UI },
+    { path: /nexus/service/local/attributes, status: 401 }
   ]
 }
