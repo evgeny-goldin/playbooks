@@ -23,7 +23,7 @@
 - name: Generating {{ title }} upstart script
   template:
     src:  "{{ playbook_dir }}/utils/templates/upstart"
-    dest: "{{ ubuntu.init_dir }}/{{ service }}.conf"
+    dest: "{{ upstart_script }}"
 
 - name:    Restarting {{ title }} service
   service: name={{ service }} state=restarted enabled=yes

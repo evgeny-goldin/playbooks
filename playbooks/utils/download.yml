@@ -3,7 +3,7 @@
 # Downloads and unpacks an archive
 # ===================================================================================================
 # - Downloads {{ url }} to {{ archive }}
-# - Unpacks {{ archive }} to {{ home }} directory if {{ home }} is defined
+# - Unpacks {{ archive }} to {{ home }}
 #   {{ home }} is deleted before unpack operation, unless {{ clean }} is False
 # - Runs {{ tests }} commands
 # - Generates {{ configs }}
