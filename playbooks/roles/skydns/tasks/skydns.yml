@@ -23,8 +23,8 @@
 
 - include: "{{ common.utils.service }}"
   vars:
-    service:     skydns
-    title:       SkyDNS
+    service:    skydns
+    title:      SkyDNS
     configs:
       - { from: skydns-config, to: "{{ skydns.config }}" }
     env_config: "{{ skydns.config }}"

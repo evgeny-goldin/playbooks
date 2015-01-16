@@ -21,6 +21,7 @@
     - wget
     - curl
     - git
+    - zip
     - unzip
     - upstart
     - man

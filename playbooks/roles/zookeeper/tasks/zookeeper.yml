@@ -1,41 +1,19 @@
 ---
 - set_fact:
-    zookeeper_home:   "{{ zookeeper.home }}/zookeeper-{{ zookeeper.version }}"
-- set_fact:
-    zookeeper_port:   "{{ zookeeper_port | default( zookeeper.port ) }}"
-    zookeeper_server: "{{ zookeeper_home }}/bin/zkServer.sh"
-    zookeeper_config: "{{ zookeeper_home }}/conf/zoo.cfg"
+    zookeeper_home: "{{ zookeeper.home }}/zookeeper-{{ zookeeper.version }}"
+    zookeeper_port: "{{ zookeeper_port | default( zookeeper.port ) }}"
 
-- name: Stopping ZooKeeper service
-  service: name=zookeeper state=stopped
-  ignore_errors: yes
-
-- include: "{{ common.utils.download }}"
+- include: "{{ common.utils.service }}"
   vars:
-    name:    ZooKeeper
+    title:    ZooKeeper
+    service:  zookeeper
     url:     "{{ zookeeper.url     | tokens( zookeeper ) }}"
     archive: "{{ zookeeper.archive | tokens( zookeeper ) }}"
     home:    "{{ zookeeper.home }}"
-
-- include: "{{ common.utils.mkdir }}"
-  vars:
-    file:  "{{ zookeeper_config }}"
-
-- name: Generating ZooKeeper config
-  template:
-    src:  zookeeper-config
-    dest: "{{ zookeeper_config }}"
-
-- name: Generating ZooKeeper upstart script
-  template:
-    src:  zookeeper-upstart
-    dest: "{{ ubuntu.init_dir }}/zookeeper.conf"
-
-- name:    Starting ZooKeeper service
-  service: name=zookeeper state=started enabled=yes
-
-- name: Verifying ZooKeeper endpoint
-  wait_for: port={{ zookeeper_port }} timeout=3
+    configs:
+      - { from: zookeeper-config, to: "{{ zookeeper_home }}/conf/zoo.cfg" }
+    command: "{{ zookeeper_home }}/bin/zkServer.sh start-foreground"
+    port:    "{{ zookeeper_port }}"
 
 - name: Running zkCli
   shell:    "echo 'ls /' | {{ zookeeper_home }}/bin/zkCli.sh -server {{ common.net.localhost }}:{{ zookeeper_port }}"

@@ -9,8 +9,12 @@
 # - Waits for HTTP endpoint to respond with {{ wait_for }}
 # - Verifies HTTP endpoint content with {{ verify }}
 # ===================================================================================================
-# - Required variables are: service, title, command. Others are optional.
+# - Required variables are: title, service, command. Others are optional.
 # ===================================================================================================
+
+- debug: msg="title = '{{ title }}'"
+- debug: msg="service = '{{ service }}'"
+- debug: msg="command = '{{ command }}'"
 
 - include: download.yml
   when:    ( url is defined ) and ( archive is defined )

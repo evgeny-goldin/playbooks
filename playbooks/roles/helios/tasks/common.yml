@@ -2,14 +2,14 @@
 # --------------------------------------------
 #   Common tasks for Helios master and agent
 # --------------------------------------------
-- debug: var=helios_master
-- debug: var=helios_master_port
-- debug: var=zookeeper_port
-- debug: var=etcd_port
-- debug: var=exhibitor_port
-- debug: var=domain
-- debug: var=ansible_fqdn
-- debug: var=facter_ipaddress_eth1
+- debug: msg="helios_master = '{{ helios_master }}'"
+- debug: msg="helios_master_port = '{{ helios_master_port }}'"
+- debug: msg="zookeeper_port = '{{ zookeeper_port }}'"
+- debug: msg="etcd_port = '{{ etcd_port }}'"
+- debug: msg="exhibitor_port = '{{ exhibitor_port }}'"
+- debug: msg="domain = '{{ domain }}'"
+- debug: msg="ansible_fqdn = '{{ ansible_fqdn }}'"
+- debug: msg="facter_ipaddress_eth1 = '{{ facter_ipaddress_eth1 }}'"
 
 - name: Calculating Helios version
   set_fact:

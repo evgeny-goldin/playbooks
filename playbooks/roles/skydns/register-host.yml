@@ -3,11 +3,8 @@
 # Called by other roles to register a host with SkyDNS
 # ---------------------------------------------------------
 - debug: msg="Sending registration request to '{{ etcd_host }}' for '{{ fqdn }}' => '{{ ip }}'"
-- debug: var=etcd_host
-- debug: var=etcd_port
-- debug: var=skydns_host
-- debug: var=fqdn
-- debug: var=ip
+- debug: msg="etcd_port = '{{ etcd_port }}'"
+- debug: msg="skydns_host = '{{ skydns_host }}'"
 
 - set_fact:
     registration_url: "http://{{ etcd_host }}:{{ etcd_port }}/v2/keys/skydns/{{ '/'.join( fqdn.split( '.' )[::-1] ) }}"

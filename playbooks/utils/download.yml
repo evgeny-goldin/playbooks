@@ -1,6 +1,6 @@
 ---
 # ===================================================================================================
-# Downloads and unpacks an archive
+# Downloads and unpacks an archive titled {{ title }}
 # ===================================================================================================
 # - Downloads {{ url }} to {{ archive }}
 # - Unpacks {{ archive }} to {{ home }}

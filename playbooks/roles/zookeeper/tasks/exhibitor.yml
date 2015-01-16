@@ -6,30 +6,29 @@
     exhibitor_port:    "{{ exhibitor_port | default( exhibitor.port ) }}"
     exhibitor_jar:     "{{ exhibitor.home }}/build/libs/exhibitor-{{ exhibitor_version }}.jar"
 
-- name: Stopping Exhibitor service
-  service: name=exhibitor state=stopped
-  ignore_errors: yes
-
 - stat: path={{ exhibitor_jar }}
   register: exhibitor_jar_stat
+
+- set_fact:
+    exhibitor_jar_available: exhibitor_jar_stat.stat.exists | bool
 
 - name: Cloning Gradle provider
   git:
     repo: "{{ exhibitor.gradle_provider }}"
     dest: "{{ exhibitor.home }}"
-  when: ( not exhibitor_jar_stat.stat.exists | bool )
+  when: not exhibitor_jar_available
 
 - name: Writing Exhibitor build file
   template:
     src:  exhibitor-build.gradle
     dest: "{{ exhibitor.home }}/build.gradle"
-  when: ( not exhibitor_jar_stat.stat.exists | bool )
+  when: not exhibitor_jar_available
 
 - name: Building Exhibitor standalone
   command: ./gradlew clean jar
   args:
     chdir: "{{ exhibitor.home }}"
-  when: ( not exhibitor_jar_stat.stat.exists | bool )
+  when: not exhibitor_jar_available
 
 - name:     Running Exhibitor standalone help
   command:  java -jar '{{ exhibitor_jar }}' --help
@@ -42,24 +41,14 @@
       - "'Print this help'                    in exhibitor_help_out.stdout"
       - "'Default Property Names'             in exhibitor_help_out.stdout"
 
-- name: Generating Exhibitor upstart script
-  template:
-    src:  exhibitor-upstart
-    dest: "{{ ubuntu.init_dir }}/exhibitor.conf"
-
-- name: Starting Exhibitor service
-  service: name=exhibitor state=started enabled=yes
-
-- name: Verifying Exhibitor endpoint
-  wait_for: port={{ exhibitor_port }} timeout=10
-
-- name: Verifying Exhibitor HTTP endpoint
-  uri:  url="http://{{ common.net.localhost }}:{{ exhibitor_port }}/exhibitor/v1/ui/index.html" return_content=yes
-  register: exhibitor_out
-
-- name: Verifying Exhibitor HTTP endpoint
-  assert:
-    that:
-      - "'Exhibitor for ZooKeeper' in exhibitor_out.content"
-      - "'Control Panel'           in exhibitor_out.content"
-      - "'Backup and Restore'      in exhibitor_out.content"
+- include: "{{ common.utils.service }}"
+  vars:
+    title:   Exhibitor
+    service: exhibitor
+    command: "java -jar '{{ exhibitor_jar }}' -c file --port {{ exhibitor_port }}"
+    port:    "{{ exhibitor_port }}"
+    verify:
+      - { status: 404 }
+      - { path: /exhibitor, status: 404 }
+      - { path: /exhibitor/v1/ui/, status: 405 }
+      - { path: /exhibitor/v1/ui/index.html, content: Exhibitor for ZooKeeper }
