@@ -1,4 +1,4 @@
 ---
 dependencies:
-  - { role: java    }
-  - { role: node.js }
+  - { role: java,    when: periodic }
+  - { role: node.js, when: periodic }

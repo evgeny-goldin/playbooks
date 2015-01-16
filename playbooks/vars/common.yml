@@ -27,9 +27,10 @@ common: {
     download: "{{ playbook_dir }}/utils/download.yml",
     mkdir:    "{{ playbook_dir }}/utils/mkdir.yml",
     service:  "{{ playbook_dir }}/utils/service.yml",
-    tomcat:   "{{ playbook_dir }}/roles/tomcat/tasks/main.yml"
+    verify:   "{{ playbook_dir }}/utils/verify.yml"
   },
 
-  # Whether roles should start services installed
-  start_service: true
+  roles: {
+    tomcat:   "{{ playbook_dir }}/roles/tomcat/tasks/main.yml"
+  }
 }

@@ -4,20 +4,41 @@
 # ---------------------------------------------
 - debug: msg="Verifying Helios master '{{ master }}' endpoints"
 
-- name: Verifying Helios master ports
-  wait_for: host={{ master }} port={{ item }} timeout=3
-  with_items:
-    - "{{ common.net.dns_port }}"
-    - "{{ helios_master_port }}"
-    - "{{ zookeeper_port }}"
-    - "{{ etcd_port }}"
-    - "{{ exhibitor_port }}"
+- include: "{{ common.utils.verify }}"
+  vars:
+    title: Helios master DNS
+    host:  "{{ master }}"
+    port:  "{{ common.net.dns_port }}"
 
-- name: Verifying Helios master HTTP endpoints
-  uri:  url=http://{{ master }}:{{ item.port }}{{ item.path }} status_code={{ item.status }}
-  with_items:
-    - { port: "{{ etcd_port }}",          path: '/version', status: 200 }
-    - { port: "{{ helios_master_port }}", path: '',         status: 404 }
+- include: "{{ common.utils.verify }}"
+  vars:
+    title: Helios master service
+    host:  "{{ master }}"
+    port:  "{{ helios_master_port }}"
+    verify:
+      - { status: 404 }
+
+- include: "{{ common.utils.verify }}"
+  vars:
+    title: Helios master ZooKeeper
+    host:  "{{ master }}"
+    port:  "{{ zookeeper_port }}"
+
+- include: "{{ common.utils.verify }}"
+  vars:
+    title: Helios master etcd
+    host:  "{{ master }}"
+    port:  "{{ etcd_port }}"
+    verify:
+      - { path: '/version', content: "{{ etcd.version }}" }
+
+- include: "{{ common.utils.verify }}"
+  vars:
+    title: Helios master Exhibitor
+    host:  "{{ master }}"
+    port:  "{{ exhibitor_port }}"
+    verify:
+      - { path: /exhibitor/v1/ui/index.html, content: Exhibitor for ZooKeeper }
 
 - include: "{{ playbook_dir }}/roles/skydns/register-host.yml"
   vars:

@@ -5,9 +5,7 @@
 # - Runs download.yml
 # - Creates an upstart script to run {{ command }} as service {{ service }} and starts it
 #   upstart script attempts to load {{ env_config }} and writes log to /var/log/{{ service }}.log
-# - Verifies service endpoint reachable at {{ port }} within {{ timeout }} seconds
-# - Waits for HTTP endpoint to respond with {{ wait_for }}
-# - Verifies HTTP endpoint content with {{ verify }}
+# - Runs verify.yml
 # ===================================================================================================
 # - Required variables are: title, service, command. Others are optional.
 # ===================================================================================================
@@ -31,31 +29,5 @@
 - name:    Restarting {{ title }} service
   service: name={{ service }} state=restarted enabled=yes
 
-- name: Waiting for {{ title }} endpoint
-  wait_for: port={{ port }} timeout={{ timeout | default( 5 ) }}
-  when: port is defined
-
-- name: Waiting for {{ title }} HTTP endpoint
-  uri:
-    url:            "http://{{ common.net.localhost }}:{{ port }}{{ item.path | default('')}}"
-    status_code:    "{{ item.status | default( 200 )}}"
-    return_content: yes
-  register: http_wait_out
-  until:    item.content in http_wait_out.content
-  # https://github.com/ansible/ansible/issues/5865
-  retries: 20 # "{{ timeout | default( 5 ) | int // 3 }}"
-  delay:   3
-  with_items:
-    - "{{ wait }}"
-  when: ( port is defined ) and ( wait is defined )
-
-- name: Verifying {{ title }} HTTP endpoint
-  uri:
-    url:            "http://{{ common.net.localhost }}:{{ port }}{{ item.path | default('')}}"
-    return_content: yes
-  register: http_verify_out
-  with_items:
-    - "{{ verify }}"
-  # https://github.com/ansible/ansible/issues/10017
-  failed_when: ( '{{ item.content | default('') }}' not in http_verify_out.content ) or ( {{ item.status | default( 200 ) }} != http_verify_out.status )
-  when:        ( port is defined ) and ( verify is defined )
+- include: verify.yml
+  when:    port is defined

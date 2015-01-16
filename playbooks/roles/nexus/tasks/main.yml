@@ -32,7 +32,7 @@
   # War
   # -----------------------
 
-- include: "{{ common.utils.tomcat }}"
+- include: "{{ common.roles.tomcat }}"
   vars:
     tomcat_port: "{{ nexus_port }}"
   when: nexus.run == 'war'

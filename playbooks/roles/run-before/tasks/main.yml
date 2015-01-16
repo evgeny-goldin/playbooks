@@ -56,14 +56,8 @@
   register: grep_result
 
 - set_fact:
-    is_docker: "{{ grep_result.stdout|int > 0 }}"
+    is_docker:     "{{ grep_result.stdout|int > 0 }}"
+    start_service: "{{ not ( ami | default( False ) | bool ) }}"
 
 - debug: var=is_docker
-- debug: var=common.start_service
-- debug: var=ami
-
-- name: Calculating 'start_service' flag
-  set_fact:
-    start_service: "{{ ( common.start_service|bool ) and ( not ( ami|default(false)|bool )) }}"
-
 - debug: var=start_service
