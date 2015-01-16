@@ -15,11 +15,11 @@
 
 - include: "{{ common.utils.service }}"
   vars:
-    service:     artifactory
-    title:       Artifactory
-    url:         "{{ artifactory.standalone.url     | tokens({ 'version': artifactory_version }) }}"
-    archive:     "{{ artifactory.standalone.archive | tokens({ 'version': artifactory_version }) }}"
-    home:        "{{ artifactory.standalone.home }}"
+    service: artifactory
+    title:   Artifactory
+    url:     "{{ artifactory.standalone.url     | tokens({ 'version': artifactory_version }) }}"
+    archive: "{{ artifactory.standalone.archive | tokens({ 'version': artifactory_version }) }}"
+    home:    "{{ artifactory.standalone.home }}"
     configs:
       - { from: server.xml, to: "{{ artifactory_home }}/tomcat/conf/server.xml" }
     command: "{{ artifactory_home }}/bin/artifactory.sh"
@@ -40,14 +40,14 @@
 
 - include: "{{ common.utils.service }}"
   vars:
-    service:  artifactory
-    title:    Artifactory
-    url:      "{{ artifactory.war.url     | tokens({ 'version': artifactory_version }) }}"
-    archive:  "{{ artifactory.war.archive | tokens({ 'version': artifactory_version }) }}"
-    home:     "{{ tomcat_webapps }}/{{ artifactory.war.home }}"
-    command:  "{{ tomcat_run  }}"
-    port:     "{{ artifactory_port }}"
-    timeout:  "{{ artifactory.timeout }}"
-    wait:     "{{ artifactory.wait }}"
-    verify:   "{{ artifactory.verify }}"
+    service: artifactory
+    title:   Artifactory
+    url:     "{{ artifactory.war.url     | tokens({ 'version': artifactory_version }) }}"
+    archive: "{{ artifactory.war.archive | tokens({ 'version': artifactory_version }) }}"
+    home:    "{{ tomcat_webapps }}/{{ artifactory.war.home }}"
+    command: "{{ tomcat_run  }}"
+    port:    "{{ artifactory_port }}"
+    timeout: "{{ artifactory.timeout }}"
+    wait:    "{{ artifactory.wait }}"
+    verify:  "{{ artifactory.verify }}"
   when: artifactory.run == 'war'
