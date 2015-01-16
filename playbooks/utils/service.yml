@@ -49,10 +49,10 @@
 - name: Verifying {{ title }} HTTP endpoint
   uri:
     url:            "http://{{ common.net.localhost }}:{{ port }}{{ item.path | default('')}}"
-    status_code:    "{{ item.status | default( 200 )}}"
     return_content: yes
   register: http_verify_out
   with_items:
     - "{{ verify }}"
-  failed_when: "'{{ item.content | default('') }}' not in http_verify_out.content"
+  # https://github.com/ansible/ansible/issues/10017
+  failed_when: ( '{{ item.content | default('') }}' not in http_verify_out.content ) or ( {{ item.status | default( 200 ) }} != http_verify_out.status )
   when:        ( port is defined ) and ( verify is defined )
