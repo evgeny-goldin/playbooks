@@ -40,7 +40,7 @@
   when: clean_home
 
 - file: path={{ home }} state=directory
-  when: clean_home
+  when: home is defined
 
 - name: Unpacking {{ title }}
   unarchive:
