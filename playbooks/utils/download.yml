@@ -39,8 +39,9 @@
     copy: false
   when: home is defined
 
-- name:     Running {{ title }} tests
-  command:  "{{ item.run }}"
+- name:        Running {{ title }} tests
+  command:     "{{ item.run }}"
+  environment: "{{ item.env | default({}) }}"
   register: test_out
   ignore_errors: yes # So we don't fail for non-zero exit code
   failed_when:   item.expect not in test_out.stdout
@@ -61,8 +62,9 @@
     - "{{ configs }}"
   when: configs is defined
 
-- name: Running {{ title }} cleanup commands
-  command: "{{ ubuntu.bash }} -c '{{ item }}'"
+- name:        Running {{ title }} cleanup commands
+  command:     "{{ ubuntu.bash }} -c '{{ item }}'"
+  environment: "{{ item.env | default({}) }}"
   with_items:
     - "{{ cleanup }}"
   when: cleanup is defined

@@ -8,28 +8,20 @@
   with_items:
     - mercurial
 
-- include: "{{ common.utils.download }}"
-  vars:
-    title:   Go
-    url:     "{{ go.url     | tokens({ 'version': go_version }) }}" 
-    archive: "{{ go.archive | tokens({ 'version': go_version }) }}" 
-    home:    "{{ go.bin_dir }}/../.."
-    clean:   no
-
 - file: path={{ go.path }} state=directory
 - name: Setting Go environment variables
   template:
     src:  golang.sh
     dest: "{{ ubuntu.envs_dir }}/golang.sh"
 
-- name:     Running Go
-  command:  go version
-  register: go_out
-  environment:
-    PATH:   "{{ ansible_env.PATH }}:{{ go.bin_dir }}"
-
-- name: Verifying Go version
-  assert:
-    that:
-      - "'go version go{{ go_version }} ' in go_out.stdout"
-      - "'linux/amd64'                    in go_out.stdout"
+- include: "{{ common.utils.download }}"
+  vars:
+    title:   Go
+    url:     "{{ go.url     | tokens({ 'version': go_version }) }}"
+    archive: "{{ go.archive | tokens({ 'version': go_version }) }}"
+    home:    "{{ go.bin_dir }}/../.."
+    clean:   no
+    tests:
+      - { run:    go version,
+          expect: 'go version go{{ go_version }} ',
+          env:    { 'PATH': '{{ ansible_env.PATH }}:{{ go.bin_dir }}' } }
