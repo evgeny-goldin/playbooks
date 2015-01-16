@@ -11,8 +11,6 @@
     - vars/{{ ansible_distribution }}.yml
 
   roles:
-    - { role: run-before, period: daily    }
-    - { role: base,       when:   periodic }
-    - { role: ansible,    when:   periodic }
+    - { role: run-before, period: daily }
     - mysql
     - run-after

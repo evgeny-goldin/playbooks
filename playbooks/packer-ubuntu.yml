@@ -11,9 +11,7 @@
     - vars/{{ ansible_distribution }}.yml
 
   roles:
-    - { role: run-before, period: daily    }
-    - { role: base,       when:   periodic }
-    - { role: ansible,    when:   periodic }
+    - { role: run-before, period: daily }
     - { role: docker,     when:   "( periodic|bool and ( not is_docker|bool ))" }
     - { role: vagrant,    when:   periodic }
     - { role: virtualbox, when:   periodic }

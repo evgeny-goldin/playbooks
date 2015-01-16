@@ -1,6 +1,6 @@
 ---
 ubuntu: {
-  apt_repo:     ftp.sunet.se/pub/os/Linux/distributions/ubuntu/ubuntu/, # http://mirrors.ubuntu.com/mirrors.txt
+  apt_repo:     'http://ubuntu.mirror.su.se/ubuntu/', # http://mirrors.ubuntu.com/mirrors.txt
   root_home:    /root,
   home_dir:     /home,
   bash:         /bin/bash,

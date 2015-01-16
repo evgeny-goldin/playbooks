@@ -4,10 +4,9 @@
 - set_fact:
     skydns_bin:  "{{ skydns_root }}/skydns"
 
-- name: Downloading SkyDNS
-  command: go get '{{ skydns.url }}'
-  environment:
-    "{{ go_env }}"
+- name:        Downloading SkyDNS
+  command:     go get '{{ skydns.url }}'
+  environment: "{{ go_env }}"
 
 - name: Switching SkyDNS tag
   command: git checkout '{{ skydns.version }}'
@@ -18,8 +17,7 @@
   command: go build -v
   args:
     chdir: "{{ skydns_root }}"
-  environment:
-    "{{ go_env }}"
+  environment: "{{ go_env }}"
 
 - include: "{{ common.utils.service }}"
   vars:

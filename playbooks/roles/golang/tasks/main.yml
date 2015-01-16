@@ -22,6 +22,4 @@
     home:    "{{ go.bin_dir }}/../.."
     clean:   no
     tests:
-      - { run:    go version,
-          expect: 'go version go{{ go_version }} ',
-          env:    { 'PATH': '{{ ansible_env.PATH }}:{{ go.bin_dir }}' } }
+      - { run: go version, expect: 'go version go{{ go_version }} ', env: "{{ go_env }}" }

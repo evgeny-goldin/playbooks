@@ -11,11 +11,8 @@
     - vars/{{ ansible_distribution }}.yml
 
   roles:
-    - { role: run-before, period: daily  }
-    - { role: base,       when: periodic }
-    - { role: ansible,    when: periodic }
+    - { role: run-before, period: daily }
     - { role: zookeeper,  when: periodic, install_exhibitor: yes }
-    - { role: golang,     when: periodic }
     - { role: skydns,     when: periodic }
     - { role: helios,     helios_role: master }
     - run-after

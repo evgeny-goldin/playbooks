@@ -1,10 +1,16 @@
 ---
-- name: Updating sources.list
+- name: Updating Ubuntu repo
   replace:
     dest:    "{{ ubuntu.sources_list }}"
-    regexp:  '\/archive\.ubuntu\.com\/'
-    replace: "/{{ ubuntu.apt_repo }}/"
+    regexp:  'http:\/\/archive\.ubuntu\.com\/ubuntu'
+    replace: "{{ ubuntu.apt_repo }}"
     backup:  yes
+
+- name:     Listing Ubuntu repos
+  shell:    grep 'http://' '{{ ubuntu.sources_list }}' | grep -v '#' | awk '{print $2}' | uniq | sort
+  register: ubuntu_repos
+
+- debug: var=ubuntu_repos.stdout_lines
 
 - name: Updating 'apt' cache
   apt:  update_cache=yes
