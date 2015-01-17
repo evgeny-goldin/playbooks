@@ -5,7 +5,7 @@ nexus: {
   timeout: 60,         # in seconds
   run:     standalone, # standalone, war
   standalone: {
-    url:     '{{ common.repo.sonatype }}/nexus/oss/nexus-<version>-bundle.tar.gz',
+    url:     'https://sonatype-download.global.ssl.fastly.net/nexus/oss/nexus-<version>-bundle.tar.gz',
     archive: /opt/nexus-<version>.tar.gz,
     home:    /opt/nexus
   },

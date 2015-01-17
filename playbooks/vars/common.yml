@@ -19,8 +19,7 @@ common: {
     github:   'https://github.com',
     jcenter:  'https://jcenter.bintray.com',
     bintray:  'https://dl.bintray.com',
-    jfrog:    'https://repo.jfrog.org',
-    sonatype: 'https://download.sonatype.com'
+    jfrog:    'https://repo.jfrog.org'
   },
 
   utils: {
