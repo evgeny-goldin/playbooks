@@ -30,7 +30,7 @@
     host:  "{{ master }}"
     port:  "{{ etcd_port }}"
     verify:
-      - { path: '/version', content: "{{ etcd.version }}" }
+      - { path: /version, content: etcd }
 
 - include: "{{ common.utils.verify }}"
   vars:
@@ -40,7 +40,7 @@
     verify:
       - { path: /exhibitor/v1/ui/index.html, content: Exhibitor for ZooKeeper }
 
-- include: "{{ playbook_dir }}/roles/skydns/register-host.yml"
+- include: "{{ common.roles.register }}"
   vars:
     etcd_host:   "{{ master }}"
     skydns_host: "{{ master }}"

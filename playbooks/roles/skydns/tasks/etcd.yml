@@ -20,4 +20,4 @@
     command: "{{ etcd_bin }} $ETCD_OPTS"
     port:    "{{ etcd_port }}"
     verify:
-      - { path: '/version', content: "{{ etcd.version }}" }
+      - { path: /version, content: "{{ etcd.version }}" }

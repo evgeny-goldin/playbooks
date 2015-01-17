@@ -31,6 +31,7 @@ common: {
   },
 
   roles: {
-    tomcat:   "{{ playbook_dir }}/roles/tomcat/tasks/main.yml"
+    tomcat:   "{{ playbook_dir }}/roles/tomcat/tasks/main.yml",
+    register: "{{ playbook_dir }}/roles/skydns/register-host.yml"
   }
 }
