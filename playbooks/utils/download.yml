@@ -59,7 +59,7 @@
     - "{{ tests }}"
   when: tests is defined
 
-- command: mkdir -p $(dirname {{ item.to }})
+- shell: mkdir -p "$( dirname {{ item.to }} )"
   with_items:
     - "{{ configs }}"
   when: configs is defined
