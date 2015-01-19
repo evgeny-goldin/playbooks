@@ -32,8 +32,8 @@ This repo contains **Ansible** [Playbooks](https://github.com/evgeny-goldin/play
     * `artifactory`
     * `asgard`
     * `docker`
-    * `helios-master`
     * `helios-agent`
+    * `helios-master`
     * `jenkins`
     * `mysql`
     * `nexus`
