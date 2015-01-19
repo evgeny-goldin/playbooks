@@ -9,7 +9,7 @@ apply plugin: 'maven'
 group   = 'exhibitor'
 version = '{{ exhibitor_version }}'
 
-repositories { jcenter() }
+repositories { maven { url '{{ maven_repo }}' }}
 dependencies { compile 'com.netflix.exhibitor:exhibitor-standalone:{{ exhibitor_version }}' }
 
 jar {
