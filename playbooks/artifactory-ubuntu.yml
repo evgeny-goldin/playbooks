@@ -12,5 +12,5 @@
 
   roles:
     - { role: run-before, period: daily }
-    - artifactory
+    - artifactory-load
     - run-after

@@ -1,0 +1,6 @@
+---
+dependencies:
+  - { role: nexus,     when: periodic }
+  - { role: exhibitor, when: periodic,
+                       maven_repo:        "{{ nexus_load.maven_repo }}",
+                       exhibitor_service: false }

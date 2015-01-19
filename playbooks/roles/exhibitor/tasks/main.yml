@@ -53,3 +53,4 @@
       - { path: /exhibitor, status: 404 }
       - { path: /exhibitor/v1/ui/, status: 405 }
       - { path: /exhibitor/v1/ui/index.html, content: Exhibitor for ZooKeeper }
+  when: exhibitor_service | default(True)
