@@ -1,3 +1,4 @@
 ---
 dependencies:
   - { role: golang, when: periodic }
+  - { role: etcd,   when: periodic }

@@ -12,7 +12,8 @@
 
   roles:
     - { role: run-before, period: daily }
-    - { role: zookeeper,  when: periodic, install_exhibitor: yes }
+    - { role: zookeeper,  when: periodic }
+    - { role: exhibitor,  when: periodic }
     - { role: skydns,     when: periodic }
     - { role: helios,     helios_role: master }
     - run-after

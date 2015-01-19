@@ -13,7 +13,7 @@
     archive: "{{ etcd.archive | tokens( etcd ) }}"
     home:    "{{ etcd.home }}"
     configs:
-      - { role: skydns, from: etcd-config, to: "{{ etcd.config }}" }
+      - { from: etcd-config, to: "{{ etcd.config }}" }
     env_config:  "{{ etcd.config }}"
     tests:
       - { run: "{{ etcd_bin }} --version", expect: "{{ etcd.version }}" }

@@ -20,7 +20,7 @@ HELIOS_PROPERTIES       = { helios_master:      "helios-master.#{ VAGRANT_DOMAIN
                             zookeeper_port:     ZOOKEEPER_PORT,
                             etcd_port:          ETCD_PORT,
                             exhibitor_port:     EXHIBITOR_PORT,
-                            domain:             VAGRANT_DOMAIN }
+                            skydns_domain:      VAGRANT_DOMAIN }
 
 BOXES = {
   # Name of the box (and corresponding playbook) => { playbook's extra variables, :ports is respected by Vagrant }

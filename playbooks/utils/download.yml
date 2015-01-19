@@ -17,35 +17,43 @@
 - set_fact:
     clean_home: "{{ ( unpack | bool and ( clean | default(True))) | bool }}"
 
+- set_fact:
+    archive_absolute: "{{ archive | absolute_path }}"
+  when: download
+
+- set_fact:
+    home_absolute: "{{ home | absolute_path }}"
+  when: unpack
+
 - debug: var=download
 - debug: var=unpack
 - debug: var=clean_home
 
-- debug: msg="Downloading '{{ url }}' => '{{ archive }}'"
+- debug: msg="Downloading '{{ url }}' => '{{ archive_absolute }}'"
   when:  download and ( not unpack )
 
-- debug: msg="Downloading '{{ url }}' => '{{ archive }}' => '{{ home }}'"
+- debug: msg="Downloading '{{ url }}' => '{{ archive_absolute }}' => '{{ home_absolute }}'"
   when:  unpack
 
 - name: Downloading {{ title }}
   get_url:
     url:  "{{ url }}"
-    dest: "{{ archive }}"
+    dest: "{{ archive_absolute }}"
   when: download
 
-- debug: msg="Deleting '{{ home }}'!"
+- debug: msg="Deleting '{{ home_absolute }}'!"
   when:  clean_home
 
-- file: path={{ home }} state=absent
+- file: path={{ home_absolute }} state=absent
   when: clean_home
 
-- file: path={{ home }} state=directory
+- file: path={{ home_absolute }} state=directory
   when: home is defined
 
 - name: Unpacking {{ title }}
   unarchive:
-    src:  "{{ archive }}"
-    dest: "{{ home }}"
+    src:  "{{ archive_absolute }}"
+    dest: "{{ home_absolute }}"
     copy: false
   when: unpack
 

@@ -6,8 +6,13 @@ import time
 import subprocess
 import re
 import sys
+import os.path
 from   ansible import errors
 from   timeit  import default_timer as timer
+
+def absolute_path( path ):
+  '''Returns absolute path of the path provided'''
+  return os.path.abspath( path );
 
 def tokens( s, vars_tree ):
   '''Replaces all <token> sections in a string with corresponding Ansible variables'''
@@ -18,7 +23,7 @@ def tokens( s, vars_tree ):
 def bare( hostname ):
   '''Leaves out the dot and everything that follows from a domain name: "helios-master.vm" => "helios-master"'''
   return re.sub( '\..*', '', hostname )
-    
+
 def merge( hash_a, hash_b ):
   '''Merges two hashes'''
   return dict( hash_a.items() + hash_b.items());
@@ -81,11 +86,12 @@ class FilterModule( object ):
 
   def filters( self ):
     return {
-      'tokens'    : tokens,        
-      'bare'      : bare,
-      'merge'     : merge,
-      'strftime'  : strftime,
-      'transform' : transform,
-      'explain'   : explain,
-      'calculate' : calculate,
+      'absolute_path' : absolute_path,
+      'tokens'        : tokens,
+      'bare'          : bare,
+      'merge'         : merge,
+      'strftime'      : strftime,
+      'transform'     : transform,
+      'explain'       : explain,
+      'calculate'     : calculate,
     }

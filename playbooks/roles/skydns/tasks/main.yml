@@ -1,6 +1,43 @@
 ---
-- debug: var=etcd_port
-- debug: var=domain
+- debug: var=skydns_domain
 
-- include: etcd.yml
-- include: skydns.yml
+- set_fact:
+    skydns_root: "{{ go.path }}/src/{{ skydns.url }}"
+- set_fact:
+    skydns_bin:  "{{ skydns_root }}/skydns"
+
+- name:        Downloading SkyDNS
+  command:     go get '{{ skydns.url }}'
+  environment: "{{ go_env }}"
+
+- name: Switching SkyDNS tag
+  command: git checkout '{{ skydns.version }}'
+  args:
+    chdir: "{{ skydns_root }}"
+
+- name: Building SkyDNS
+  command: go build -v
+  args:
+    chdir: "{{ skydns_root }}"
+  environment: "{{ go_env }}"
+
+- include: "{{ common.utils.service }}"
+  vars:
+    service:    skydns
+    title:      SkyDNS
+    configs:
+      - { from: skydns-config, to: "{{ skydns.config }}" }
+    env_config: "{{ skydns.config }}"
+    command:    "{{ skydns_bin }} $SKYDNS_OPTS"
+    port:       "{{ common.net.dns_port }}"
+
+- name:     Running local dig
+  command:  dig @{{ common.net.localhost }}
+  register: dig_out
+
+- name: Verifying local dig
+  assert:
+    that:
+      - "'Got answer'       in dig_out.stdout"
+      - "'QUESTION SECTION' in dig_out.stdout"
+      - "'SERVER: {{ common.net.localhost }}#{{ common.net.dns_port }}({{ common.net.localhost }})' in dig_out.stdout"
