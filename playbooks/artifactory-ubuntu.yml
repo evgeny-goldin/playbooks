@@ -13,5 +13,5 @@
   roles:
     - { role: run-before,  period: daily  }
     - { role: artifactory, when: periodic }
-    - { role: repo-load,   repo: "http://{{ common.net.localhost }}:{{ artifactory_port | default( artifactory.port ) }}/artifactory/repo/" }
+    - { role: repo-load,   repo: "http://{{ common.net.localhost }}:{{ artifactory_port }}/artifactory/repo/" }
     - run-after

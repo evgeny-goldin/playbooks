@@ -1,7 +1,23 @@
 ---
 - debug: msg="Stress-testing repo '{{ repo }}'"
 
-- include: "{{ common.roles.exhibitor }}"
+- name: Building Exhibitor
+  include: "{{ common.roles.exhibitor }}"
   vars:
     maven_repo:        "{{ repo }}"
     exhibitor_service: false
+
+- name: Cloning sample application
+  git:
+    repo: "{{ repo_load.sample_app.repo }}"
+    dest: "{{ repo_load.sample_app.home }}"
+- replace:
+    dest:    "{{ repo_load.sample_app.home }}/build.gradle"
+    regexp:  '(jcenter\(\))|(mavenCentral\(\))'
+    replace: "    maven { url '{{ repo }}' }"
+
+- name: Building sample app
+  command: gradle clean build
+  environment: "{{ gradle_env | expand_path( ansible_env ) }}"
+  args:
+    chdir: "{{ repo_load.sample_app.home }}"

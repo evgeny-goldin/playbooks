@@ -1,4 +1,4 @@
 ---
 dependencies:
-  - { role: gradle,  when: periodic }
+  - { role: gradle }
   - { role: gatling, when: periodic }

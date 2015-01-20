@@ -13,5 +13,5 @@
   roles:
     - { role: run-before,  period: daily  }
     - { role: nexus,       when: periodic }
-    - { role: repo-load,   repo: "http://{{ common.net.localhost }}:{{ nexus_port | default( nexus.port ) }}/nexus/content/repositories/central/" }
+    - { role: repo-load,   repo: "http://{{ common.net.localhost }}:{{ nexus_port }}/nexus/content/repositories/central/" }
     - run-after
