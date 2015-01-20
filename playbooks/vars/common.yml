@@ -21,9 +21,7 @@ common: {
     bintray:  'https://dl.bintray.com',
     jfrog:    'https://repo.jfrog.org',
     gradle:   'https://www.gradle.org',
-    typesafe: 'https://downloads.typesafe.com',
-    scala:    'http://www.scala-lang.org',
-    groovy:   'http://groovy.codehaus.org'
+    scala:    'http://www.scala-lang.org'
   },
 
   utils: {

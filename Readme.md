@@ -10,6 +10,7 @@ This repo contains **Ansible** [Playbooks](https://github.com/evgeny-goldin/play
 * [Docker](https://www.docker.com/)
 * [Exhibitor](https://github.com/Netflix/exhibitor)
 * [etcd](https://github.com/coreos/etcd)
+* [Gatling](http://gatling.io/)
 * [Gradle](https://www.gradle.org/)
 * [Groovy](http://groovy.codehaus.org/)
 * [Go](https://golang.org/)

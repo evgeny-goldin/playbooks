@@ -1,0 +1,16 @@
+---
+gatling: {
+  version: latest, # 2.1.3, latest - https://jcenter.bintray.com/io/gatling/highcharts/gatling-charts-highcharts/
+  latest: {
+    command: "curl -s '{{ common.urls.jcenter }}/io/gatling/highcharts/gatling-charts-highcharts/' | grep '<pre>' | grep -v 'metadata' | sed -r 's/<[^>]+>//g' | sed -r 's/\\/$//' | tail -1",
+    pattern: '^\d+\.\d+\.\d+$'
+  },
+  url:     '{{ common.urls.jcenter }}/io/gatling/highcharts/gatling-charts-highcharts-bundle/<version>/gatling-charts-highcharts-bundle-<version>-bundle.zip',
+  archive: /opt/gatling-<version>.zip,
+  home:    /opt/gatling
+}
+
+gatling_env: {
+  PATH:         "$PATH:{{ gatling.home }}/gatling-charts-highcharts-bundle-{{ gatling_version }}/bin",
+  GATLING_HOME: "{{ gatling.home }}/gatling-charts-highcharts-bundle-{{ gatling_version }}"
+}

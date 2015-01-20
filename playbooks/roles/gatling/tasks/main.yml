@@ -1,0 +1,14 @@
+---
+- name: Calculating Gatling version
+  set_fact:
+    gatling_version: "{{ gatling.version | calculate( gatling.latest ) }}"
+
+- include: "{{ common.utils.download }}"
+  vars:
+    title:   Gatling
+    url:     "{{ gatling.url     | tokens({ 'version': gatling_version }) }}"
+    archive: "{{ gatling.archive | tokens({ 'version': gatling_version }) }}"
+    home:    "{{ gatling.home }}"
+    env:     "{{ gatling_env }}"
+    tests:
+      - { run: "gatling.sh --help", expect: "Usage: compiler" }

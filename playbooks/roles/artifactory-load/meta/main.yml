@@ -1,6 +1,7 @@
 ---
 dependencies:
   - { role: artifactory, when: periodic }
+  - { role: gatling,     when: periodic }
   - { role: exhibitor,   when: periodic,
                          maven_repo:        "{{ artifactory_load.maven_repo }}",
                          exhibitor_service: false }

@@ -1,0 +1,14 @@
+---
+- name: Calculating Scala version
+  set_fact:
+    scala_version: "{{ scala.version | calculate( scala.latest ) }}"
+
+- include: "{{ common.utils.download }}"
+  vars:
+    title:   Scala
+    url:     "{{ scala.url     | tokens({ 'version': scala_version }) }}"
+    archive: "{{ scala.archive | tokens({ 'version': scala_version }) }}"
+    home:    "{{ scala.home }}"
+    env:     "{{ scala_env }}"
+    tests:
+      - { run: "scala -version", expect: "Scala code runner version {{ scala_version }}" }

@@ -1,0 +1,15 @@
+---
+scala: {
+  version: latest, # 2.11.5, latest - http://scala-lang.org/download/
+  latest: {
+    command: "curl -s '{{ common.urls.scala }}/download/' | grep '<span class=\"version\">' | sed -r 's/<[^>]+>//g' | awk '{print $2}'",
+    pattern: '^\d+\.\d+\.\d+$'
+  },
+  url:     'http://downloads.typesafe.com/scala/<version>/scala-<version>.tgz',
+  archive: /opt/scala-<version>.tgz,
+  home:    /opt/scala
+}
+
+scala_env: {
+  PATH: "$PATH:{{ scala.home }}/scala-{{ scala_version }}/bin"
+}
