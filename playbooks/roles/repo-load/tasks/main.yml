@@ -16,7 +16,7 @@
     regexp:  '(jcenter\(\))|(mavenCentral\(\))'
     replace: "    maven { url '{{ repo }}' }"
 
-- name: Building sample app
+- name: Building sample application
   command: gradle clean build
   environment: "{{ gradle_env | expand_path( ansible_env ) }}"
   args:
