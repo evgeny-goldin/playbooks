@@ -1,10 +1,9 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-# Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = '2'
 CPUS                    = '2'
-MEMORY                  = '1024'
+MEMORY                  = '512'
 VAGRANT_DOMAIN          = 'vm'
 ZOOKEEPER_PORT          = 2181
 HELIOS_MASTER_PORT      = 5801
@@ -27,8 +26,8 @@ BOXES = {
   'helios-master'  => HELIOS_PROPERTIES.merge(
     ports: [ DNS_PORT, ZOOKEEPER_PORT, HELIOS_MASTER_PORT, ETCD_PORT, EXHIBITOR_PORT ]),
   'helios-agent'   => HELIOS_PROPERTIES,
-  artifactory:          { artifactory_port: ARTIFACTORY_PORT, ports: [ ARTIFACTORY_PORT ]},
-  nexus:                { nexus_port:       NEXUS_PORT,       ports: [ NEXUS_PORT ]},
+  artifactory:          { memory: 2048, artifactory_port: ARTIFACTORY_PORT, ports: [ ARTIFACTORY_PORT ]},
+  nexus:                { memory: 2048, nexus_port:       NEXUS_PORT,       ports: [ NEXUS_PORT ]},
   # packer:             {},
   # ruby:               {},
   # jenkins:            { ports: [ WEB_PORT ]},
@@ -68,7 +67,9 @@ Vagrant.configure( VAGRANTFILE_API_VERSION ) do | config |
         vb.gui  = false
         vb.name = box_name
         # https://www.virtualbox.org/manual/ch08.html
-        vb.customize [ 'modifyvm', :id, '--memory', MEMORY, '--cpus', CPUS ]
+        vb.customize [ 'modifyvm', :id,
+                       '--memory', variables[ :memory ] || MEMORY,
+                       '--cpus',   variables[ :cpus ]   || CPUS ]
       end
 
       config.vm.provision 'ansible' do | ansible |

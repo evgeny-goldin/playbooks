@@ -28,6 +28,7 @@
 
 - name:    Restarting {{ title }} service
   service: name={{ service }} state=restarted enabled=yes
+- pause:   seconds=3
 
 - include: verify.yml
   when:    port is defined
