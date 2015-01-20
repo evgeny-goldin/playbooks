@@ -1,4 +1,7 @@
 ---
+# When this role is imported - we need to explicitly include our own vars
+- include_vars: "{{ common.vars.exhibitor }}"
+
 - name: Calculating Exhibitor version
   set_fact:
     exhibitor_version: "{{ exhibitor.version | calculate( exhibitor.latest ) }}"

@@ -1,0 +1,7 @@
+---
+- debug: msg="Stress-testing repo '{{ repo }}'"
+
+- include: "{{ common.roles.exhibitor }}"
+  vars:
+    maven_repo:        "{{ repo }}"
+    exhibitor_service: false

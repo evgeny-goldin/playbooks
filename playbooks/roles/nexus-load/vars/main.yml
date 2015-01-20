@@ -1,4 +1,0 @@
----
-nexus_load: {
-  maven_repo: "http://{{ common.net.localhost }}:{{ nexus_port | default( nexus.port ) }}/nexus/content/repositories/central/"
-}

@@ -5,10 +5,8 @@
 # - Downloads {{ url }} to {{ archive }}
 # - Unpacks {{ archive }} to {{ home }}
 #   {{ home }} is deleted before unpack operation, unless {{ clean }} is False
-# - Runs {{ tests }} commands
-# - Generates {{ configs }}
-# - Generates {{ env }} / {{ path }} (mutually exclusive) environment variables file
-# - Runs {{ cleanup }} commands
+# - Generates {{ configs }} and {{ env }} environment variables file
+# - Runs {{ tests }} and {{ cleanup }} commands, with {{ env }} environment
 # ===================================================================================================
 # - Required variables: title. Others are optional.
 # ===================================================================================================
@@ -20,19 +18,12 @@
 - set_fact:
     clean_home: "{{ ( unpack | bool and ( clean | default(True))) | bool }}"
 
-- set_fact:
-    env:
-      PATH: "$PATH:{{ path }}"
-  when: path is defined
-
 # {{ env_file }} is a file containing service env variables, loaded by upstart script
+# {{ run_env }}  is an environment (dictionary) used when running {{ tests }} and {{ cleanup }} commands
 - set_fact:
     env_file: "{{ ubuntu.envs_dir }}/{{ title.lower() }}.sh"
+    run_env:  "{{ env | default({}) | expand_path( ansible_env ) }}"
   when: env is defined
-
-# {{ run_env }} in an environment (dictionary) used when running {{ tests }} and {{ cleanup }} commands
-- set_fact:
-    run_env: "{{ env | default({}) | expand_path( ansible_env ) }}"
 
 - debug: var=url
 - debug: var=archive

@@ -1,4 +1,0 @@
----
-artifactory_load: {
-  maven_repo: "http://{{ common.net.localhost }}:{{ artifactory_port | default( artifactory.port ) }}/artifactory/repo/"
-}

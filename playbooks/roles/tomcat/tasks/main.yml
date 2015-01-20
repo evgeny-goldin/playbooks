@@ -1,6 +1,6 @@
 ---
 # When this role is imported - we need to explicitly include our own vars
-- include_vars: "{{ playbook_dir }}/roles/tomcat/vars/main.yml"
+- include_vars: "{{ common.vars.tomcat }}"
 
 - name: Calculating Tomcat version
   set_fact:
