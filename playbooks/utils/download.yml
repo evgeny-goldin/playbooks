@@ -102,7 +102,7 @@
   when:      env is defined
 
 - name:        Running {{ title }} tests
-  command:     "{{ item.run }}"
+  command:     "{{ ubuntu.bash }} -c '{{ item.run }} 2>&1'"
   environment: "{{ run_env }}"
   register:    test_out
   failed_when: item.expect not in test_out.stdout
@@ -111,7 +111,7 @@
   when: tests is defined
 
 - name:        Running {{ title }} cleanup commands
-  command:     "{{ ubuntu.bash }} -c '{{ item }}'"
+  command:     "{{ ubuntu.bash }} -c '{{ item }} 2>&1'"
   environment: "{{ run_env }}"
   with_items:
     - "{{ cleanup }}"
