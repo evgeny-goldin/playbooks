@@ -15,11 +15,15 @@ common: {
     public_dns: "8.8.8.8:53,8.8.4.4:53",
   },
 
-  repo: {
+  urls: {
     github:   'https://github.com',
     jcenter:  'https://jcenter.bintray.com',
     bintray:  'https://dl.bintray.com',
-    jfrog:    'https://repo.jfrog.org'
+    jfrog:    'https://repo.jfrog.org',
+    gradle:   'https://www.gradle.org',
+    typesafe: 'https://downloads.typesafe.com',
+    scala:    'http://www.scala-lang.org',
+    groovy:   'http://groovy.codehaus.org'
   },
 
   utils: {

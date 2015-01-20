@@ -5,16 +5,16 @@ artifactory: {
   timeout: 60,         # in seconds
   run:     standalone, # standalone, war
   latest: {
-    command: "curl -s '{{ common.repo.bintray }}/jfrog/artifactory/' | grep '<pre>' | grep 'artifactory-' | sed -r 's/<[^>]+>//g' | sed 's/artifactory-//' | sed 's/\\.zip$//' | tail -1",
+    command: "curl -s '{{ common.urls.bintray }}/jfrog/artifactory/' | grep '<pre>' | grep 'artifactory-' | sed -r 's/<[^>]+>//g' | sed 's/artifactory-//' | sed 's/\\.zip$//' | tail -1",
     pattern: '^\d+\.\d+\.\d+$'
   },
   standalone: {
-    url:     '{{ common.repo.bintray }}/jfrog/artifactory/artifactory-<version>.zip',
+    url:     '{{ common.urls.bintray }}/jfrog/artifactory/artifactory-<version>.zip',
     archive: /opt/artifactory-<version>.zip,
     home:    /opt/artifactory
   },
   war: {
-    url:     '{{ common.repo.jfrog }}/artifactory/libs-releases/org/artifactory/artifactory-web-war/<version>/artifactory-web-war-<version>.war',
+    url:     '{{ common.urls.jfrog }}/artifactory/libs-releases/org/artifactory/artifactory-web-war/<version>/artifactory-web-war-<version>.war',
     archive: /opt/artifactory-<version>.war,
     home:    artifactory
   },

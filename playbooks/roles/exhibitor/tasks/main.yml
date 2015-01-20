@@ -11,22 +11,19 @@
   register: exhibitor_jar_stat
 - set_fact: exhibitor_jar_missing="{{ not exhibitor_jar_stat.stat.exists | bool }}"
 
+- debug: var=exhibitor_jar
 - debug: var=exhibitor_jar_missing
 
-- name: Cloning Gradle provider
-  git:
-    repo: "{{ exhibitor.gradle_provider }}"
-    dest: "{{ exhibitor.home }}"
-  when: exhibitor_jar_missing
-
+- file: path={{ exhibitor.home }} state=directory
 - name: Writing Exhibitor build file
   template:
-    src:  exhibitor-build.gradle
+    src:  build.gradle
     dest: "{{ exhibitor.home }}/build.gradle"
   when: exhibitor_jar_missing
 
-- name: Building Exhibitor standalone
-  command: ./gradlew clean jar
+- name:        Building Exhibitor standalone
+  command:     gradle clean jar
+  environment: "{{ gradle_env | expand_path }}"
   args:
     chdir: "{{ exhibitor.home }}"
   when: exhibitor_jar_missing

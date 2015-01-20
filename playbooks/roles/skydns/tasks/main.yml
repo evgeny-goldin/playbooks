@@ -2,13 +2,13 @@
 - debug: var=skydns_domain
 
 - set_fact:
-    skydns_root: "{{ go.path }}/src/{{ skydns.url }}"
+    skydns_root: "{{ golang.home }}/src/{{ skydns.url }}"
 - set_fact:
     skydns_bin:  "{{ skydns_root }}/skydns"
 
 - name:        Downloading SkyDNS
   command:     go get '{{ skydns.url }}'
-  environment: "{{ go_env }}"
+  environment: "{{ golang_env | expand_path }}"
 
 - name: Switching SkyDNS tag
   command: git checkout '{{ skydns.version }}'
@@ -19,14 +19,14 @@
   command: go build -v
   args:
     chdir: "{{ skydns_root }}"
-  environment: "{{ go_env }}"
+  environment: "{{ golang_env | expand_path }}"
 
 - include: "{{ common.utils.service }}"
   vars:
     service:    skydns
     title:      SkyDNS
     configs:
-      - { from: skydns-config, to: "{{ skydns.config }}" }
+      - { from: config, to: "{{ skydns.config }}" }
     env_config: "{{ skydns.config }}"
     command:    "{{ skydns_bin }} $SKYDNS_OPTS"
     port:       "{{ common.net.dns_port }}"

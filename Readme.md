@@ -10,6 +10,8 @@ This repo contains **Ansible** [Playbooks](https://github.com/evgeny-goldin/play
 * [Docker](https://www.docker.com/)
 * [Exhibitor](https://github.com/Netflix/exhibitor)
 * [etcd](https://github.com/coreos/etcd)
+* [Gradle](https://www.gradle.org/)
+* [Groovy](http://groovy.codehaus.org/)
 * [Go](https://golang.org/)
 * [Helios](https://github.com/spotify/helios)
 * [Java](http://www.oracle.com/technetwork/java/index.html) _(Oracle JRE, Oracle JDK, DefaultJDK)_
@@ -19,6 +21,7 @@ This repo contains **Ansible** [Playbooks](https://github.com/evgeny-goldin/play
 * [Node.js](https://nodejs.org/)
 * [Packer](https://www.packer.io/)
 * [Ruby](https://www.ruby-lang.org/en/)
+* [Scala](http://www.scala-lang.org/)
 * [SkyDNS](https://github.com/skynetservices/skydns)
 * [Tomcat](https://tomcat.apache.org/)
 * [Vagrant](https://www.vagrantup.com/)

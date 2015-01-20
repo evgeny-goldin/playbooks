@@ -1,25 +1,20 @@
 ---
 - name: Calculating Go version
   set_fact:
-    go_version: "{{ go.version | calculate( go.latest ) }}"
+    go_version: "{{ golang.version | calculate( golang.latest ) }}"
 
 - name: Installing Go packages
   apt: name={{ item }}
   with_items:
     - mercurial
 
-- file: path={{ go.path }} state=directory
-- name: Setting Go environment variables
-  template:
-    src:  golang.sh
-    dest: "{{ ubuntu.envs_dir }}/golang.sh"
-
 - include: "{{ common.utils.download }}"
   vars:
-    title:   Go
-    url:     "{{ go.url     | tokens({ 'version': go_version }) }}"
-    archive: "{{ go.archive | tokens({ 'version': go_version }) }}"
-    home:    "{{ go.bin_dir }}/../.."
+    title:   Golang
+    url:     "{{ golang.url     | tokens({ 'version': go_version }) }}"
+    archive: "{{ golang.archive | tokens({ 'version': go_version }) }}"
+    home:    "{{ golang.home }}"
     clean:   no
+    env:     "{{ golang_env }}"
     tests:
-      - { run: go version, expect: 'go version go{{ go_version }} ', env: "{{ go_env }}" }
+      - { run: go version, expect: 'go version go{{ go_version }} ' }

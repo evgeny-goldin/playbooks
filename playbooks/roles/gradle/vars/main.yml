@@ -1,0 +1,15 @@
+---
+gradle: {
+  version: latest, # 2.2.1, latest - https://www.gradle.org/downloads
+  latest: {
+    command: "curl -s '{{ common.urls.gradle }}/downloads' | grep 'latest release' | sed -r 's/.+<strong>//' | sed -r 's/<\\/strong>.+//'",
+    pattern: '^\d+\.\d+(\.\d+)?$'
+  },
+  url:     'https://services.gradle.org/distributions/gradle-<version>-bin.zip',
+  archive: /opt/gradle-<version>.zip,
+  home:    /opt/gradle
+}
+
+gradle_env: {
+  PATH: "$PATH:{{ gradle.home }}/gradle-{{ gradle_version }}/bin"
+}

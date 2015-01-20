@@ -11,7 +11,7 @@
     archive: "{{ zookeeper.archive | tokens( zookeeper ) }}"
     home:    "{{ zookeeper.home }}"
     configs:
-      - { from: zookeeper-config, to: "{{ zookeeper_home }}/conf/zoo.cfg" }
+      - { from: zoo.cfg, to: "{{ zookeeper_home }}/conf/zoo.cfg" }
     command: "{{ zookeeper_home }}/bin/zkServer.sh start-foreground"
     port:    "{{ zookeeper_port }}"
 

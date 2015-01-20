@@ -1,6 +1,6 @@
 ---
 java: {
-  version: 8, # 7 or 8, applies only to 'oracle-jre' and 'oracle-jdk' distributions
+  version: 8, # 7, 8 - applies only to 'oracle-jre' and 'oracle-jdk' distributions
   oracle-jre: {
     redownload:       false,
     installer_url:    'http://www.duinsoft.nl/pkg/pool/all/update-sun-jre.bin',

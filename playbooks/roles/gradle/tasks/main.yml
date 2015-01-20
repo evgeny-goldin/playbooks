@@ -1,0 +1,14 @@
+---
+- name: Calculating Gradle version
+  set_fact:
+    gradle_version: "{{ gradle.version | calculate( gradle.latest ) }}"
+
+- include: "{{ common.utils.download }}"
+  vars:
+    title:   Gradle
+    url:     "{{ gradle.url     | tokens({ 'version': gradle_version }) }}"
+    archive: "{{ gradle.archive | tokens({ 'version': gradle_version }) }}"
+    home:    "{{ gradle.home }}"
+    env:     "{{ gradle_env }}"
+    tests:
+      - { run: "gradle --version", expect: "Gradle {{ gradle_version }}" }

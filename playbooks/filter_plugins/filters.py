@@ -6,9 +6,16 @@ import time
 import subprocess
 import re
 import sys
+import os
 import os.path
 from   ansible import errors
 from   timeit  import default_timer as timer
+
+def expand_path( env_dict ):
+  '''Returns env variables dictionary where $PATH is replaced with os.environ[ 'PATH' ]'''
+  if 'PATH' in env_dict:
+    env_dict[ 'PATH' ] = env_dict[ 'PATH' ].replace( '$PATH', os.environ[ 'PATH' ] )
+  return env_dict;
 
 def absolute_path( path ):
   '''Returns absolute path of the path provided'''
@@ -86,6 +93,7 @@ class FilterModule( object ):
 
   def filters( self ):
     return {
+      'expand_path'   : expand_path,
       'absolute_path' : absolute_path,
       'tokens'        : tokens,
       'bare'          : bare,

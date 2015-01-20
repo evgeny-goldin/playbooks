@@ -1,11 +1,11 @@
 ---
 helios: {
   version: latest, # 0.8.138, latest - https://github.com/spotify/helios/releases
-  url:     '{{ common.repo.github }}/spotify/helios/releases/download/<version>/helios-debs.tar.gz',
+  url:     '{{ common.urls.github }}/spotify/helios/releases/download/<version>/helios-debs.tar.gz',
   archive: /opt/helios-<version>.tar.gz,
   home:    /opt/helios,
   latest: {
-    command: "curl -s '{{ common.repo.github }}/spotify/helios/releases' | grep '/spotify/helios/releases/tag/' | sed -r 's/<[^>]+>//g' | sed -r 's/:.+//' | sed '/^\\s*$/d' | head -1 | awk '{print $1}'",
+    command: "curl -s '{{ common.urls.github }}/spotify/helios/releases' | grep '/spotify/helios/releases/tag/' | sed -r 's/<[^>]+>//g' | sed -r 's/:.+//' | sed '/^\\s*$/d' | head -1 | awk '{print $1}'",
     pattern: '^\d+\.\d+\.\d+$'
   },
   master: {
@@ -18,7 +18,7 @@ helios: {
     state_dir:        /var/lib/helios-agent,
     registrar_plugin: {
       version: 0.1, # https://github.com/spotify/helios-skydns/releases
-      url:     '{{ common.repo.github }}/spotify/helios-skydns/releases/download/<version>/helios-skydns-<version>.jar',
+      url:     '{{ common.urls.github }}/spotify/helios-skydns/releases/download/<version>/helios-skydns-<version>.jar',
       jar:     /opt/helios-skydns-<version>.jar
     }
   }

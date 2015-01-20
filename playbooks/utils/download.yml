@@ -7,10 +7,13 @@
 #   {{ home }} is deleted before unpack operation, unless {{ clean }} is False
 # - Runs {{ tests }} commands
 # - Generates {{ configs }}
+# - Generates {{ env }} / {{ path }} (mutually exclusive) environment variables file
 # - Runs {{ cleanup }} commands
 # ===================================================================================================
-# - Required variables: none. All are optional.
+# - Required variables: title. Others are optional.
 # ===================================================================================================
+- debug: msg="title = '{{ title }}'"
+
 - set_fact:
     download:   "{{ (( url is defined ) and ( archive is defined )) | bool }}"
     unpack:     "{{ (( url is defined ) and ( archive is defined ) and ( home is defined )) | bool }}"
@@ -25,14 +28,23 @@
     home_absolute: "{{ home | absolute_path }}"
   when: unpack
 
+- set_fact:
+    env:
+      PATH: "$PATH:{{ path }}"
+  when: path is defined
+
+- set_fact: env_file="{{ ubuntu.envs_dir }}/{{ title.lower() }}.sh"
+  when: env is defined
+
 - debug: var=download
 - debug: var=unpack
 - debug: var=clean_home
+- debug: var=env
 
-- debug: msg="Downloading '{{ url }}' => '{{ archive_absolute }}'"
+- debug: msg="Downloading {{ title }} - '{{ url }}' => '{{ archive_absolute }}'"
   when:  download and ( not unpack )
 
-- debug: msg="Downloading '{{ url }}' => '{{ archive_absolute }}' => '{{ home_absolute }}'"
+- debug: msg="Downloading and unpacking {{ title }} - '{{ url }}' => '{{ archive_absolute }}' => '{{ home_absolute }}'"
   when:  unpack
 
 - name: Downloading {{ title }}
@@ -59,10 +71,9 @@
 
 - name:        Running {{ title }} tests
   command:     "{{ item.run }}"
-  environment: "{{ item.env | default({}) }}"
-  register: test_out
-  ignore_errors: yes # So we don't fail for non-zero exit code
-  failed_when:   item.expect not in test_out.stdout
+  environment: "{{ env | default({}) | expand_path }}"
+  register:    test_out
+  failed_when: item.expect not in test_out.stdout
   with_items:
     - "{{ tests }}"
   when: tests is defined
@@ -80,9 +91,20 @@
     - "{{ configs }}"
   when: configs is defined
 
+- file: path="{{ env_file }}" state=absent
+  when: env is defined
+
+- name: Generating {{ title }} environment variables file
+  lineinfile:
+    dest:    "{{ env_file }}"
+    create:  yes
+    line:    'export {{ item.key }}="{{ item.value }}"'
+  with_dict: env | default({})
+  when:      env is defined
+
 - name:        Running {{ title }} cleanup commands
   command:     "{{ ubuntu.bash }} -c '{{ item }}'"
-  environment: "{{ item.env | default({}) }}"
+  environment: "{{ env | default({}) | expand_path }}"
   with_items:
     - "{{ cleanup }}"
   when: cleanup is defined
