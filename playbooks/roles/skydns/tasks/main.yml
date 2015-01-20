@@ -8,7 +8,7 @@
 
 - name:        Downloading SkyDNS
   command:     go get '{{ skydns.url }}'
-  environment: "{{ golang_env | expand_path }}"
+  environment: "{{ golang_env | expand_path( ansible_env ) }}"
 
 - name: Switching SkyDNS tag
   command: git checkout '{{ skydns.version }}'
@@ -19,7 +19,7 @@
   command: go build -v
   args:
     chdir: "{{ skydns_root }}"
-  environment: "{{ golang_env | expand_path }}"
+  environment: "{{ golang_env | expand_path( ansible_env ) }}"
 
 - include: "{{ common.utils.service }}"
   vars:

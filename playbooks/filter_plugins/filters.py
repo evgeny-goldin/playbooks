@@ -11,10 +11,10 @@ import os.path
 from   ansible import errors
 from   timeit  import default_timer as timer
 
-def expand_path( env_dict ):
-  '''Returns env variables dictionary where $PATH is replaced with os.environ[ 'PATH' ]'''
+def expand_path( env_dict, ansible_env ):
+  '''Returns env variables dictionary where $PATH is replaced with ansible_env['PATH']'''
   if 'PATH' in env_dict:
-    env_dict[ 'PATH' ] = env_dict[ 'PATH' ].replace( '$PATH', os.environ[ 'PATH' ] )
+    env_dict[ 'PATH' ] = env_dict[ 'PATH' ].replace( '$PATH', ansible_env['PATH'] )
   return env_dict;
 
 def absolute_path( path ):

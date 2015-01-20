@@ -23,7 +23,7 @@
 
 - name:        Building Exhibitor standalone
   command:     gradle clean jar
-  environment: "{{ gradle_env | expand_path }}"
+  environment: "{{ gradle_env | expand_path( ansible_env ) }}"
   args:
     chdir: "{{ exhibitor.home }}"
   when: exhibitor_jar_missing

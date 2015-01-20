@@ -21,14 +21,6 @@
     clean_home: "{{ ( unpack | bool and ( clean | default(True))) | bool }}"
 
 - set_fact:
-    archive_absolute: "{{ archive | absolute_path }}"
-  when: download
-
-- set_fact:
-    home_absolute: "{{ home | absolute_path }}"
-  when: unpack
-
-- set_fact:
     env:
       PATH: "$PATH:{{ path }}"
   when: path is defined
@@ -40,8 +32,11 @@
 
 # {{ run_env }} in an environment (dictionary) used when running {{ tests }} and {{ cleanup }} commands
 - set_fact:
-    run_env: "{{ env | default({}) | expand_path }}"
+    run_env: "{{ env | default({}) | expand_path( ansible_env ) }}"
 
+- debug: var=url
+- debug: var=archive
+- debug: var=home
 - debug: var=download
 - debug: var=unpack
 - debug: var=clean_home
@@ -49,31 +44,31 @@
 - debug: var=env_file
 - debug: var=run_env
 
-- debug: msg="Downloading {{ title }} - '{{ url }}' => '{{ archive_absolute }}'"
+- debug: msg="Downloading {{ title }} - '{{ url }}' => '{{ archive }}'"
   when:  download and ( not unpack )
 
-- debug: msg="Downloading and unpacking {{ title }} - '{{ url }}' => '{{ archive_absolute }}' => '{{ home_absolute }}'"
+- debug: msg="Downloading and unpacking {{ title }} - '{{ url }}' => '{{ archive }}' => '{{ home }}'"
   when:  unpack
 
 - name: Downloading {{ title }}
   get_url:
     url:  "{{ url }}"
-    dest: "{{ archive_absolute }}"
+    dest: "{{ archive }}"
   when: download
 
-- debug: msg="Deleting '{{ home_absolute }}'!"
+- debug: msg="Deleting '{{ home }}'!"
   when:  clean_home
 
-- file: path={{ home_absolute }} state=absent
+- file: path={{ home }} state=absent
   when: clean_home
 
-- file: path={{ home_absolute }} state=directory
+- file: path={{ home }} state=directory
   when: home is defined
 
 - name: Unpacking {{ title }}
   unarchive:
-    src:  "{{ archive_absolute }}"
-    dest: "{{ home_absolute }}"
+    src:  "{{ archive }}"
+    dest: "{{ home }}"
     copy: false
   when: unpack
 
