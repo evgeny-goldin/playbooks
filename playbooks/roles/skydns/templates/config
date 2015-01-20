@@ -1,5 +1,0 @@
-# https://github.com/skynetservices/skydns
-export SKYDNS_DOMAIN="{{ skydns_domain }}"
-export SKYDNS_ADDR="{{ common.net.any_ip }}:{{ common.net.dns_port }}"
-export ETCD_MACHINES="{{ common.net.localhost }}:{{ etcd_port }}"
-export SKYDNS_NAMESERVERS="{{ common.net.public_dns }}"

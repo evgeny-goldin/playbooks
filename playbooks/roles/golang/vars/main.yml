@@ -7,11 +7,12 @@ golang: {
   },
   url:     'https://storage.googleapis.com/golang/go<version>.linux-amd64.tar.gz',
   archive: /opt/go-<version>.tar.gz,
-  home:    /opt/golang
+  path:    /opt/golang,
+  home:    /opt/golang/home
 }
 
 golang_env: {
-  GOPATH: "{{ golang.home }}",
+  GOPATH: "{{ golang.path }}",
   GOROOT: "{{ golang.home }}/go",
   PATH:   "$PATH:{{ golang.home }}/go/bin",
 }

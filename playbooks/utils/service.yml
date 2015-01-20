@@ -4,7 +4,7 @@
 # ===================================================================================================
 # - Runs download.yml
 # - Creates an upstart script to run {{ command }} as service {{ service }} and starts it
-#   upstart script attempts to load {{ env_config }} and writes log to /var/log/{{ service }}.log
+#   service started logs to /var/log/{{ service }}.log
 # - Runs verify.yml
 # ===================================================================================================
 # - Required variables are: title, service, command. Others are optional.
@@ -18,10 +18,6 @@
 
 - set_fact:
     upstart_script: "{{ ubuntu.init_dir }}/{{ service }}.conf"
-
-- set_fact:
-    env_config: "{{ env_file }}"
-  when: ( env is defined ) and ( env_config is not defined )
 
 - debug: msg="Starting {{ title }} service '{{ service }}' with '{{ command }}' in '{{ upstart_script }}'"
 

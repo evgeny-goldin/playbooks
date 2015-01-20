@@ -2,7 +2,7 @@
 - debug: var=skydns_domain
 
 - set_fact:
-    skydns_root: "{{ golang.home }}/src/{{ skydns.url }}"
+    skydns_root: "{{ golang.path }}/src/{{ skydns.url }}"
 - set_fact:
     skydns_bin:  "{{ skydns_root }}/skydns"
 
@@ -23,13 +23,16 @@
 
 - include: "{{ common.utils.service }}"
   vars:
-    service:    skydns
-    title:      SkyDNS
-    configs:
-      - { from: config, to: "{{ skydns.config }}" }
-    env_config: "{{ skydns.config }}"
-    command:    "{{ skydns_bin }} $SKYDNS_OPTS"
-    port:       "{{ common.net.dns_port }}"
+    service: skydns
+    title:   SkyDNS
+    env:
+      # https://github.com/skynetservices/skydns
+      SKYDNS_DOMAIN:      "{{ skydns_domain }}"
+      SKYDNS_ADDR:        "{{ common.net.any_ip }}:{{ common.net.dns_port }}"
+      ETCD_MACHINES:      "{{ common.net.localhost }}:{{ etcd_port }}"
+      SKYDNS_NAMESERVERS: "{{ common.net.public_dns }}"
+    command: "{{ skydns_bin }} $SKYDNS_OPTS"
+    port:    "{{ common.net.dns_port }}"
 
 - name:     Running local dig
   command:  dig @{{ common.net.localhost }}

@@ -14,7 +14,6 @@
     url:     "{{ golang.url     | tokens({ 'version': go_version }) }}"
     archive: "{{ golang.archive | tokens({ 'version': go_version }) }}"
     home:    "{{ golang.home }}"
-    clean:   no
     env:     "{{ golang_env }}"
     tests:
       - { run: go version, expect: 'go version go{{ go_version }} ' }
