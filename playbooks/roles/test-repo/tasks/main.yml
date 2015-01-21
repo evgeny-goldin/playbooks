@@ -1,22 +1,9 @@
 ---
-- debug:   msg="Testing {{ name }} repo '{{ repo }}'"
-- include: build-applications.yml
+- debug: msg="Running simulation of {{ repo_name }} repo '{{ repo }}' => '{{ report_dir }}'"
 
-# -----------------------------
-# LoadArtifacts.scala
-# -----------------------------
+- file: path={{ gatling_simulations }} state=absent
+- file: path={{ gatling_simulations }} state=directory
 
-- name: Copying artifacts file
-  copy:
-    src:  load-artifacts.txt
-    dest: "{{ test_repo.load.artifacts }}"
-
-- name: Generating LoadArtifacts simulation
-  template:
-    src:  LoadArtifacts.scala
-    dest: "{{ gatling_simulations }}/LoadArtifacts.scala"
-
-- debug:   msg="Running '{{ name }}-' LoadArtifacts simulation => '{{ report }}'"
-- name:    Running LoadArtifacts simulation
-  command: gatling.sh -m --output-name '{{ name }}' --simulation LoadArtifacts --results-folder '{{ report }}'
-  environment: "{{ gatling_env | expand_path( ansible_env ) }}"
+- include: run-simulation.yml simulation=load_artifacts
+- include: run-simulation.yml simulation=get_artifacts_10
+- include: run-simulation.yml simulation=get_artifacts_30

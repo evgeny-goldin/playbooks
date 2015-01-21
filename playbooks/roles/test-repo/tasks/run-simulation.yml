@@ -1,0 +1,26 @@
+---
+- debug: var=simulation
+- set_fact:
+    simulation: "{{ test_repo.simulations[ simulation ] }}"
+- debug: var=simulation    
+
+- set_fact:
+    name:      "{{ repo_name }}{{ simulation.name }}"
+    artifacts: "{{ test_repo.artifacts }}/{{ simulation.artifacts }}"
+    users:     "{{ simulation.users }}"
+
+- debug: msg="Running {{ name }} simulation. Artifacts - '{{ simulation.artifacts }}', users - {{ users }}, report - '{{ report_dir }}'"
+
+- name: Copying artifacts file
+  copy:
+    src:  "{{ simulation.artifacts }}"
+    dest: "{{ artifacts }}"
+
+- name: Generating simulation {{ name }}
+  template:
+    src:  Simulation.scala
+    dest: "{{ gatling_simulations }}/{{ name }}.scala"
+
+- name:    Running simulation {{ name }}
+  command: gatling.sh -m --output-name '{{ name }}' --simulation '{{ name }}' --results-folder '{{ report_dir }}'
+  environment: "{{ gatling_env | expand_path( ansible_env ) }}"
