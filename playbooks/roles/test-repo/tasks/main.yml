@@ -4,6 +4,19 @@
 - file: path={{ gatling_simulations }} state=absent
 - file: path={{ gatling_simulations }} state=directory
 
-- include: run-simulation.yml name=LoadArtifacts
-- include: run-simulation.yml name=GetArtifacts10
-- include: run-simulation.yml name=GetArtifacts30
+- name: Copying artifacts files
+  copy:
+    src:  "{{ item.value.artifacts }}"
+    dest: "{{ test_repo.artifacts }}/{{ item.value.artifacts }}"
+  with_dict: test_repo.simulations
+
+- name: Generating simulations
+  template:
+    src:  Simulation.scala
+    dest: "{{ gatling_simulations }}/{{ item.key }}.scala"
+  with_dict: test_repo.simulations
+
+- name: Running simulations
+  command: gatling.sh -m --output-name '{{ repo_name }}{{ item.key }}' --simulation '{{ item.key }}' --results-folder '{{ report_dir }}'
+  environment: "{{ gatling_env | expand_path( ansible_env ) }}"
+  with_dict: test_repo.simulations
