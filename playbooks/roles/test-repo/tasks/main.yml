@@ -1,9 +1,9 @@
 ---
-- debug: msg="Running simulation of {{ repo_name }} repo '{{ repo }}' => '{{ report_dir }}'"
+- debug: msg="Testing {{ repo_name }} repo {{ repo }}"
 
 - file: path={{ gatling_simulations }} state=absent
 - file: path={{ gatling_simulations }} state=directory
 
-- include: run-simulation.yml simulation=load_artifacts
-- include: run-simulation.yml simulation=get_artifacts_10
-- include: run-simulation.yml simulation=get_artifacts_30
+- include: run-simulation.yml name=LoadArtifacts
+- include: run-simulation.yml name=GetArtifacts10
+- include: run-simulation.yml name=GetArtifacts30

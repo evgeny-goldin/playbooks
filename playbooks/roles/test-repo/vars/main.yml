@@ -2,18 +2,15 @@
 test_repo: {
   artifacts: /opt,
   simulations: {
-    load_artifacts: {
-      name:      LoadArtifacts,
+    LoadArtifacts: {
       artifacts: all-artifacts.txt,
       users:     1
     },
-    get_artifacts_10: {
-      name:      GetArtifacts10,
+    GetArtifacts10: {
       artifacts: all-artifacts.txt,
       users:     10
     },
-    get_artifacts_30: {
-      name:      GetArtifacts30,
+    GetArtifacts30: {
       artifacts: all-artifacts.txt,
       users:     30
     }
