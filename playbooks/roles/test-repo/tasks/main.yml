@@ -1,23 +1,17 @@
 ---
-- debug: msg="Stress-testing repo '{{ repo }}'"
+- debug:   msg="Testing repo '{{ repo }}'"
+- include: build-applications.yml
 
-- name: Building Exhibitor
-  include: "{{ common.roles.exhibitor }}"
-  vars:
-    maven_repo:        "{{ repo }}"
-    exhibitor_service: false
+# -----------------------------
+# LoadArtifacts.scala
+# -----------------------------
 
-- name: Cloning sample application
-  git:
-    repo: "{{ test_repo.sample_app.repo }}"
-    dest: "{{ test_repo.sample_app.home }}"
-- replace:
-    dest:    "{{ test_repo.sample_app.home }}/build.gradle"
-    regexp:  '(jcenter\(\))|(mavenCentral\(\))'
-    replace: "    maven { url '{{ repo }}' }"
+- name: Copying artifacts file
+  copy:
+    src:  load-artifacts.txt
+    dest: "{{ test_repo.load.artifacts }}"
 
-- name: Building sample application
-  command: gradle clean build
-  environment: "{{ gradle_env | expand_path( ansible_env ) }}"
-  args:
-    chdir: "{{ test_repo.sample_app.home }}"
+- name: Generating LoadArtifacts simulation
+  template:
+    src:  LoadArtifacts.scala
+    dest: "{{ gatling_simulations }}/LoadArtifacts.scala"

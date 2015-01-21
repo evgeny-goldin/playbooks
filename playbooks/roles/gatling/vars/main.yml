@@ -11,6 +11,6 @@ gatling: {
 }
 
 gatling_env: {
-  PATH:         "$PATH:{{ gatling.home }}/gatling-charts-highcharts-bundle-{{ gatling_version }}/bin",
-  GATLING_HOME: "{{ gatling.home }}/gatling-charts-highcharts-bundle-{{ gatling_version }}"
+  GATLING_HOME: "{{ gatling_home }}",
+  PATH:         "$PATH:{{ gatling_home }}/bin"
 }

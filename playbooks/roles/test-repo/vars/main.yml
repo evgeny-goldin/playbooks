@@ -1,7 +1,15 @@
 ---
 test_repo: {
+  exhibitor: {
+    version: 1.5.2
+  },
   sample_app: {
     repo: '{{ common.urls.github }}/gradleware/continuous-delivery-jump-start.git',
+    sha:  00804350c5a632b85abde6333fe98d73a014c8fe,
     home: /opt/continuous-delivery-jump-start
+  },
+  load: {
+    users:     30,
+    artifacts: "{{ gatling_home }}/load-artifacts.txt"
   }
 }
