@@ -17,4 +17,5 @@
     tests:
       - { run: "gatling.sh --help", expect: "Usage: compiler" }
     cleanup:
-      - rm -rf "{{ gatling_simulations }}/computerdatabase"
+      - rm   -rf "{{ gatling_simulations }}"
+      - mkdir -p "{{ gatling_simulations }}"
