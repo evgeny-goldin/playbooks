@@ -23,8 +23,7 @@ HELIOS_PROPERTIES  = { helios_master:      "helios-master.#{ VAGRANT_DOMAIN }",
                        skydns_domain:      VAGRANT_DOMAIN }
 HELIOS_PORTS       = { ports: [ DNS_PORT, ZOOKEEPER_PORT, HELIOS_MASTER_PORT, ETCD_PORT, EXHIBITOR_PORT ] }
 
-# Name of the box => { playbook's extra variables, :ports is respected by Vagrant }
-BOXES = {
+VB_BOXES = {
   'helios-master'  => HELIOS_PROPERTIES.merge( HELIOS_PORTS ),
   'helios-agent'   => HELIOS_PROPERTIES,
   helios:             HELIOS_PROPERTIES.merge( HELIOS_PORTS ).merge( helios_master: "helios.#{ VAGRANT_DOMAIN }" ),
@@ -35,12 +34,12 @@ BOXES = {
                           nexus_port: NEXUS_PORT,
                           ports:      [ NEXUS_PORT ]},
   'test-artifactory' => { memory:     1024,
-                          playbook:   'test-repo',
+                          playbook:   'test-repo-ubuntu',
                           repo_name:  'Artifactory',
                           report_dir: '/vagrant',
                           repo:       "http://artifactory.#{ VAGRANT_DOMAIN }:#{ ARTIFACTORY_PORT }/artifactory/repo/" },
   'test-nexus'       => { memory:     1024,
-                          playbook:   'test-repo',
+                          playbook:   'test-repo-ubuntu',
                           repo_name:  'Nexus',
                           report_dir: '/vagrant',
                           repo:       "http://nexus.#{ VAGRANT_DOMAIN }:#{ NEXUS_PORT }/nexus/content/repositories/central/" },
@@ -54,6 +53,11 @@ BOXES = {
   #                                        env_file: '/playbooks/todo-sample-app.env' }
 }
 
+AWS_BOXES = {
+  'artifactory-aws' => { artifactory_port: ARTIFACTORY_PORT, playbook: 'artifactory-ubuntu' },
+  'nexus-aws'       => { nexus_port:       NEXUS_PORT,       playbook: 'nexus-ubuntu' }
+}
+
 Vagrant.require_version '>= 1.7.0'
 Vagrant.configure( VAGRANTFILE_API_VERSION ) do | config |
 
@@ -64,7 +68,7 @@ Vagrant.configure( VAGRANTFILE_API_VERSION ) do | config |
   config.landrush.enabled = true
   config.landrush.tld     = VAGRANT_DOMAIN
 
-  BOXES.each_pair { | box, variables |
+  VB_BOXES.each_pair { | box, variables |
 
     box_name = "#{ box }.#{ VAGRANT_DOMAIN }"
 
@@ -79,7 +83,7 @@ Vagrant.configure( VAGRANTFILE_API_VERSION ) do | config |
         b.vm.network 'forwarded_port', guest: port, host: port, auto_correct: true
       }
 
-      config.vm.provider 'virtualbox' do | vb |
+      b.vm.provider :virtualbox do | vb |
         vb.gui  = false
         vb.name = box_name
         # https://www.virtualbox.org/manual/ch08.html
@@ -88,7 +92,7 @@ Vagrant.configure( VAGRANTFILE_API_VERSION ) do | config |
                        '--cpus',   variables[ :cpus ]   || CPUS ]
       end
 
-      config.vm.provision 'ansible' do | ansible |
+      b.vm.provision :ansible do | ansible |
         ansible.verbose    = VERBOSE if VERBOSE != ''
         ansible.playbook   = "playbooks/#{ variables[ :playbook ] || "#{ box }-ubuntu" }.yml"
         ansible.extra_vars = variables.merge({
@@ -101,4 +105,47 @@ Vagrant.configure( VAGRANTFILE_API_VERSION ) do | config |
       end
     end
   }
+
+  AWS_BOXES.each_pair { | box_name, variables |
+
+    # https://github.com/mitchellh/vagrant-aws
+    # https://gist.github.com/tknerr/5753319
+
+    config.vm.define box_name do | b |
+      b.vm.provider :aws do | aws, override |
+        override.vm.box               = 'aws-dummy'
+        override.vm.box_url           = 'https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box'
+        override.ssh.username         = env('AWS_SSH_USER')
+        override.ssh.private_key_path = env('AWS_SSH_PRIVATE_KEY')
+
+        aws.access_key_id       = env('AWS_ACCESS_KEY_ID')
+        aws.ami                 = env('AWS_AMI')
+        aws.instance_type       = env('AWS_INSTANCE_TYPE')
+        aws.keypair_name        = env('AWS_KEYPAIR_NAME')
+        aws.region              = env('AWS_REGION')
+        aws.secret_access_key   = env('AWS_SECRET_ACCESS_KEY')
+        # aws.security_groups     = [ env('AWS_SECURITY_GROUP') ]
+        aws.subnet_id           = env('AWS_SUBNET_ID')
+        aws.associate_public_ip = true
+        aws.tags                = { Name: box_name }
+      end
+
+      b.vm.provision 'ansible' do | ansible |
+        ansible.verbose    = VERBOSE if VERBOSE != ''
+        ansible.playbook   = "playbooks/#{ variables[ :playbook ] || "#{ box_name }-ubuntu" }.yml"
+        ansible.extra_vars = variables.merge({
+          # Uncomment and set to true to forcefully update all packages
+          # Uncomment and set to false to disable periodic run
+          # Otherwise (when commented out) packages are updated automatically once a day
+          # periodic: true
+          # periodic: false
+        })
+      end
+    end
+  }
+end
+
+
+def env( name )
+  ENV[ name ] or raise "Undefined environment variable '#{ name }'!"
 end

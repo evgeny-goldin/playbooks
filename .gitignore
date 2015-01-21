@@ -8,3 +8,4 @@ packer_cache
 aws.yml
 ansible.cfg
 hosts
+aws.sh
