@@ -2,30 +2,32 @@
 # vi: set ft=ruby :
 
 VAGRANTFILE_API_VERSION = '2'
-CPUS                    = 2
-MEMORY                  = 512
-VAGRANT_DOMAIN          = 'vm'
-ZOOKEEPER_PORT          = 2181
-HELIOS_MASTER_PORT      = 5801
-ETCD_PORT               = 4001
-WEB_PORT                = 8080
-EXHIBITOR_PORT          = WEB_PORT
-ARTIFACTORY_PORT        = WEB_PORT
-NEXUS_PORT              = WEB_PORT
-DNS_PORT                = 53
-VERBOSE                 = '' # Ansible verbosity level: '', 'v', 'vv', 'vvv', 'vvvv'
-HELIOS_PROPERTIES       = { helios_master:      "helios-master.#{ VAGRANT_DOMAIN }",
-                            helios_master_port: HELIOS_MASTER_PORT,
-                            zookeeper_port:     ZOOKEEPER_PORT,
-                            etcd_port:          ETCD_PORT,
-                            exhibitor_port:     EXHIBITOR_PORT,
-                            skydns_domain:      VAGRANT_DOMAIN }
+
+CPUS               = 2
+MEMORY             = 512
+VAGRANT_DOMAIN     = 'vm'
+ZOOKEEPER_PORT     = 2181
+HELIOS_MASTER_PORT = 5801
+ETCD_PORT          = 4001
+WEB_PORT           = 8080
+EXHIBITOR_PORT     = WEB_PORT
+ARTIFACTORY_PORT   = WEB_PORT
+NEXUS_PORT         = WEB_PORT
+DNS_PORT           = 53
+VERBOSE            = '' # Ansible verbosity level: '', 'v', 'vv', 'vvv', 'vvvv'
+HELIOS_PROPERTIES  = { helios_master:      "helios-master.#{ VAGRANT_DOMAIN }",
+                       helios_master_port: HELIOS_MASTER_PORT,
+                       zookeeper_port:     ZOOKEEPER_PORT,
+                       etcd_port:          ETCD_PORT,
+                       exhibitor_port:     EXHIBITOR_PORT,
+                       skydns_domain:      VAGRANT_DOMAIN }
+HELIOS_PORTS       = { ports: [ DNS_PORT, ZOOKEEPER_PORT, HELIOS_MASTER_PORT, ETCD_PORT, EXHIBITOR_PORT ] }
 
 # Name of the box => { playbook's extra variables, :ports is respected by Vagrant }
 BOXES = {
-  'helios-master'  => HELIOS_PROPERTIES.merge(
-    ports: [ DNS_PORT, ZOOKEEPER_PORT, HELIOS_MASTER_PORT, ETCD_PORT, EXHIBITOR_PORT ]),
+  'helios-master'  => HELIOS_PROPERTIES.merge( HELIOS_PORTS ),
   'helios-agent'   => HELIOS_PROPERTIES,
+  helios:             HELIOS_PROPERTIES.merge( HELIOS_PORTS ).merge( helios_master: "helios.#{ VAGRANT_DOMAIN }" ),
   artifactory:          { memory:           1024,
                           artifactory_port: ARTIFACTORY_PORT,
                           ports:            [ ARTIFACTORY_PORT ]},
@@ -36,12 +38,12 @@ BOXES = {
                           playbook:   'test-repo',
                           name:       'Artifactory',
                           report:     '/vagrant',
-                          repo:       "http://artifactory.vm:#{ ARTIFACTORY_PORT }/artifactory/repo/" },
+                          repo:       "http://artifactory.#{ VAGRANT_DOMAIN }:#{ ARTIFACTORY_PORT }/artifactory/repo/" },
   'test-nexus'       => { memory:     1024,
                           playbook:   'test-repo',
                           name:       'Nexus',
                           report:     '/vagrant',
-                          repo:       "http://nexus.vm:#{ NEXUS_PORT }/nexus/content/repositories/central/" },
+                          repo:       "http://nexus.#{ VAGRANT_DOMAIN }:#{ NEXUS_PORT }/nexus/content/repositories/central/" },
   # packer:             {},
   # ruby:               {},
   # jenkins:            { ports: [ WEB_PORT ]},

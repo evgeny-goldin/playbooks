@@ -2,7 +2,7 @@
 - include: common.yml
 
 - include: master.yml
-  when:    helios_role == 'master'
+  when:    ( helios_role is undefined ) or ( helios_role == 'master' )
 
 - include: agent.yml
-  when:    helios_role == 'agent'
+  when:    ( helios_role is undefined ) or ( helios_role == 'agent' )

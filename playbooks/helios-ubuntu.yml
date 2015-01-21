@@ -1,8 +1,8 @@
 ---
-# Helios Master playbook for Ubuntu
+# Helios Master and Agent playbook for Ubuntu
 # https://github.com/spotify/helios
 
-- name:  Helios Master
+- name:  Helios
   hosts: all
   sudo:  yes
 
@@ -12,5 +12,5 @@
 
   roles:
     - { role: run-before, period: daily }
-    - { role: helios,     helios_role: master }
+    - helios
     - run-after
