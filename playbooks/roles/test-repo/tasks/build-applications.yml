@@ -1,5 +1,15 @@
 ---
-# Loads artifacts into {{ repo }} by building applications using it
+# -----------------------------
+# Loads artifacts into {{ repo }} by building sample applications
+# -----------------------------
+
+- include_vars: "{{ common.vars.exhibitor }}"
+- name: Cleaning up Gradle cache and previously built artifacts
+  file: path={{ item }} state=absent
+  with_items:
+    - ~/.gradle
+    - "{{ exhibitor.home }}/build"
+    - "{{ test_repo.sample_app.home }}/build"
 
 # -----------------------------
 # Exhibitor
