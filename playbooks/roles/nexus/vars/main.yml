@@ -2,7 +2,7 @@
 nexus: {
   version: '2.11.1-01',
   port:    8080,
-  timeout: 60,         # in seconds
+  timeout: 120,        # in seconds
   run:     standalone, # standalone, war
   standalone: {
     url:     'https://sonatype-download.global.ssl.fastly.net/nexus/oss/nexus-<version>-bundle.tar.gz',
