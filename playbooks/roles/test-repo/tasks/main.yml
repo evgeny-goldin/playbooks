@@ -1,5 +1,5 @@
 ---
-- debug:   msg="Testing repo '{{ repo }}'"
+- debug:   msg="Testing {{ name }} repo '{{ repo }}'"
 - include: build-applications.yml
 
 # -----------------------------
@@ -15,3 +15,8 @@
   template:
     src:  LoadArtifacts.scala
     dest: "{{ gatling_simulations }}/LoadArtifacts.scala"
+
+- debug:   msg="Running '{{ name }}-' LoadArtifacts simulation => '{{ report }}'"
+- name:    Running LoadArtifacts simulation
+  command: gatling.sh -m --output-name '{{ name }}' --simulation LoadArtifacts --results-folder '{{ report }}'
+  environment: "{{ gatling_env | expand_path( ansible_env ) }}"
