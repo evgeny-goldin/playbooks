@@ -2,8 +2,8 @@
 # vi: set ft=ruby :
 
 VAGRANTFILE_API_VERSION = '2'
-CPUS                    = '2'
-MEMORY                  = '512'
+CPUS                    = 2
+MEMORY                  = 512
 VAGRANT_DOMAIN          = 'vm'
 ZOOKEEPER_PORT          = 2181
 HELIOS_MASTER_PORT      = 5801
@@ -11,7 +11,7 @@ ETCD_PORT               = 4001
 WEB_PORT                = 8080
 EXHIBITOR_PORT          = WEB_PORT
 ARTIFACTORY_PORT        = WEB_PORT
-NEXUS_PORT              = WEB_PORT + 1
+NEXUS_PORT              = WEB_PORT
 DNS_PORT                = 53
 VERBOSE                 = '' # Ansible verbosity level: '', 'v', 'vv', 'vvv', 'vvvv'
 HELIOS_PROPERTIES       = { helios_master:      "helios-master.#{ VAGRANT_DOMAIN }",
@@ -21,13 +21,23 @@ HELIOS_PROPERTIES       = { helios_master:      "helios-master.#{ VAGRANT_DOMAIN
                             exhibitor_port:     EXHIBITOR_PORT,
                             skydns_domain:      VAGRANT_DOMAIN }
 
+# Name of the box => { playbook's extra variables, :ports is respected by Vagrant }
 BOXES = {
-  # Name of the box (and corresponding playbook) => { playbook's extra variables, :ports is respected by Vagrant }
   'helios-master'  => HELIOS_PROPERTIES.merge(
     ports: [ DNS_PORT, ZOOKEEPER_PORT, HELIOS_MASTER_PORT, ETCD_PORT, EXHIBITOR_PORT ]),
   'helios-agent'   => HELIOS_PROPERTIES,
-  artifactory:          { memory: 2048, artifactory_port: ARTIFACTORY_PORT, ports: [ ARTIFACTORY_PORT ]},
-  nexus:                { memory: 2048, nexus_port:       NEXUS_PORT,       ports: [ NEXUS_PORT ]},
+  artifactory:          { memory:           2048,
+                          artifactory_port: ARTIFACTORY_PORT,
+                          ports:            [ ARTIFACTORY_PORT ]},
+  nexus:                { memory:     2048,
+                          nexus_port: NEXUS_PORT,
+                          ports:      [ NEXUS_PORT ]},
+  'test-artifactory' => { memory:     1024,
+                          playbook:   'test-repo',
+                          repo:       "http://artifactory.vm:#{ ARTIFACTORY_PORT }/artifactory/repo/" },
+  'test-nexus'       => { memory:     1024,
+                          playbook:   'test-repo',
+                          repo:       "http://nexus.vm:#{ NEXUS_PORT }/nexus/content/repositories/central/" },
   # packer:             {},
   # ruby:               {},
   # jenkins:            { ports: [ WEB_PORT ]},
@@ -74,7 +84,7 @@ Vagrant.configure( VAGRANTFILE_API_VERSION ) do | config |
 
       config.vm.provision 'ansible' do | ansible |
         ansible.verbose    = VERBOSE if VERBOSE != ''
-        ansible.playbook   = "playbooks/#{ variables[:playbook] || "#{ box }-ubuntu" }.yml"
+        ansible.playbook   = "playbooks/#{ variables[ :playbook ] || "#{ box }-ubuntu" }.yml"
         ansible.extra_vars = variables.merge({
           # Uncomment and set to true to forcefully update all packages
           # Uncomment and set to false to disable periodic run

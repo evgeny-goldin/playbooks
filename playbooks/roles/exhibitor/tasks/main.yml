@@ -24,7 +24,8 @@
     dest: "{{ exhibitor.home }}/build.gradle"
   when: exhibitor_jar_missing
 
-- name:        Building Exhibitor standalone
+- debug: msg="Building Exhibitor standalone using '{{ maven_repo }}' repo"
+- name:       Building Exhibitor standalone
   command:     gradle clean jar
   environment: "{{ gradle_env | expand_path( ansible_env ) }}"
   args:

@@ -1,8 +1,5 @@
 ---
-# Artifactory playbook for Ubuntu
-# http://www.jfrog.com/artifactory/
-
-- name:  Artifactory
+- name:  Repo Test
   hosts: all
   sudo:  yes
 
@@ -12,5 +9,5 @@
 
   roles:
     - { role: run-before, period: daily }
-    - artifactory
+    - test-repo
     - run-after

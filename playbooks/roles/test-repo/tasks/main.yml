@@ -9,10 +9,10 @@
 
 - name: Cloning sample application
   git:
-    repo: "{{ repo_load.sample_app.repo }}"
-    dest: "{{ repo_load.sample_app.home }}"
+    repo: "{{ test_repo.sample_app.repo }}"
+    dest: "{{ test_repo.sample_app.home }}"
 - replace:
-    dest:    "{{ repo_load.sample_app.home }}/build.gradle"
+    dest:    "{{ test_repo.sample_app.home }}/build.gradle"
     regexp:  '(jcenter\(\))|(mavenCentral\(\))'
     replace: "    maven { url '{{ repo }}' }"
 
@@ -20,4 +20,4 @@
   command: gradle clean build
   environment: "{{ gradle_env | expand_path( ansible_env ) }}"
   args:
-    chdir: "{{ repo_load.sample_app.home }}"
+    chdir: "{{ test_repo.sample_app.home }}"

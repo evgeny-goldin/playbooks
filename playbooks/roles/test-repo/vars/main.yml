@@ -1,5 +1,5 @@
 ---
-repo_load: {
+test_repo: {
   sample_app: {
     repo: '{{ common.urls.github }}/gradleware/continuous-delivery-jump-start.git',
     home: /opt/continuous-delivery-jump-start
