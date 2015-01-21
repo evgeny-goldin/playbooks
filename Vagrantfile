@@ -26,10 +26,10 @@ BOXES = {
   'helios-master'  => HELIOS_PROPERTIES.merge(
     ports: [ DNS_PORT, ZOOKEEPER_PORT, HELIOS_MASTER_PORT, ETCD_PORT, EXHIBITOR_PORT ]),
   'helios-agent'   => HELIOS_PROPERTIES,
-  artifactory:          { memory:           2048,
+  artifactory:          { memory:           1024,
                           artifactory_port: ARTIFACTORY_PORT,
                           ports:            [ ARTIFACTORY_PORT ]},
-  nexus:                { memory:     2048,
+  nexus:                { memory:     1024,
                           nexus_port: NEXUS_PORT,
                           ports:      [ NEXUS_PORT ]},
   'test-artifactory' => { memory:     1024,
