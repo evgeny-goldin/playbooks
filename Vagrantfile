@@ -3,6 +3,10 @@
 
 VAGRANTFILE_API_VERSION = '2'
 
+def env( name )
+  ENV[ name ] or raise "Undefined environment variable '#{ name }'!"
+end
+
 CPUS               = 2
 MEMORY             = 512
 VAGRANT_DOMAIN     = 'vm'
@@ -54,8 +58,16 @@ VB_BOXES = {
 }
 
 AWS_BOXES = {
-  'artifactory-aws' => { artifactory_port: ARTIFACTORY_PORT, playbook: 'artifactory-ubuntu' },
-  'nexus-aws'       => { nexus_port:       NEXUS_PORT,       playbook: 'nexus-ubuntu' }
+  'artifactory-aws'      => { artifactory_port: ARTIFACTORY_PORT, playbook: 'artifactory-ubuntu' },
+  'nexus-aws'            => { nexus_port:       NEXUS_PORT,       playbook: 'nexus-ubuntu' },
+  'test-artifactory-aws' => { playbook:   'test-repo-ubuntu',
+                              repo_name:  'Artifactory',
+                              report_dir: '/opt',
+                              repo:       "http://#{ env( 'ARTIFACTORY_HOST' ) }:#{ ARTIFACTORY_PORT }/artifactory/repo/" },
+  'test-nexus-aws'       => { playbook:   'test-repo-ubuntu',
+                              repo_name:  'Nexus',
+                              report_dir: '/opt',
+                              repo:       "http://#{ env( 'NEXUS_HOST' ) }:#{ NEXUS_PORT }/nexus/content/repositories/central/" },
 }
 
 Vagrant.require_version '>= 1.7.0'
@@ -112,6 +124,9 @@ Vagrant.configure( VAGRANTFILE_API_VERSION ) do | config |
     # https://gist.github.com/tknerr/5753319
 
     config.vm.define box_name do | b |
+
+      b.vm.synced_folder 'playbooks', '/playbooks'
+
       b.vm.provider :aws do | aws, override |
         override.vm.box               = 'aws-dummy'
         override.vm.box_url           = 'https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box'
@@ -143,9 +158,4 @@ Vagrant.configure( VAGRANTFILE_API_VERSION ) do | config |
       end
     end
   }
-end
-
-
-def env( name )
-  ENV[ name ] or raise "Undefined environment variable '#{ name }'!"
 end

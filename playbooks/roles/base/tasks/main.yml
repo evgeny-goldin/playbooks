@@ -34,10 +34,10 @@
     - build-essential
     - psmisc # Needed for 'killall'
 
-- name:    Stopping and disabling Chef service, if exists
+- name:    Stopping and disabling Chef service, if found
   service: name=chef-client state=stopped enabled=no
   ignore_errors: yes
 
-- name:    Stopping and disabling Puppet service, if exists
+- name:    Stopping and disabling Puppet service, if found
   service: name=puppet state=stopped enabled=no
   ignore_errors: yes
