@@ -1,8 +1,12 @@
 ---
 - debug: msg="Testing {{ repo_name }} repo {{ repo }}"
 
-- file: path={{ gatling_simulations }} state=absent
-- file: path={{ gatling_simulations }} state=directory
+- name: Creating directories
+  file: path={{ item }} state=directory
+  with_items:
+    - "{{ test_repo.artifacts }}"
+    - "{{ gatling_simulations }}"
+    - "{{ report_dir }}"
 
 - name: Copying artifacts files
   copy:
