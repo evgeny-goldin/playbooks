@@ -121,6 +121,7 @@ Vagrant.configure( VAGRANTFILE_API_VERSION ) do | config |
   AWS_BOXES.each_pair { | box_name, variables |
 
     # https://github.com/mitchellh/vagrant-aws
+    # vagrant plugin install vagrant-aws
     # https://gist.github.com/tknerr/5753319
 
     config.vm.define box_name do | b |
