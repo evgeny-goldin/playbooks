@@ -31,22 +31,12 @@ VB_BOXES = {
   'helios-master'  => HELIOS_PROPERTIES.merge( HELIOS_PORTS ),
   'helios-agent'   => HELIOS_PROPERTIES,
   helios:             HELIOS_PROPERTIES.merge( HELIOS_PORTS ).merge( helios_master: "helios.#{ VAGRANT_DOMAIN }" ),
-  artifactory:          { memory:           1024,
-                          artifactory_port: ARTIFACTORY_PORT,
-                          ports:            [ ARTIFACTORY_PORT ]},
-  nexus:                { memory:     1024,
-                          nexus_port: NEXUS_PORT,
-                          ports:      [ NEXUS_PORT ]},
-  'test-artifactory' => { memory:     1024,
-                          playbook:   'test-repo-ubuntu',
-                          repo_name:  'Artifactory',
-                          report_dir: '/vagrant',
-                          repo:       "http://artifactory.#{ VAGRANT_DOMAIN }:#{ ARTIFACTORY_PORT }/artifactory/repo/" },
-  'test-nexus'       => { memory:     1024,
-                          playbook:   'test-repo-ubuntu',
-                          repo_name:  'Nexus',
-                          report_dir: '/vagrant',
-                          repo:       "http://nexus.#{ VAGRANT_DOMAIN }:#{ NEXUS_PORT }/nexus/content/repositories/central/" },
+  artifactory:   { memory: 1024, artifactory_port: ARTIFACTORY_PORT, ports: [ ARTIFACTORY_PORT ]},
+  nexus:         { memory: 1024, nexus_port:       NEXUS_PORT,       ports: [ NEXUS_PORT ]},
+  'test-repo' => { memory: 1024, report_dir: '/vagrant',
+                   repo_name:  'Artifactory', repo: "http://artifactory.#{ VAGRANT_DOMAIN }:#{ ARTIFACTORY_PORT }/artifactory/repo/"
+                  #  repo_name:  'Nexus',       repo: "http://nexus.#{ VAGRANT_DOMAIN }:#{ NEXUS_PORT }/nexus/content/repositories/central/"
+                 },
   # packer:             {},
   # ruby:               {},
   # jenkins:            { ports: [ WEB_PORT ]},
@@ -58,16 +48,16 @@ VB_BOXES = {
 }
 
 AWS_BOXES = {
-  'artifactory-aws'      => { artifactory_port: ARTIFACTORY_PORT, playbook: 'artifactory-ubuntu' },
-  'nexus-aws'            => { nexus_port:       NEXUS_PORT,       playbook: 'nexus-ubuntu' },
-  'test-artifactory-aws' => { playbook:   'test-repo-ubuntu',
-                              repo_name:  'Artifactory',
-                              report_dir: '/opt',
-                              repo:       "http://#{ env( 'ARTIFACTORY_HOST' ) }:#{ ARTIFACTORY_PORT }/artifactory/repo/" },
-  'test-nexus-aws'       => { playbook:   'test-repo-ubuntu',
-                              repo_name:  'Nexus',
-                              report_dir: '/opt',
-                              repo:       "http://#{ env( 'NEXUS_HOST' ) }:#{ NEXUS_PORT }/nexus/content/repositories/central/" },
+  'artifactory-aws' => { instance_type: 't2.medium', artifactory_port: ARTIFACTORY_PORT, playbook: 'artifactory-ubuntu' },
+  'nexus-aws'       => { instance_type: 't2.medium', nexus_port:       NEXUS_PORT,       playbook: 'nexus-ubuntu' },
+  'test-repo'       => { instance_type: 't2.small'
+                         report_dir:    '/opt',
+                         repo_name:     'Artifactory',
+                         repo:          "http://#{ env( 'ARTIFACTORY_HOST' ) }:#{ ARTIFACTORY_PORT }/artifactory/repo/",
+                        #  repo_name:     'Nexus',
+                        #  repo:          "http://#{ env( 'NEXUS_HOST' ) }:#{ NEXUS_PORT }/nexus/content/repositories/central/"
+                       },
+
 }
 
 Vagrant.require_version '>= 1.7.0'
@@ -136,7 +126,7 @@ Vagrant.configure( VAGRANTFILE_API_VERSION ) do | config |
 
         aws.access_key_id       = env('AWS_ACCESS_KEY_ID')
         aws.ami                 = env('AWS_AMI')
-        aws.instance_type       = env('AWS_INSTANCE_TYPE')
+        aws.instance_type       = variables[ :instance_type ] || env('AWS_INSTANCE_TYPE')
         aws.keypair_name        = env('AWS_KEYPAIR_NAME')
         aws.region              = env('AWS_REGION')
         aws.secret_access_key   = env('AWS_SECRET_ACCESS_KEY')
