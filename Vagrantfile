@@ -48,14 +48,11 @@ VB_BOXES = {
 }
 
 AWS_BOXES = {
-  'artifactory-aws' => { instance_type: 't2.medium', artifactory_port: ARTIFACTORY_PORT, playbook: 'artifactory-ubuntu' },
-  'nexus-aws'       => { instance_type: 't2.medium', nexus_port:       NEXUS_PORT,       playbook: 'nexus-ubuntu' },
-  'test-repo'       => { instance_type: 't2.small'
-                         report_dir:    '/opt',
-                         repo_name:     'Artifactory',
-                         repo:          "http://#{ env( 'ARTIFACTORY_HOST' ) }:#{ ARTIFACTORY_PORT }/artifactory/repo/",
-                        #  repo_name:     'Nexus',
-                        #  repo:          "http://#{ env( 'NEXUS_HOST' ) }:#{ NEXUS_PORT }/nexus/content/repositories/central/"
+  'artifactory-aws' => { instance_type: 't2.medium',   artifactory_port: ARTIFACTORY_PORT, playbook: 'artifactory-ubuntu' },
+  'nexus-aws'       => { instance_type: 't2.medium',   nexus_port:       NEXUS_PORT,       playbook: 'nexus-ubuntu' },
+  'test-repo-aws'   => { instance_type: 't2.small',    report_dir: '/opt',                 playbook: 'test-repo-ubuntu',
+                        #  repo_name:     'Artifactory', repo: "http://#{ env( 'ARTIFACTORY_HOST' ) }:#{ ARTIFACTORY_PORT }/artifactory/repo/"
+                        #  repo_name:     'Nexus',       repo: "http://#{ env( 'NEXUS_HOST' ) }:#{ NEXUS_PORT }/nexus/content/repositories/central/"
                        },
 
 }
