@@ -34,8 +34,8 @@ VB_BOXES = {
   artifactory:   { memory: 1024, artifactory_port: ARTIFACTORY_PORT, ports: [ ARTIFACTORY_PORT ]},
   nexus:         { memory: 1024, nexus_port:       NEXUS_PORT,       ports: [ NEXUS_PORT ]},
   'test-repo' => { memory: 1024, report_dir: '/vagrant',
-                   repo_name:  'Artifactory', repo: "http://artifactory.#{ VAGRANT_DOMAIN }:#{ ARTIFACTORY_PORT }/artifactory/repo/"
-                  #  repo_name:  'Nexus',       repo: "http://nexus.#{ VAGRANT_DOMAIN }:#{ NEXUS_PORT }/nexus/content/repositories/central/"
+                   repo_name: 'Artifactory', repo: "http://artifactory.#{ VAGRANT_DOMAIN }:#{ ARTIFACTORY_PORT }/artifactory/repo/"
+                  #  repo_name: 'Nexus',       repo: "http://nexus.#{ VAGRANT_DOMAIN }:#{ NEXUS_PORT }/nexus/content/repositories/central/"
                  },
   # packer:             {},
   # ruby:               {},
@@ -48,13 +48,12 @@ VB_BOXES = {
 }
 
 AWS_BOXES = {
-  'artifactory-aws' => { instance_type: 't2.medium',   artifactory_port: ARTIFACTORY_PORT, playbook: 'artifactory-ubuntu' },
-  'nexus-aws'       => { instance_type: 't2.medium',   nexus_port:       NEXUS_PORT,       playbook: 'nexus-ubuntu' },
-  'test-repo-aws'   => { instance_type: 't2.small',    report_dir: '/opt',                 playbook: 'test-repo-ubuntu',
-                        #  repo_name:     'Artifactory', repo: "http://#{ env( 'ARTIFACTORY_HOST' ) }:#{ ARTIFACTORY_PORT }/artifactory/repo/"
-                        #  repo_name:     'Nexus',       repo: "http://#{ env( 'NEXUS_HOST' ) }:#{ NEXUS_PORT }/nexus/content/repositories/central/"
+  'artifactory-aws' => { instance_type: 't2.medium', artifactory_port: ARTIFACTORY_PORT, playbook: 'artifactory-ubuntu' },
+  'nexus-aws'       => { instance_type: 't2.medium', nexus_port:       NEXUS_PORT,       playbook: 'nexus-ubuntu' },
+  'test-repo-aws'   => { instance_type: 't2.small',  report_dir: '/opt',                 playbook: 'test-repo-ubuntu',
+                         repo_name: 'Artifactory',   repo: "http://#{ env( 'ARTIFACTORY_HOST' ) }:#{ ARTIFACTORY_PORT }/artifactory/repo/"
+                        #  repo_name: 'Nexus',         repo: "http://#{ env( 'NEXUS_HOST' ) }:#{ NEXUS_PORT }/nexus/content/repositories/central/"
                        },
-
 }
 
 Vagrant.require_version '>= 1.7.0'
