@@ -1,8 +1,6 @@
-<!-- [![Build Status](https://api.shippable.com/projects/5416fa1e50f3833e055aa2a8/badge?branchName=ship)](https://app.shippable.com/projects/5416fa1e50f3833e055aa2a8) -->
-
 #### Summary
 
-This repo contains **Ansible** [Playbooks](https://github.com/evgeny-goldin/playbooks/tree/master/playbooks) and [Roles](https://github.com/evgeny-goldin/playbooks/tree/master/playbooks/roles) for installing the following packages on Ubuntu:
+This repo contains **Ansible** [Playbooks](https://github.com/evgeny-goldin/playbooks/tree/master/playbooks) and [Roles](https://github.com/evgeny-goldin/playbooks/tree/master/playbooks/roles) for installing the following tools on Ubuntu:
 
 * [Ansible](http://www.ansible.com/)
 * [Artifactory](http://www.jfrog.com/artifactory/) _(standalone or Tomcat)_
@@ -28,31 +26,6 @@ This repo contains **Ansible** [Playbooks](https://github.com/evgeny-goldin/play
 * [Vagrant](https://www.vagrantup.com/)
 * [VirtualBox](https://www.virtualbox.org/)
 * [ZooKeeper](https://zookeeper.apache.org/)
-
-#### Usage
-
-* `<box>` is one of:
-
-    * `artifactory`
-    * `asgard`
-    * `docker`
-    * `helios`
-    * `helios-agent`
-    * `helios-master`
-    * `jenkins`
-    * `mysql`
-    * `nexus`
-    * `packer`
-    * `ruby`
-
-* You can create Ubuntu VMs if **Vagrant** and **VirtualBox** are installed:
-
-  * `vagrant up <box>`
-
-  All boxes come with Ansible installed so you can re-run the playbook from within a box:
-
-  * `vagrant ssh <box>`
-  * `ansible-playbook /playbooks/<box>-ubuntu.yml -s -c local`
 
 #### Docker
 
