@@ -56,11 +56,19 @@
   # Import
   # -----------------------
 
+- set_fact:
+    import_dir: "{{ nexus.import.home | tokens({ 'home' : nexus.standalone.home }) }}/{{ nexus.import.repo }}"
+  when: ( nexus.run == 'standalone' ) and ( import is defined )
+
+- set_fact:
+    import_dir: "{{ nexus.import.home | tokens({ 'home' : '/root' }) }}/{{ nexus.import.repo }}"
+  when: ( nexus.run == 'war' ) and ( import is defined )
+
 - include: "{{ common.utils.download }}"
   vars:
     title:   Nexus import archive
     url:     "{{ import }}"
     archive: "{{ nexus.import.archive | tokens({ 'ext' : import | ext }) }}"
-    home:    "{{ nexus.import.home    | tokens({ 'home': nexus.standalone.home }) }}/{{ nexus.import.repo }}"
+    home:    "{{ import_dir }}"
     clean:   false
-  when: ( nexus.run == 'standalone' ) and ( import is defined )
+  when: import is defined

@@ -24,9 +24,9 @@
     status_code:    "{{ item.status | default( 200 )}}"
     return_content: yes
   register: http_wait_out
-  until:    item.content in http_wait_out.content
+  until: "{{ ( http_wait_out.content is defined ) and ( item.content in http_wait_out.content ) }}"
   # https://github.com/ansible/ansible/issues/5865
-  retries: 20 # "{{ timeout | default( 5 ) | int // 3 }}"
+  retries: 40 # "{{ timeout | default( 5 ) | int // 3 }}"
   delay:   3
   with_items:
     - "{{ wait }}"
@@ -34,7 +34,7 @@
 
 - name: Verifying {{ title }} HTTP endpoint
   uri:
-    url:            "http://{{ v_host }}:{{ v_port }}{{ item.path | default('')}}"
+    url: "http://{{ v_host }}:{{ v_port }}{{ item.path | default('')}}"
     return_content: yes
   register: http_verify_out
   with_items:

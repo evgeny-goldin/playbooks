@@ -89,7 +89,7 @@
 
 - name:        Running {{ title }} tests
   command:     "{{ ubuntu.bash }} -c '{{ item.run }} 2>&1'"
-  environment: "{{ run_env }}"
+  environment: "{{ run_env | default({}) }}"
   register:    test_out
   failed_when: item.expect not in test_out.stdout
   with_items:
@@ -98,7 +98,7 @@
 
 - name:        Running {{ title }} cleanup commands
   command:     "{{ ubuntu.bash }} -c '{{ item }} 2>&1'"
-  environment: "{{ run_env }}"
+  environment: "{{ run_env | default({}) }}"
   with_items:
     - "{{ cleanup }}"
   when: cleanup is defined
