@@ -26,5 +26,14 @@ artifactory: {
     { path: '/artifactory/api/search/artifact?name=x', content: results },
     { path: /artifactory/webapp/home.html,             content: Artifactory },
     { path: /artifactory/webapp/browserepo.html,       content: Artifactory }
-  ]
+  ],
+  auth: {
+    user: admin,
+    pass: password
+  },
+  import: {
+    archive: /opt/artifactory-import.<ext>,
+    home:    /opt/artifactory-import,
+    repo:    jcenter-cache
+  }
 }

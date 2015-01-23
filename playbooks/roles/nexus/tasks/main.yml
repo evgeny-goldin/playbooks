@@ -17,6 +17,7 @@
     url:     "{{ nexus.standalone.url     | tokens( nexus ) }}"
     archive: "{{ nexus.standalone.archive | tokens( nexus ) }}"
     home:    "{{ nexus.standalone.home }}"
+    clean:   false
     env:
       RUN_AS_USER: root
     configs:
@@ -50,3 +51,16 @@
     wait:    "{{ nexus.wait }}"
     verify:  "{{ nexus.verify }}"
   when: nexus.run == 'war'
+
+  # -----------------------
+  # Import
+  # -----------------------
+
+- include: "{{ common.utils.download }}"
+  vars:
+    title:   Nexus import archive
+    url:     "{{ import }}"
+    archive: "{{ nexus.import.archive | tokens({ 'ext' : import | ext }) }}"
+    home:    "{{ nexus.import.home    | tokens({ 'home': nexus.standalone.home }) }}/{{ nexus.import.repo }}"
+    clean:   false
+  when: ( nexus.run == 'standalone' ) and ( import is defined )

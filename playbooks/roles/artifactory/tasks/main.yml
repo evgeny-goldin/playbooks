@@ -51,3 +51,25 @@
     wait:    "{{ artifactory.wait }}"
     verify:  "{{ artifactory.verify }}"
   when: artifactory.run == 'war'
+
+  # -----------------------
+  # Import
+  # -----------------------
+
+- include: "{{ common.utils.download }}"
+  vars:
+    title:   Artifactory import archive
+    url:     "{{ import }}"
+    archive: "{{ artifactory.import.archive | tokens({ 'ext': import | ext }) }}"
+    home:    "{{ artifactory.import.home }}/{{ artifactory.import.repo }}"
+    clean:   false
+  when: import is defined
+
+- name: Running Artifactory import
+  uri:
+    # https://www.jfrog.com/confluence/display/RTF/Artifactory+REST+API#ArtifactoryRESTAPI-ImportRepositoryContent
+    url:      "http://{{ common.net.localhost }}:{{ artifactory_port }}/artifactory/api/import/repositories?path={{ artifactory.import.home }}"
+    method:   POST
+    user:     "{{ artifactory.auth.user }}"
+    password: "{{ artifactory.auth.pass }}"
+  when: import is defined

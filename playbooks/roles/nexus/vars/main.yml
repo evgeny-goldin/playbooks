@@ -21,5 +21,10 @@ nexus: {
     { path: /nexus, content: Sonatype Nexus },
     { path: /nexus, content: Loading Nexus UI },
     { path: /nexus/service/local/attributes, status: 401 }
-  ]
+  ],
+  import: {
+    archive: /opt/nexus-import.<ext>,
+    home:    <home>/sonatype-work/nexus/storage,
+    repo:    central
+  }
 }

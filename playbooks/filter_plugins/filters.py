@@ -11,6 +11,15 @@ import os.path
 from   ansible import errors
 from   timeit  import default_timer as timer
 
+def ext( url ):
+  '''Returns URL extension'''
+  if url.endswith( '.tar.gz' ):
+     return 'tar.gz'
+  if url.endswith( '.tar.bz2' ):
+     return 'tar.bz2'
+  return url.split('.')[-1]
+
+
 def expand_path( env_dict, ansible_env ):
   '''Returns env variables dictionary where $PATH is replaced with ansible_env['PATH']'''
   if 'PATH' in env_dict:
@@ -93,6 +102,7 @@ class FilterModule( object ):
 
   def filters( self ):
     return {
+      'ext'           : ext,
       'expand_path'   : expand_path,
       'absolute_path' : absolute_path,
       'tokens'        : tokens,

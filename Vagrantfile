@@ -19,6 +19,7 @@ ARTIFACTORY_PORT   = WEB_PORT
 NEXUS_PORT         = WEB_PORT
 DNS_PORT           = 53
 VERBOSE            = '' # Ansible verbosity level: '', 'v', 'vv', 'vvv', 'vvvv'
+M2_REPO_IMPORT     = 'https://s3-eu-west-1.amazonaws.com/evgenyg-ansible/m2-import.zip'
 HELIOS_PROPERTIES  = { helios_master:      "helios-master.#{ VAGRANT_DOMAIN }",
                        helios_master_port: HELIOS_MASTER_PORT,
                        zookeeper_port:     ZOOKEEPER_PORT,
@@ -31,8 +32,14 @@ VB_BOXES = {
   'helios-master'  => HELIOS_PROPERTIES.merge( HELIOS_PORTS ),
   'helios-agent'   => HELIOS_PROPERTIES,
   helios:             HELIOS_PROPERTIES.merge( HELIOS_PORTS ).merge( helios_master: "helios.#{ VAGRANT_DOMAIN }" ),
-  artifactory:   { memory: 1024, artifactory_port: ARTIFACTORY_PORT, ports: [ ARTIFACTORY_PORT ]},
-  nexus:         { memory: 1024, nexus_port:       NEXUS_PORT,       ports: [ NEXUS_PORT ]},
+  artifactory:   { memory:           1024,
+                   artifactory_port: ARTIFACTORY_PORT,
+                   import:           M2_REPO_IMPORT,
+                   ports:            [ ARTIFACTORY_PORT ]},
+  nexus:         { memory:           1024,
+                   nexus_port:       NEXUS_PORT,
+                   import:           M2_REPO_IMPORT,
+                   ports:            [ NEXUS_PORT ]},
   'test-repo' => { memory: 1024, report_dir: '/vagrant',
                    repo_name: 'Artifactory', repo: "http://artifactory.#{ VAGRANT_DOMAIN }:#{ ARTIFACTORY_PORT }/artifactory/repo/"
                   #  repo_name: 'Nexus',       repo: "http://nexus.#{ VAGRANT_DOMAIN }:#{ NEXUS_PORT }/nexus/content/repositories/central/"
