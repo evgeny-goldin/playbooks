@@ -49,7 +49,7 @@ AWS_BOXES = {
  # vagrant plugin install vagrant-aws
  # https://gist.github.com/tknerr/5753319
 
-  # 'repo-aws'      => { instance_type: 't2.medium',
+  # 'repo-aws'      => { instance_type: 't2.small',
   #                      repo_port:     WEB_PORT,
   #                      java_options:  '-Xms512m -Xmx3584m',
   #                      import:        M2_REPO_IMPORT,
