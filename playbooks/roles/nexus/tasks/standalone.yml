@@ -1,0 +1,21 @@
+---
+- set_fact:
+    nexus_home: "{{ nexus.standalone.home }}/nexus-{{ nexus.version }}"
+
+- include: "{{ common.utils.service }}"
+  vars:
+    service: nexus
+    title:   Nexus
+    url:     "{{ nexus.standalone.url     | tokens( nexus ) }}"
+    archive: "{{ nexus.standalone.archive | tokens( nexus ) }}"
+    home:    "{{ nexus.standalone.home }}"
+    clean:   false
+    env:
+      RUN_AS_USER: root
+    configs:
+      - { from: nexus.properties, to: "{{ nexus_home }}/conf/nexus.properties" }
+    command: "{{ nexus_home }}/bin/nexus console"
+    port:    "{{ nexus_port }}"
+    timeout: "{{ nexus.timeout }}"
+    wait:    "{{ nexus.wait }}"
+    verify:  "{{ nexus.verify }}"

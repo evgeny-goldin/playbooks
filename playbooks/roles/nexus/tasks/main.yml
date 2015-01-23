@@ -1,74 +1,16 @@
 ---
 - set_fact:
-    nexus_port: "{{ nexus_port | default( nexus.port ) }}"
+    nexus_port: "{{ repo_port | default( nexus.port ) }}"
 
-  # -----------------------
-  # Standalone
-  # -----------------------
+- name:    Stopping and disabling Artifactory service, if found
+  service: name=artifactory state=stopped enabled=no
+  ignore_errors: yes
 
-- set_fact:
-    nexus_home: "{{ nexus.standalone.home }}/nexus-{{ nexus.version }}"
-  when: nexus.run == 'standalone'
+- include: standalone.yml
+  when:    nexus.run == 'standalone'
 
-- include: "{{ common.utils.service }}"
-  vars:
-    service: nexus
-    title:   Nexus
-    url:     "{{ nexus.standalone.url     | tokens( nexus ) }}"
-    archive: "{{ nexus.standalone.archive | tokens( nexus ) }}"
-    home:    "{{ nexus.standalone.home }}"
-    clean:   false
-    env:
-      RUN_AS_USER: root
-    configs:
-      - { from: nexus.properties, to: "{{ nexus_home }}/conf/nexus.properties" }
-    command: "{{ nexus_home }}/bin/nexus console"
-    port:    "{{ nexus_port }}"
-    timeout: "{{ nexus.timeout }}"
-    wait:    "{{ nexus.wait }}"
-    verify:  "{{ nexus.verify }}"
-  when: nexus.run == 'standalone'
+- include: war.yml
+  when:    nexus.run == 'war'
 
-  # -----------------------
-  # War
-  # -----------------------
-
-- include: "{{ common.roles.tomcat }}"
-  vars:
-    tomcat_port: "{{ nexus_port }}"
-  when: nexus.run == 'war'
-
-- include: "{{ common.utils.service }}"
-  vars:
-    service: nexus
-    title:   Nexus
-    url:     "{{ nexus.war.url     | tokens( nexus ) }}"
-    archive: "{{ nexus.war.archive | tokens( nexus ) }}"
-    home:    "{{ tomcat_webapps }}/{{ nexus.war.home }}"
-    command: "{{ tomcat_run  }}"
-    port:    "{{ nexus_port }}"
-    timeout: "{{ nexus.timeout }}"
-    wait:    "{{ nexus.wait }}"
-    verify:  "{{ nexus.verify }}"
-  when: nexus.run == 'war'
-
-  # -----------------------
-  # Import
-  # -----------------------
-
-- set_fact:
-    import_dir: "{{ nexus.import.home | tokens({ 'home' : nexus.standalone.home }) }}/{{ nexus.import.repo }}"
-  when: ( nexus.run == 'standalone' ) and ( import is defined )
-
-- set_fact:
-    import_dir: "{{ nexus.import.home | tokens({ 'home' : '/root' }) }}/{{ nexus.import.repo }}"
-  when: ( nexus.run == 'war' ) and ( import is defined )
-
-- include: "{{ common.utils.download }}"
-  vars:
-    title:   Nexus import archive
-    url:     "{{ import }}"
-    archive: "{{ nexus.import.archive | tokens({ 'ext' : import | ext }) }}"
-    home:    "{{ import_dir }}"
-    clean:   false
-  when: import is defined
+- include: import.yml
+  when:    import is defined

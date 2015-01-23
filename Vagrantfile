@@ -10,41 +10,36 @@ end
 CPUS               = 2
 MEMORY             = 512
 VAGRANT_DOMAIN     = 'vm'
-ZOOKEEPER_PORT     = 2181
-HELIOS_MASTER_PORT = 5801
-ETCD_PORT          = 4001
-WEB_PORT           = 8080
-EXHIBITOR_PORT     = WEB_PORT
-ARTIFACTORY_PORT   = WEB_PORT
-NEXUS_PORT         = WEB_PORT
 DNS_PORT           = 53
+ZOOKEEPER_PORT     = 2181
+ETCD_PORT          = 4001
+HELIOS_MASTER_PORT = 5801
+WEB_PORT           = 8080
 VERBOSE            = '' # Ansible verbosity level: '', 'v', 'vv', 'vvv', 'vvvv'
 M2_REPO_IMPORT     = 'https://s3-eu-west-1.amazonaws.com/evgenyg-ansible/m2-import.zip'
 HELIOS_PROPERTIES  = { helios_master:      "helios-master.#{ VAGRANT_DOMAIN }",
                        helios_master_port: HELIOS_MASTER_PORT,
                        zookeeper_port:     ZOOKEEPER_PORT,
                        etcd_port:          ETCD_PORT,
-                       exhibitor_port:     EXHIBITOR_PORT,
+                       exhibitor_port:     WEB_PORT,
                        skydns_domain:      VAGRANT_DOMAIN }
-HELIOS_PORTS       = { ports: [ DNS_PORT, ZOOKEEPER_PORT, HELIOS_MASTER_PORT, ETCD_PORT, EXHIBITOR_PORT ] }
+HELIOS_PORTS       = { ports: [ DNS_PORT, ZOOKEEPER_PORT, HELIOS_MASTER_PORT, ETCD_PORT, WEB_PORT ] }
 
 VB_BOXES = {
   'helios-master'  => HELIOS_PROPERTIES.merge( HELIOS_PORTS ),
   'helios-agent'   => HELIOS_PROPERTIES,
   helios:             HELIOS_PROPERTIES.merge( HELIOS_PORTS ).merge( helios_master: "helios.#{ VAGRANT_DOMAIN }" ),
-  artifactory:   { memory:           1024,
-                   artifactory_port: ARTIFACTORY_PORT,
-                   java_options:     '-Xms512m -Xmx800m',
-                  #  import:           M2_REPO_IMPORT,
-                   ports:            [ ARTIFACTORY_PORT ]},
-  nexus:         { memory:           1024,
-                   nexus_port:       NEXUS_PORT,
-                   java_options:     '-Xmx768m',
-                  #  import:           M2_REPO_IMPORT,
-                   ports:            [ NEXUS_PORT ]},
+  repo:          { memory:       1024,
+                   repo_port:    WEB_PORT,
+                   java_options: '-Xms512m -Xmx800m',
+                  #  import:       M2_REPO_IMPORT,
+                   ports:        [ WEB_PORT ],
+                   playbook:     'artifactory-ubuntu'
+                  #  playbook:     'nexus-ubuntu'
+                 },
   'test-repo' => { memory: 1024, report_dir: '/vagrant',
-                   repo_name: 'Artifactory', repo: "http://artifactory.#{ VAGRANT_DOMAIN }:#{ ARTIFACTORY_PORT }/artifactory/repo/"
-                  #  repo_name: 'Nexus',       repo: "http://nexus.#{ VAGRANT_DOMAIN }:#{ NEXUS_PORT }/nexus/content/repositories/central/"
+                   repo_name: 'Artifactory', repo: "http://artifactory.#{ VAGRANT_DOMAIN }:#{ WEB_PORT }/artifactory/repo/"
+                  #  repo_name: 'Nexus',       repo: "http://nexus.#{ VAGRANT_DOMAIN }:#{ WEB_PORT }/nexus/content/repositories/central/"
                  },
 }
 
@@ -54,24 +49,18 @@ AWS_BOXES = {
  # vagrant plugin install vagrant-aws
  # https://gist.github.com/tknerr/5753319
 
-  # 'artifactory-aws' => { instance_type:    't2.medium',
-  #                        artifactory_port: ARTIFACTORY_PORT,
-  #                        playbook:         'artifactory-ubuntu',
-  #                        import:           M2_REPO_IMPORT },
-  # 'nexus-aws'       => { instance_type:    't2.medium',
-  #                        nexus_port:       NEXUS_PORT,
-  #                        playbook:         'nexus-ubuntu',
-  #                        import:           M2_REPO_IMPORT },
-  # 'test-repo-aws'   => { playbook:         'test-repo-ubuntu',
-  #                        instance_type:    't2.small',
-  #                        report_dir:       '/opt',
-  #                        repo_name:        'Artifactory',
-  #                        repo:             "http://#{ env( 'ARTIFACTORY_HOST' ) }:#{ ARTIFACTORY_PORT }/artifactory/repo/" },
-  # 'test-repo-aws'    => { playbook:        'test-repo-ubuntu',
-  #                         instance_type:   't2.small',
-  #                         report_dir:      '/opt',
-  #                         repo_name:       'Nexus',
-  #                         repo:            "http://#{ env( 'NEXUS_HOST' ) }:#{ NEXUS_PORT }/nexus/content/repositories/central/" }
+  # 'repo-aws'      => { instance_type: 't2.medium',
+  #                      repo_port:     WEB_PORT,
+  #                      java_options:  '-Xms512m -Xmx3584m',
+  #                      import:        M2_REPO_IMPORT,
+  #                      playbook:      'artifactory-ubuntu'
+                      #  playbook:      'nexus-ubuntu'
+  #  },
+  # 'test-repo-aws' => { playbook:      'test-repo-ubuntu',
+  #                      instance_type: 't2.small',
+  #                      report_dir:    '/opt',
+  #                      repo_name:     'Artifactory', repo: "http://#{ env( 'ARTIFACTORY_HOST' ) }:#{ WEB_PORT }/artifactory/repo/" }
+                      #  repo_name:     'Nexus',       repo: "http://#{ env( 'NEXUS_HOST' ) }:#{ WEB_PORT }/nexus/content/repositories/central/" }
 }
 
 Vagrant.require_version '>= 1.7.0'
@@ -140,7 +129,6 @@ Vagrant.configure( VAGRANTFILE_API_VERSION ) do | config |
         aws.keypair_name        = env('AWS_KEYPAIR_NAME')
         aws.region              = env('AWS_REGION')
         aws.secret_access_key   = env('AWS_SECRET_ACCESS_KEY')
-        # aws.security_groups     = [ env('AWS_SECURITY_GROUP') ]
         aws.subnet_id           = env('AWS_SUBNET_ID')
         aws.associate_public_ip = true
         aws.tags                = { Name: box_name }

@@ -3,8 +3,12 @@
   set_fact:
     artifactory_version: "{{ artifactory.version | calculate( artifactory.latest ) }}"
 - set_fact:
-    artifactory_port:    "{{ artifactory_port    | default( artifactory.port ) }}"
-    java_options:        "{{ java_options        | default( '' ) }}"
+    artifactory_port:    "{{ repo_port    | default( artifactory.port ) }}"
+    java_options:        "{{ java_options | default( '' ) }}"
+
+- name:    Stopping and disabling Nexus service, if found
+  service: name=nexus state=stopped enabled=no
+  ignore_errors: yes
 
 - include: standalone.yml
   when:    artifactory.run == 'standalone'
