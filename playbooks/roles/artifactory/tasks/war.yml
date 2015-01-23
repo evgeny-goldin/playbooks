@@ -1,0 +1,18 @@
+---
+- include: "{{ common.roles.tomcat }}"
+  vars:
+    tomcat_port:      "{{ artifactory_port }}"
+    catalina_options: "-server -Xms512m -Xmx2g -Xss256k -XX:PermSize=128m -XX:MaxPermSize=256m -XX:+UseG1GC -Djruby.compile.invokedynamic=false {{ java_options }}"
+
+- include: "{{ common.utils.service }}"
+  vars:
+    service: artifactory
+    title:   Artifactory
+    url:     "{{ artifactory.war.url     | tokens({ 'version': artifactory_version }) }}"
+    archive: "{{ artifactory.war.archive | tokens({ 'version': artifactory_version }) }}"
+    home:    "{{ tomcat_webapps }}/{{ artifactory.war.home }}"
+    command: "{{ tomcat_run }}"
+    port:    "{{ artifactory_port }}"
+    timeout: "{{ artifactory.timeout }}"
+    wait:    "{{ artifactory.wait }}"
+    verify:  "{{ artifactory.verify }}"

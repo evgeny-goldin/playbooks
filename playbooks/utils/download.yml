@@ -16,10 +16,7 @@
     download:   "{{ (( url is defined ) and ( archive is defined )) | bool }}"
     unpack:     "{{ (( url is defined ) and ( archive is defined ) and ( home is defined )) | bool }}"
 - set_fact:
-    clean_home: "{{ ( unpack | bool and ( clean | default(True))) | bool }}"
-    global_env: ( env is defined ) and ( env.global | default( True ))
-
-- debug: global_env
+    clean_home: "{{ ( unpack | bool and ( clean | default( True ))) | bool }}"
 
 # {{ env_file }} is a file containing service env variables, loaded by upstart script
 # {{ run_env }}  is an environment (dictionary) used when running {{ tests }} and {{ cleanup }} commands

@@ -1,0 +1,20 @@
+---
+- set_fact:
+    artifactory_home: "{{ artifactory.standalone.home }}/artifactory-{{ artifactory_version }}"
+
+- include: "{{ common.utils.service }}"
+  vars:
+    service: artifactory
+    title:   Artifactory
+    url:     "{{ artifactory.standalone.url     | tokens({ 'version': artifactory_version }) }}"
+    archive: "{{ artifactory.standalone.archive | tokens({ 'version': artifactory_version }) }}"
+    home:    "{{ artifactory.standalone.home }}"
+    configs:
+      - { from: tomcat-server.xml, to: "{{ artifactory_home }}/tomcat/conf/server.xml" }
+    cleanup:
+      - echo "export JAVA_OPTIONS="\""\$JAVA_OPTIONS {{ java_options }}"\""" >> "{{ artifactory_home }}/bin/artifactory.default"
+    command: "{{ artifactory_home }}/bin/artifactory.sh"
+    port:    "{{ artifactory_port }}"
+    timeout: "{{ artifactory.timeout }}"
+    wait:    "{{ artifactory.wait }}"
+    verify:  "{{ artifactory.verify }}"

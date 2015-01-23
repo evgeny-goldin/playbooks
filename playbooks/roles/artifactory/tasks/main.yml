@@ -4,78 +4,13 @@
     artifactory_version: "{{ artifactory.version | calculate( artifactory.latest ) }}"
 - set_fact:
     artifactory_port:    "{{ artifactory_port    | default( artifactory.port ) }}"
+    java_options:        "{{ java_options        | default( '' ) }}"
 
-  # -----------------------
-  # Standalone
-  # -----------------------
+- include: standalone.yml
+  when:    artifactory.run == 'standalone'
 
-- set_fact:
-    artifactory_home:    "{{ artifactory.standalone.home }}/artifactory-{{ artifactory_version }}"
-  when: artifactory.run == 'standalone'
+- include: war.yml
+  when:    artifactory.run == 'war'
 
-- include: "{{ common.utils.service }}"
-  vars:
-    service: artifactory
-    title:   Artifactory
-    url:     "{{ artifactory.standalone.url     | tokens({ 'version': artifactory_version }) }}"
-    archive: "{{ artifactory.standalone.archive | tokens({ 'version': artifactory_version }) }}"
-    home:    "{{ artifactory.standalone.home }}"
-    configs:
-      - { from: server.xml, to: "{{ artifactory_home }}/tomcat/conf/server.xml" }
-    command: "{{ java_options | default('') }} {{ artifactory_home }}/bin/artifactory.sh"
-    env:
-      JAVA_OPTIONS: "{{ java_options | default('') }}"
-      global: false
-    port:    "{{ artifactory_port }}"
-    timeout: "{{ artifactory.timeout }}"
-    wait:    "{{ artifactory.wait }}"
-    verify:  "{{ artifactory.verify }}"
-  when: artifactory.run == 'standalone'
-
-  # -----------------------
-  # War
-  # -----------------------
-
-- include: "{{ common.roles.tomcat }}"
-  vars:
-    tomcat_port: "{{ artifactory_port }}"
-  when: artifactory.run == 'war'
-
-- include: "{{ common.utils.service }}"
-  vars:
-    service: artifactory
-    title:   Artifactory
-    url:     "{{ artifactory.war.url     | tokens({ 'version': artifactory_version }) }}"
-    archive: "{{ artifactory.war.archive | tokens({ 'version': artifactory_version }) }}"
-    home:    "{{ tomcat_webapps }}/{{ artifactory.war.home }}"
-    command: "{{ tomcat_run }}"
-    env:
-      JAVA_OPTIONS: "{{ java_options | default('') }}"
-      global: false
-    port:    "{{ artifactory_port }}"
-    timeout: "{{ artifactory.timeout }}"
-    wait:    "{{ artifactory.wait }}"
-    verify:  "{{ artifactory.verify }}"
-  when: artifactory.run == 'war'
-
-  # -----------------------
-  # Import
-  # -----------------------
-
-- include: "{{ common.utils.download }}"
-  vars:
-    title:   Artifactory import archive
-    url:     "{{ import }}"
-    archive: "{{ artifactory.import.archive | tokens({ 'ext': import | ext }) }}"
-    home:    "{{ artifactory.import.home }}/{{ artifactory.import.repo }}"
-    clean:   false
-  when: import is defined
-
-- name: Running Artifactory import
-  uri:
-    # https://www.jfrog.com/confluence/display/RTF/Artifactory+REST+API#ArtifactoryRESTAPI-ImportRepositoryContent
-    url:      "http://{{ common.net.localhost }}:{{ artifactory_port }}/artifactory/api/import/repositories?path={{ artifactory.import.home }}"
-    method:   POST
-    user:     "{{ artifactory.auth.user }}"
-    password: "{{ artifactory.auth.pass }}"
-  when: import is defined
+- include: import.yml
+  when:    import is defined
