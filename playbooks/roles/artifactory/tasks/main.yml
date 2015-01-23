@@ -22,7 +22,10 @@
     home:    "{{ artifactory.standalone.home }}"
     configs:
       - { from: server.xml, to: "{{ artifactory_home }}/tomcat/conf/server.xml" }
-    command: "{{ artifactory_home }}/bin/artifactory.sh"
+    command: "{{ java_options | default('') }} {{ artifactory_home }}/bin/artifactory.sh"
+    env:
+      JAVA_OPTIONS: "{{ java_options | default('') }}"
+      global: false
     port:    "{{ artifactory_port }}"
     timeout: "{{ artifactory.timeout }}"
     wait:    "{{ artifactory.wait }}"
@@ -45,7 +48,10 @@
     url:     "{{ artifactory.war.url     | tokens({ 'version': artifactory_version }) }}"
     archive: "{{ artifactory.war.archive | tokens({ 'version': artifactory_version }) }}"
     home:    "{{ tomcat_webapps }}/{{ artifactory.war.home }}"
-    command: "{{ tomcat_run  }}"
+    command: "{{ tomcat_run }}"
+    env:
+      JAVA_OPTIONS: "{{ java_options | default('') }}"
+      global: false
     port:    "{{ artifactory_port }}"
     timeout: "{{ artifactory.timeout }}"
     wait:    "{{ artifactory.wait }}"
