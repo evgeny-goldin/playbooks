@@ -11,6 +11,10 @@ import os.path
 from   ansible import errors
 from   timeit  import default_timer as timer
 
+def re_escape( pattern ):
+  '''Returns \Qpattern\E, regex-escaped'''
+  return re.escape( pattern )
+
 def ext( url ):
   '''Returns URL extension'''
   if url.endswith( '.tar.gz' ):
@@ -102,6 +106,7 @@ class FilterModule( object ):
 
   def filters( self ):
     return {
+      're_escape'     : re_escape,
       'ext'           : ext,
       'expand_path'   : expand_path,
       'absolute_path' : absolute_path,

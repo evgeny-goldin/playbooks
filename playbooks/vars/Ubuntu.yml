@@ -1,6 +1,5 @@
 ---
 ubuntu: {
-  apt_repo:     'http://ubuntu.mirror.su.se/ubuntu', # http://mirrors.ubuntu.com/mirrors.txt
   root_home:    /root,
   home_dir:     /home,
   bash:         /bin/bash,
@@ -13,5 +12,11 @@ ubuntu: {
   sudoers:      /etc/sudoers,
   sources_list: /etc/apt/sources.list,
   etc_default:  /etc/default,
-  resolv_conf:  /etc/resolv.conf
+  resolv_conf:  /etc/resolv.conf,
+  apt: {
+      # Replacing apt repos, based on http://mirrors.ubuntu.com/mirrors.txt results
+      # Repo to replace => repo to replace with
+      'http://archive.ubuntu.com/ubuntu':               'http://ubuntu.mirror.su.se/ubuntu',
+      'http://eu-west-1.ec2.archive.ubuntu.com/ubuntu': 'http://ftp.heanet.ie/pub/ubuntu'
+  }
 }

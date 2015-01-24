@@ -1,10 +1,11 @@
 ---
-- name: Updating Ubuntu repo
+- name: Updating Ubuntu repos
   replace:
     dest:    "{{ ubuntu.sources_list }}"
-    regexp:  'http:\/\/archive\.ubuntu\.com\/ubuntu'
-    replace: "{{ ubuntu.apt_repo }}"
+    regexp:  "{{ item.key | re_escape }}"
+    replace: "{{ item.value }}"
     backup:  yes
+  with_dict: ubuntu.apt
 
 - name:     Listing Ubuntu repos
   shell:    grep 'http://' '{{ ubuntu.sources_list }}' | grep -v '#' | awk '{print $2}' | uniq | sort

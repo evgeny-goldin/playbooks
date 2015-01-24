@@ -5,7 +5,6 @@
     url:     "{{ import }}"
     archive: "{{ artifactory.import.archive | tokens({ 'ext': import | ext }) }}"
     home:    "{{ artifactory.import.home }}/{{ artifactory.import.repo }}"
-    clean:   false
 
 - name: Running Artifactory import
   uri:
