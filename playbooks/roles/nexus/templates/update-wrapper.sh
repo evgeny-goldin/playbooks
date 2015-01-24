@@ -1,14 +1,22 @@
 #!/bin/bash
 
+# -------------------------------------------------------------
 # Updates Nexus wrapper.conf with additional Java options.
+# -------------------------------------------------------------
+
+# Comment out 'wrapper.java.initmemory' section if '-Xms' is present in Java options
 
 if [[ "{{ java_options }}" == *"-Xms"* ]]; then
   sed -i 's/\(wrapper.java.initmemory=.*\)/#\1/' '{{ wrapper_conf }}';
 fi
 
+# Comment out 'wrapper.java.maxmemory' section if '-Xmx' is present in Java options
+
 if [[ "{{ java_options }}" == *"-Xmx"* ]]; then
-  sed -i 's/\(wrapper.java.maxmemory=.*\)/#\1/'  '{{ wrapper_conf }}';
+  sed -i 's/\(wrapper.java.maxmemory=.*\)/#\1/' '{{ wrapper_conf }}';
 fi
+
+# Split Java options and add numbered 'wrapper.java.additional' sections, starting from 5
 
 opts="{{ java_options }}";
 arr=(${opts// / });
