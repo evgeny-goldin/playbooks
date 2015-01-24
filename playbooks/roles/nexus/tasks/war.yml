@@ -2,7 +2,7 @@
 - include: "{{ common.roles.tomcat }}"
   vars:
     tomcat_port:   "{{ nexus_port }}"
-    catalina_opts: "-Xms256m -Xmx768m -XX:MaxPermSize=192m -Djava.io.tmpdir=./tmp -Djava.net.preferIPv4Stack=true {{ java_options }}"
+    catalina_opts: "{{ nexus.war.java_options }} {{ java_options }}"
 
 - include: "{{ common.utils.service }}"
   vars:
@@ -10,7 +10,7 @@
     title:   Nexus
     url:     "{{ nexus.war.url     | tokens( nexus ) }}"
     archive: "{{ nexus.war.archive | tokens( nexus ) }}"
-    home:    "{{ tomcat_webapps }}/{{ nexus.war.home }}"
+    home:    "{{ tomcat_webapps }}/nexus"
     command: "{{ tomcat_run  }}"
     port:    "{{ nexus_port }}"
     timeout: "{{ nexus.timeout }}"

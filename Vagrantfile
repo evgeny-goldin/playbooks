@@ -31,7 +31,7 @@ VB_BOXES = {
   helios:             HELIOS_PROPERTIES.merge( HELIOS_PORTS ).merge( helios_master: "helios.#{ VAGRANT_DOMAIN }" ),
   repo:          { memory:       1024,
                    repo_port:    WEB_PORT,
-                   java_options: '-Xms512m -Xmx800m',
+                   java_options: '-server -Xms512m -Xmx800m',
                   #  import:       M2_REPO_IMPORT,
                    ports:        [ WEB_PORT ],
                    playbook:     'artifactory-ubuntu' },

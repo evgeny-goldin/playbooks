@@ -10,9 +10,9 @@ nexus: {
     home:    /opt/nexus
   },
   war: {
-    url:     '{{ common.urls.jcenter }}/org/sonatype/nexus/nexus-webapp/<version>/nexus-webapp-<version>.war',
-    archive: /opt/nexus-<version>.war,
-    home:    nexus
+    url:          '{{ common.urls.jcenter }}/org/sonatype/nexus/nexus-webapp/<version>/nexus-webapp-<version>.war',
+    archive:      /opt/nexus-<version>.war,
+    java_options: '-Xms256m -Xmx768m -XX:MaxPermSize=192m -Djava.io.tmpdir=./tmp -Djava.net.preferIPv4Stack=true'
   },
   wait: [
     { path: /nexus, content: nexusVersion= }

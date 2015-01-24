@@ -14,9 +14,9 @@ artifactory: {
     home:    /opt/artifactory
   },
   war: {
-    url:     '{{ common.urls.jfrog }}/artifactory/libs-releases/org/artifactory/artifactory-web-war/<version>/artifactory-web-war-<version>.war',
-    archive: /opt/artifactory-<version>.war,
-    home:    artifactory
+    url:          '{{ common.urls.jfrog }}/artifactory/libs-releases/org/artifactory/artifactory-web-war/<version>/artifactory-web-war-<version>.war',
+    archive:      /opt/artifactory-<version>.war,
+    java_options: '-server -Xms512m -Xmx2g -Xss256k -XX:PermSize=128m -XX:MaxPermSize=256m -XX:+UseG1GC -Djruby.compile.invokedynamic=false'
   },
   wait: [
     { path: /artifactory/api/system/ping, content: OK }
