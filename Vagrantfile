@@ -34,13 +34,11 @@ VB_BOXES = {
                    java_options: '-Xms512m -Xmx800m',
                   #  import:       M2_REPO_IMPORT,
                    ports:        [ WEB_PORT ],
-                   playbook:     'artifactory-ubuntu'
-                  #  playbook:     'nexus-ubuntu'
-                 },
+                   playbook:     'artifactory-ubuntu' },
+                  #  playbook:     'nexus-ubuntu' },
   'test-repo' => { memory: 1024, report_dir: '/vagrant',
-                   repo_name: 'Artifactory', repo: "http://artifactory.#{ VAGRANT_DOMAIN }:#{ WEB_PORT }/artifactory/repo/"
-                  #  repo_name: 'Nexus',       repo: "http://nexus.#{ VAGRANT_DOMAIN }:#{ WEB_PORT }/nexus/content/repositories/central/"
-                 },
+                   repo_name: 'Artifactory', repo: "http://artifactory.#{ VAGRANT_DOMAIN }:#{ WEB_PORT }/artifactory/repo/" }
+                  #  repo_name: 'Nexus',       repo: "http://nexus.#{ VAGRANT_DOMAIN }:#{ WEB_PORT }/nexus/content/repositories/central/" }
 }
 
 AWS_BOXES = {
@@ -51,11 +49,10 @@ AWS_BOXES = {
 
   # 'repo-aws'      => { instance_type: 't2.small',
   #                      repo_port:     WEB_PORT,
-  #                      java_options:  '-Xms512m -Xmx3584m',
+  #                      java_options:  '-Xms512m -Xmx1584m',
   #                      import:        M2_REPO_IMPORT,
-  #                      playbook:      'artifactory-ubuntu'
-                      #  playbook:      'nexus-ubuntu'
-  #  },
+  #                      playbook:      'artifactory-ubuntu' },
+                      #  playbook:      'nexus-ubuntu' },
   # 'test-repo-aws' => { playbook:      'test-repo-ubuntu',
   #                      instance_type: 't2.small',
   #                      report_dir:    '/opt',
