@@ -37,8 +37,8 @@ VB_BOXES = {
                    playbook:     'artifactory-ubuntu' },
                   #  playbook:     'nexus-ubuntu' },
   'test-repo' => { memory: 1024, report_dir: '/vagrant',
-                   repo_name: 'Artifactory', repo: "http://artifactory.#{ VAGRANT_DOMAIN }:#{ WEB_PORT }/artifactory/repo/" }
-                  #  repo_name: 'Nexus',       repo: "http://nexus.#{ VAGRANT_DOMAIN }:#{ WEB_PORT }/nexus/content/repositories/central/" }
+                   repo_name: 'Artifactory', repo: "http://repo.#{ VAGRANT_DOMAIN }:#{ WEB_PORT }/artifactory/repo/" }
+                  #  repo_name: 'Nexus',       repo: "http://repo.#{ VAGRANT_DOMAIN }:#{ WEB_PORT }/nexus/content/repositories/central/" }
 }
 
 AWS_BOXES = {
