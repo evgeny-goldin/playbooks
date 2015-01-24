@@ -1,6 +1,6 @@
 ---
 - name:  Repo Test
-  hosts: all
+  hosts: test-repo
   sudo:  yes
 
   vars_files:

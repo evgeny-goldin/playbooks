@@ -3,7 +3,7 @@
   set_fact:
     artifactory_version: "{{ artifactory.version | calculate( artifactory.latest ) }}"
 - set_fact:
-    artifactory_port:    "{{ repo_port    | default( artifactory.port ) }}"
+    artifactory_port:    "{{ port         | default( artifactory.port ) }}"
     java_options:        "{{ java_options | default( '' ) }}"
 
 - debug: msg="Running Artifactory on port {{ artifactory_port }}, Java options '{{ java_options }}'"

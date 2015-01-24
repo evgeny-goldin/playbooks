@@ -1,6 +1,6 @@
 ---
 - set_fact:
-    nexus_port:   "{{ repo_port    | default( nexus.port ) }}"
+    nexus_port:   "{{ port         | default( nexus.port ) }}"
     java_options: "{{ java_options | default( '' ) }}"
 
 - debug: msg="Running Nexus on port {{ nexus_port }}, Java options '{{ java_options }}'"

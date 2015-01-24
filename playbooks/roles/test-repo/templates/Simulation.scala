@@ -3,7 +3,7 @@ import io.gatling.core.structure.ScenarioBuilder
 import scala.io.Source
 import io.gatling.http.Predef._
 
-class {{ item.name }} extends Simulation {
+class {{ repo_name }}{{ item.name }} extends Simulation {
 
   val scn = Source.fromFile( "{{ test_repo.artifacts }}/{{ item.artifacts }}" ).getLines().
             foldLeft( scenario( "{{ repo_name }}{{ item.name }}" )) {

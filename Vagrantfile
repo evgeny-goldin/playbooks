@@ -3,10 +3,6 @@
 
 VAGRANTFILE_API_VERSION = '2'
 
-def env( name )
-  ENV[ name ] or raise "Undefined environment variable '#{ name }'!"
-end
-
 CPUS               = 2
 MEMORY             = 512
 VAGRANT_DOMAIN     = 'vm'
@@ -30,34 +26,18 @@ VB_BOXES = {
   'helios-agent'   => HELIOS_PROPERTIES,
   helios:             HELIOS_PROPERTIES.merge( HELIOS_PORTS ).merge( helios_master: "helios.#{ VAGRANT_DOMAIN }" ),
   repo:          { memory:       1024,
-                   repo_port:    WEB_PORT,
+                   port:         WEB_PORT,
                    java_options: '-server -Xms512m -Xmx800m',
                   #  import:       M2_REPO_IMPORT,
                    ports:        [ WEB_PORT ],
                    playbook:     'artifactory-ubuntu' },
                   #  playbook:     'nexus-ubuntu' },
-  'test-repo' => { memory: 1024, report_dir: '/vagrant',
-                   repo_name: 'Artifactory', repo: "http://repo.#{ VAGRANT_DOMAIN }:#{ WEB_PORT }/artifactory/repo/" }
-                  #  repo_name: 'Nexus',       repo: "http://repo.#{ VAGRANT_DOMAIN }:#{ WEB_PORT }/nexus/content/repositories/central/" }
-}
-
-AWS_BOXES = {
-
- # https://github.com/mitchellh/vagrant-aws
- # vagrant plugin install vagrant-aws
- # https://gist.github.com/tknerr/5753319
-
-  # 'repo-aws'      => { instance_type: 'c4.2xlarge',
-  #                      repo_port:     WEB_PORT,
-  #                      java_options:  '-server -Xms512m -Xmx14336m',
-  #                      import:        M2_REPO_IMPORT,
-  #                      playbook:      'artifactory-ubuntu' },
-                      #  playbook:      'nexus-ubuntu' },
-  # 'test-repo-aws' => { playbook:      'test-repo-ubuntu',
-  #                      instance_type: 'c4.2xlarge',
-  #                      report_dir:    '/opt',
-  #                      repo_name:     'Artifactory', repo: "http://#{ env( 'REPO_HOST' ) }:#{ WEB_PORT }/artifactory/repo/" }
-                      #  repo_name:     'Nexus',       repo: "http://#{ env( 'REPO_HOST' ) }:#{ WEB_PORT }/nexus/content/repositories/central/" }
+  'test-repo' => { memory:       1024,
+                   reports_dir:  '/vagrant',
+                   host:         "repo.#{ VAGRANT_DOMAIN }",
+                   port:         WEB_PORT,
+                   repo_name:    'Artifactory', path: '/artifactory/repo/' }
+                  #  repo_name:    'Nexus', path: '/nexus/content/repositories/central/' }
 }
 
 Vagrant.require_version '>= 1.7.0'
@@ -97,43 +77,6 @@ Vagrant.configure( VAGRANTFILE_API_VERSION ) do | config |
       b.vm.provision :ansible do | ansible |
         ansible.verbose    = VERBOSE if VERBOSE != ''
         ansible.playbook   = "playbooks/#{ variables[ :playbook ] || "#{ box }-ubuntu" }.yml"
-        ansible.extra_vars = variables.merge({
-          # Uncomment and set to true to forcefully update all packages
-          # Uncomment and set to false to disable periodic run
-          # Otherwise (when commented out) packages are updated automatically once a day
-          # periodic: true
-          # periodic: false
-        })
-      end
-    end
-  }
-
-  AWS_BOXES.each_pair { | box_name, variables |
-
-    config.vm.define box_name do | b |
-
-      b.vm.synced_folder 'playbooks', '/playbooks'
-
-      b.vm.provider :aws do | aws, override |
-        override.vm.box               = 'aws-dummy'
-        override.vm.box_url           = 'https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box'
-        override.ssh.username         = env('AWS_SSH_USER')
-        override.ssh.private_key_path = env('AWS_SSH_PRIVATE_KEY')
-
-        aws.access_key_id       = env('AWS_ACCESS_KEY_ID')
-        aws.ami                 = env('AWS_AMI')
-        aws.instance_type       = variables[ :instance_type ] || env('AWS_INSTANCE_TYPE')
-        aws.keypair_name        = env('AWS_KEYPAIR_NAME')
-        aws.region              = env('AWS_REGION')
-        aws.secret_access_key   = env('AWS_SECRET_ACCESS_KEY')
-        aws.subnet_id           = env('AWS_SUBNET_ID')
-        aws.associate_public_ip = true
-        aws.tags                = { Name: box_name }
-      end
-
-      b.vm.provision 'ansible' do | ansible |
-        ansible.verbose    = VERBOSE if VERBOSE != ''
-        ansible.playbook   = "playbooks/#{ variables[ :playbook ] || "#{ box_name }-ubuntu" }.yml"
         ansible.extra_vars = variables.merge({
           # Uncomment and set to true to forcefully update all packages
           # Uncomment and set to false to disable periodic run

@@ -9,3 +9,4 @@ aws.yml
 ansible.cfg
 hosts
 aws.sh
+inventory

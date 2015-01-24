@@ -3,7 +3,7 @@
 # http://www.jfrog.com/artifactory/
 
 - name:  Artifactory
-  hosts: all
+  hosts: repo
   sudo:  yes
 
   vars_files:

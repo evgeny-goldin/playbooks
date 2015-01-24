@@ -1,12 +1,19 @@
 ---
-- debug: msg="Testing {{ repo_name }} repo {{ repo }}"
+- set_fact:
+    repo: "http://{{ host }}:{{ port }}{{ path }}"
+
+- debug: msg="Testing {{ repo_name }} repo {{ repo }} => '{{ reports_dir }}'"
+
+- include: "{{ common.utils.mkdir }}"
+  vars:
+    file:  "{{ test_repo.log }}"
 
 - name: Creating directories
   file: path={{ item }} state=directory
   with_items:
     - "{{ test_repo.artifacts }}"
     - "{{ gatling_simulations }}"
-    - "{{ report_dir }}"
+    - "{{ reports_dir }}"
 
 - name: Copying artifacts files
   copy:
@@ -21,6 +28,6 @@
   with_items: test_repo.simulations
 
 - name: Running simulations
-  command: gatling.sh -m --output-name '{{ repo_name }}{{ item.name }}' --simulation '{{ item.name }}' --results-folder '{{ report_dir }}'
+  command: sleep 15 && gatling.sh -m --output-name {{ repo_name }}{{ item.name }} --simulation {{ repo_name }}{{ item.name }} --results-folder '{{ reports_dir }}' >> '{{ test_repo.log }}' 2>&1
   environment: "{{ gatling_env | expand_path( ansible_env ) }}"
   with_items: test_repo.simulations

@@ -3,7 +3,7 @@
 # http://www.sonatype.org/nexus/
 
 - name:  Nexus
-  hosts: all
+  hosts: repo
   sudo:  yes
 
   vars_files:
