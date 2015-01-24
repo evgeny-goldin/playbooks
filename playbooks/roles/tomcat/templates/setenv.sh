@@ -1,1 +1,1 @@
-export CATALINA_OPTS="{{ catalina_options }}"
+export CATALINA_OPTS="{{ catalina_opts }}"

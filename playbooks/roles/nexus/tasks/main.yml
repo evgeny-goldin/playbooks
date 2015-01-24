@@ -1,6 +1,7 @@
 ---
 - set_fact:
-    nexus_port: "{{ repo_port | default( nexus.port ) }}"
+    nexus_port:   "{{ repo_port    | default( nexus.port ) }}"
+    java_options: "{{ java_options | default( '' ) }}"
 
 - name:    Stopping and disabling Artifactory service, if found
   service: name=artifactory state=stopped enabled=no

@@ -1,8 +1,8 @@
 ---
 - include: "{{ common.roles.tomcat }}"
   vars:
-    tomcat_port:      "{{ artifactory_port }}"
-    catalina_options: "-server -Xms512m -Xmx2g -Xss256k -XX:PermSize=128m -XX:MaxPermSize=256m -XX:+UseG1GC -Djruby.compile.invokedynamic=false {{ java_options }}"
+    tomcat_port:   "{{ artifactory_port }}"
+    catalina_opts: "-server -Xms512m -Xmx2g -Xss256k -XX:PermSize=128m -XX:MaxPermSize=256m -XX:+UseG1GC -Djruby.compile.invokedynamic=false {{ java_options }}"
 
 - include: "{{ common.utils.service }}"
   vars:

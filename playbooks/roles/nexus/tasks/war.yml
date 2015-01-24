@@ -1,7 +1,8 @@
 ---
 - include: "{{ common.roles.tomcat }}"
   vars:
-    tomcat_port: "{{ nexus_port }}"
+    tomcat_port:   "{{ nexus_port }}"
+    catalina_opts: "-Xms256m -Xmx768m -XX:MaxPermSize=192m -Djava.io.tmpdir=./tmp -Djava.net.preferIPv4Stack=true {{ java_options }}"
 
 - include: "{{ common.utils.service }}"
   vars:

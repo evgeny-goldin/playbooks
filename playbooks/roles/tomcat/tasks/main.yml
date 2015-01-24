@@ -4,17 +4,17 @@
 
 - name: Calculating Tomcat version
   set_fact:
-    tomcat_version:   "{{ tomcat_version | default( tomcat.version ) | calculate( tomcat.latest ) }}"
+    tomcat_version:  "{{ tomcat_version | default( tomcat.version ) | calculate( tomcat.latest ) }}"
 - set_fact:
-    tomcat_port:      "{{ tomcat_port      | default( tomcat.port ) }}"
-    catalina_options: "{{ catalina_options | default( '' ) }}"
-    tomcat_home:      "{{ tomcat.home }}/apache-tomcat-{{ tomcat_version }}"
+    tomcat_port:     "{{ tomcat_port   | default( tomcat.port ) }}"
+    catalina_opts:   "{{ catalina_opts | default( '' ) }}"
+    tomcat_home:     "{{ tomcat.home }}/apache-tomcat-{{ tomcat_version }}"
 - set_fact:
-    tomcat_webapps:   "{{ tomcat_home }}/webapps"
-    tomcat_root_app:  "{{ tomcat_home }}/webapps/ROOT"
-    tomcat_run:       "{{ tomcat_home }}/bin/catalina.sh run"
+    tomcat_webapps:  "{{ tomcat_home }}/webapps"
+    tomcat_root_app: "{{ tomcat_home }}/webapps/ROOT"
+    tomcat_run:      "{{ tomcat_home }}/bin/catalina.sh run"
 
-- debug: msg="Setting up Tomcat to run on port {{ tomcat_port }} with Java options '{{ catalina_options }}'"
+- debug: msg="Setting up Tomcat to run on port {{ tomcat_port }} with Java options '{{ catalina_opts }}'"
 
 - include: "{{ common.utils.download }}"
   vars:
