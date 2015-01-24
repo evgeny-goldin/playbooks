@@ -1,14 +1,10 @@
 ---
 test_repo: {
   artifacts: /opt,
-  simulations: {
-    Warmup: {
-      artifacts: all-artifacts-size-sorted.txt,
-      users:     1
-    },
-    Get30: {
-      artifacts: all-artifacts-name-sorted.txt,
-      users:     30
-    }
-  }
+  simulations: [
+    { name: Warmup,  users: 1,   artifacts: all-artifacts-size-sorted.txt },
+    { name: Get10,   users: 10,  artifacts: all-artifacts-name-sorted.txt },
+    { name: Get50,   users: 50,  artifacts: all-artifacts-name-sorted.txt },
+    { name: Get100,  users: 100, artifacts: all-artifacts-name-sorted.txt }
+  ]
 }

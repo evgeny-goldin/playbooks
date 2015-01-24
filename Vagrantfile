@@ -47,17 +47,17 @@ AWS_BOXES = {
  # vagrant plugin install vagrant-aws
  # https://gist.github.com/tknerr/5753319
 
-  # 'repo-aws'      => { instance_type: 't2.small',
+  # 'repo-aws'      => { instance_type: 'c4.2xlarge',
   #                      repo_port:     WEB_PORT,
-  #                      java_options:  '-Xms512m -Xmx1584m',
+  #                      java_options:  '-server -Xms512m -Xmx14336m',
   #                      import:        M2_REPO_IMPORT,
   #                      playbook:      'artifactory-ubuntu' },
                       #  playbook:      'nexus-ubuntu' },
   # 'test-repo-aws' => { playbook:      'test-repo-ubuntu',
-  #                      instance_type: 't2.small',
+  #                      instance_type: 'c4.2xlarge',
   #                      report_dir:    '/opt',
-  #                      repo_name:     'Artifactory', repo: "http://#{ env( 'ARTIFACTORY_HOST' ) }:#{ WEB_PORT }/artifactory/repo/" }
-                      #  repo_name:     'Nexus',       repo: "http://#{ env( 'NEXUS_HOST' ) }:#{ WEB_PORT }/nexus/content/repositories/central/" }
+  #                      repo_name:     'Artifactory', repo: "http://#{ env( 'REPO_HOST' ) }:#{ WEB_PORT }/artifactory/repo/" }
+                      #  repo_name:     'Nexus',       repo: "http://#{ env( 'REPO_HOST' ) }:#{ WEB_PORT }/nexus/content/repositories/central/" }
 }
 
 Vagrant.require_version '>= 1.7.0'

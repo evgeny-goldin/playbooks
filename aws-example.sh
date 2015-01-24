@@ -8,5 +8,4 @@ export AWS_SSH_PRIVATE_KEY="..."
 export AWS_SSH_USER="ubuntu"
 export AWS_SUBNET_ID="..."
 
-export ARTIFACTORY_HOST="..."
-export NEXUS_HOST="..."
+export REPO_HOST="..."

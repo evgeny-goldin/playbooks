@@ -3,10 +3,10 @@ import io.gatling.core.structure.ScenarioBuilder
 import scala.io.Source
 import io.gatling.http.Predef._
 
-class {{ item.key }} extends Simulation {
+class {{ item.name }} extends Simulation {
 
-  val scn = Source.fromFile( "{{ test_repo.artifacts }}/{{ item.value.artifacts }}" ).getLines().
-            foldLeft( scenario( "{{ repo_name }}{{ item.key }}" )) {
+  val scn = Source.fromFile( "{{ test_repo.artifacts }}/{{ item.artifacts }}" ).getLines().
+            foldLeft( scenario( "{{ repo_name }}{{ item.name }}" )) {
     ( scn, artifact ) => scn.exec( http( artifact.split( '/' ).last ).get( artifact ))
   }
 
@@ -17,5 +17,5 @@ class {{ item.key }} extends Simulation {
                       acceptEncodingHeader( "gzip, deflate" ).
                       userAgentHeader( "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:35.0) Gecko/20100101 Firefox/35.0" )
 
-  setUp( scn.inject( atOnceUsers( {{ item.value.users }} ))).protocols( httpConf )
+  setUp( scn.inject( atOnceUsers( {{ item.users }} ))).protocols( httpConf )
 }

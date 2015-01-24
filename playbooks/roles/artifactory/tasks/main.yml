@@ -6,6 +6,8 @@
     artifactory_port:    "{{ repo_port    | default( artifactory.port ) }}"
     java_options:        "{{ java_options | default( '' ) }}"
 
+- debug: msg="Running Artifactory on port {{ artifactory_port }}, Java options '{{ java_options }}'"
+
 - name:    Stopping and disabling Nexus service, if found
   service: name=nexus state=stopped enabled=no
   ignore_errors: yes

@@ -10,17 +10,17 @@
 
 - name: Copying artifacts files
   copy:
-    src:  "{{ item.value.artifacts }}"
-    dest: "{{ test_repo.artifacts }}/{{ item.value.artifacts }}"
-  with_dict: test_repo.simulations
+    src:  "{{ item.artifacts }}"
+    dest: "{{ test_repo.artifacts }}/{{ item.artifacts }}"
+  with_items: test_repo.simulations
 
 - name: Generating simulations
   template:
     src:  Simulation.scala
-    dest: "{{ gatling_simulations }}/{{ item.key }}.scala"
-  with_dict: test_repo.simulations
+    dest: "{{ gatling_simulations }}/{{ item.name }}.scala"
+  with_items: test_repo.simulations
 
 - name: Running simulations
-  command: gatling.sh -m --output-name '{{ repo_name }}{{ item.key }}' --simulation '{{ item.key }}' --results-folder '{{ report_dir }}'
+  command: gatling.sh -m --output-name '{{ repo_name }}{{ item.name }}' --simulation '{{ item.name }}' --results-folder '{{ report_dir }}'
   environment: "{{ gatling_env | expand_path( ansible_env ) }}"
-  with_dict: test_repo.simulations
+  with_items: test_repo.simulations
