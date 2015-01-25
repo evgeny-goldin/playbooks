@@ -1,7 +1,6 @@
 ---
 - set_fact:
-    repo:        "http://{{ host }}:{{ port }}{{ path }}"
-    gatling_log: "{{ reports_dir }}/gatling.log"
+    repo: "http://{{ host }}:{{ port }}{{ path }}"
 
 - debug: msg="Testing {{ repo_name }} repo {{ repo }} => '{{ reports_dir }}'"
   when:  reports_archive is not defined
@@ -9,7 +8,6 @@
 - debug: msg="Testing {{ repo_name }} repo {{ repo }} => '{{ reports_dir }}' => '{{ reports_archive }}'"
   when:  reports_archive is defined
 
-- file: path={{ gatling_log }} state=absent
 - file: path={{ reports_dir }} state=absent
   when: clean_reports | default( False )
 

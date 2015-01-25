@@ -1,12 +1,14 @@
 #!/bin/bash
 
+mkdir -p '{{ reports_dir }}'
+
 {% for simulation in simulations %}
 
 echo "-=-= Running simulation {{ simulation }} =-=-"
 
-gatling.sh -m --output-name    '{{ simulation }}' \
-              --simulation     '{{ simulation }}' \
-              --results-folder '{{ reports_dir }}' >> '{{ reports_dir }}/{{ simulation }}.log' 2>&1
+'{{ gatling_sh }}' -m --output-name    '{{ simulation }}' \
+                      --simulation     '{{ simulation }}' \
+                      --results-folder '{{ reports_dir }}' >> '{{ reports_dir }}/{{ simulation }}.log' 2>&1
 
 echo "-=-= Running simulation {{ simulation }} - DONE =-=-"
 sleep 10
