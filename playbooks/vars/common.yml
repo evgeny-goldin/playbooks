@@ -29,7 +29,6 @@ common: {
 
   utils: {
     download: "{{ playbook_dir }}/utils/download.yml",
-    mkdir:    "{{ playbook_dir }}/utils/mkdir.yml",
     service:  "{{ playbook_dir }}/utils/service.yml",
     verify:   "{{ playbook_dir }}/utils/verify.yml"
   },
