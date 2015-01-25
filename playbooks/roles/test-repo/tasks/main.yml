@@ -29,26 +29,11 @@
 - name: Generating simulations
   template:
     src:  Simulation.scala
-    dest: "{{ gatling_simulations }}/{{ item.name }}.scala"
+    dest: "{{ gatling_simulations }}/{{ repo_name }}{{ item.name }}.scala"
   with_items: test_repo.simulations
 
-- name: Running simulations
-  command: "{{ ubuntu.bash }} -c 'gatling.sh -m --output-name {{ repo_name }}{{ item.name }} --simulation {{ repo_name }}{{ item.name }} --results-folder {{ reports_dir }} >> {{ gatling_log }} 2>&1'"
-  ignore_errors: yes
-  environment: "{{ gatling_env | expand_path( ansible_env ) }}"
-  with_items: test_repo.simulations
-
-- file: path={{ reports_archive }} state=absent
-  when: reports_archive is defined
-
-- name: Archiving reports (tar.gz)
-  command: tar -czf '{{ reports_archive }}' .
-  args:
-    chdir: "{{ reports_dir }}"
-  when: ( reports_archive is defined ) and ( reports_archive.endswith( '.tar.gz' ))
-
-- name: Archiving reports (zip)
-  command: zip -r9 '{{ reports_archive }}' .
-  args:
-    chdir: "{{ reports_dir }}"
-  when: ( reports_archive is defined ) and ( reports_archive.endswith( '.zip' ))
+- include: "{{ common.roles.gatling }}"
+  vars:
+    # Sending a list of simulation names: ArtifactoryWarmup, ArtifactoryGet50, etc
+    # This  will also archive the reports, based on {{ reports_dir }} and {{ reports_archive }}
+    simulations: "{{ test_repo.simulations | map( attribute = 'name' ) | transform( repo_name + '{0}' ) }}"

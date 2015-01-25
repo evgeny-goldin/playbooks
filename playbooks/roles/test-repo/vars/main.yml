@@ -2,6 +2,7 @@
 test_repo: {
   files_dir: /opt,
   simulations: [
+    # { name: LightWarmup,  users: 1,   artifacts: few-files.txt },
     { name: Warmup,  users: 1,   artifacts: all-artifacts-size-sorted.txt },
     { name: Get10,   users: 10,  artifacts: all-artifacts-name-sorted.txt },
     { name: Get50,   users: 50,  artifacts: all-artifacts-name-sorted.txt },

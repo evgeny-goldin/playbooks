@@ -1,0 +1,36 @@
+---
+
+- debug: msg="Running simulations {{ simulations | join( ', ' ) }} => '{{ reports_dir }}'"
+  when:  reports_archive is not defined
+
+- debug: msg="Running simulations {{ simulations | join( ', ' ) }} => '{{ reports_dir }}' => '{{ reports_archive }}'"
+  when:  reports_archive is defined
+
+- name: Generating simulation scripts
+  template:
+    src:  "{{ playbook_dir }}/roles/gatling/templates/run-simulation.sh"
+    dest: "{{ gatling_simulations }}/{{ item }}.sh"
+  with_items: simulations
+
+- command:    chmod +x '{{ gatling_simulations }}/{{ item }}.sh'
+  with_items: simulations
+
+- name: Running simulation scripts
+  shell: "{{ gatling_simulations }}/{{ item }}.sh"
+  environment: "{{ gatling_env | expand_path( ansible_env ) }}"
+  with_items:  simulations
+
+- file: path={{ reports_archive }} state=absent
+  when: reports_archive is defined
+
+- name: Archiving reports (tar.gz)
+  command: tar -czf '{{ reports_archive }}' .
+  args:
+    chdir: "{{ reports_dir }}"
+  when: ( reports_archive is defined ) and ( reports_archive.endswith( '.tar.gz' ))
+
+- name: Archiving reports (zip)
+  command: zip -r9 '{{ reports_archive }}' .
+  args:
+    chdir: "{{ reports_dir }}"
+  when: ( reports_archive is defined ) and ( reports_archive.endswith( '.zip' ))
