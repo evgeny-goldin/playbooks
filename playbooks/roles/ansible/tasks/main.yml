@@ -19,7 +19,7 @@
 
 - name: Creating Ansible inventory file
   file:
-    path:  "{{ ansible.inventory_file|dirname }}"
+    path:  "{{ ansible.inventory_file | dirname }}"
     state: directory
 - file:
     path:  "{{ ansible.inventory_file }}"

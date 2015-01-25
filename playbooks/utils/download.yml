@@ -63,7 +63,7 @@
     copy: false
   when: unpack
 
-- shell: mkdir -p "$( dirname {{ item.to }} )"
+- file: path={{ item.to | dirname }} state=directory
   with_items:
     - "{{ configs }}"
   when: configs is defined

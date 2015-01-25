@@ -20,11 +20,10 @@ echo "SSH key:  $AWS_SSH_PRIVATE_KEY"
 echo '------------------------------------------'
 echo "Press Enter to continue" && read
 
-echo "== Deleting Placement Group '$placement_group'"
-aws ec2 delete-placement-group --group-name "$placement_group"
-
-echo "== Creating Placement Group '$placement_group'"
-aws ec2 create-placement-group --group-name "$placement_group" --strategy cluster
+if [ $(aws ec2 describe-placement-groups --group-names "$placement_group" --output text 2>/dev/null | wc -l) == "0" ]; then
+  echo "== Creating Placement Group '$placement_group'"
+  aws ec2 create-placement-group --group-name "$placement_group" --strategy cluster
+fi
 
 echo "== Creating EC2 instances"
 instance_ids=$(aws ec2 run-instances \
@@ -53,20 +52,23 @@ while [ "$state" != "running" ]; do
   printf '.'
   state=$(aws ec2 describe-instances --instance-ids $instance_ids --query "Reservations[*].Instances[*].State.Name" --output text | tr '\t' '\n' | sort -u)
 done
-printf '\r'
+printf '\r                                                          \r'
 
+echo "== Reading instances IPs"
 repo_ip=$(aws ec2 describe-instances --instance-ids "${ids[0]}" --query "Reservations[*].Instances[*].PublicIpAddress" --output text)
 test_repo_ip=$(aws ec2 describe-instances --instance-ids "${ids[1]}" --query "Reservations[*].Instances[*].PublicIpAddress" --output text)
+echo "== IPs are [$repo_ip] and [$test_repo_ip]"
 
 for ip in $repo_ip $test_repo_ip; do
-  echo "== Waiting for $ip SSH"
+  command="ssh -o BatchMode=yes -o ConnectTimeout=5 -o StrictHostKeyChecking=no -i $AWS_SSH_PRIVATE_KEY $AWS_SSH_USER@$ip id"
+  echo "== Waiting for [$command]"
   output=''
   while ! [[ "$output" =~ "$AWS_SSH_USER" ]]; do
     sleep 5
     printf '.'
-    output=$(ssh -o BatchMode=yes -o ConnectTimeout=5 -o StrictHostKeyChecking=no -i $AWS_SSH_PRIVATE_KEY "$AWS_SSH_USER@$ip" id 2>&1)
+    output=$($command 2>&1)
   done
-  printf '\r'
+  printf '\r                                                          \r'
 done
 
 echo "== Creating '$inventory_file': [repo] is $repo_ip, [test-repo] is $test_repo_ip"
@@ -104,3 +106,6 @@ scp -i $AWS_SSH_PRIVATE_KEY "$AWS_SSH_USER@$test_repo_ip:$reports_archive" .
 set +x
 
 echo "== Terminating EC2 instances"
+
+echo "== Deleting Placement Group '$placement_group'"
+# aws ec2 delete-placement-group --group-name "$placement_group"
