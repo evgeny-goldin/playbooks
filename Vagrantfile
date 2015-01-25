@@ -34,7 +34,7 @@ VB_BOXES = {
                   #  playbook:     'nexus-ubuntu' },
   'test-repo' => { memory:          1024,
                    reports_dir:     '/opt/gatling-reports',
-                   reports_archive: '/vagrant/gatling.tar.gz',
+                   reports_archive: '/vagrant/gatling-reports.tar.gz',
                    clean_reports:   true,
                    host:            "repo.#{ VAGRANT_DOMAIN }",
                    port:            WEB_PORT,

@@ -35,5 +35,4 @@
 - include: "{{ common.roles.gatling }}"
   vars:
     # Sending a list of simulation names: ArtifactoryWarmup, ArtifactoryGet50, etc
-    # This  will also archive the reports, based on {{ reports_dir }} and {{ reports_archive }}
     simulations: "{{ test_repo.simulations | map( attribute = 'name' ) | transform( repo_name + '{0}' ) }}"
