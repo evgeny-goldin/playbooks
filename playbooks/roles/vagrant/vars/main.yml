@@ -2,10 +2,10 @@
 vagrant: {
   version: latest, # 1.7.2, latest - https://www.vagrantup.com/downloads.html
   latest: {
-    command: "curl -s 'https://dl.bintray.com/mitchellh/vagrant/' | grep vagrant | grep '.deb' | tail -1 | cut -d_ -f5",
+    command: "curl -Ls '{{ common.urls.bintray }}/mitchellh/vagrant/' | grep vagrant | grep '.deb' | tail -1 | cut -d_ -f5",
     pattern: '^\d+\.\d+\.\d+$'
   },
   platform:     x86_64, # 'i686' or 'x86_64' - http://www.vagrantup.com/downloads.html
-  download_url: 'https://dl.bintray.com/mitchellh/vagrant/vagrant_<version>_<platform>.deb',
+  download_url: '{{ common.urls.bintray }}/mitchellh/vagrant/vagrant_<version>_<platform>.deb',
   redownload:   false
 }

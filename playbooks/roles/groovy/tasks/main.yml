@@ -11,7 +11,7 @@
     home:    "{{ groovy.home }}"
     env:     "{{ groovy_env }}"
     tests:
-      - { run: "groovy   --version", expect: "Groovy Version: {{ groovy_version }}" }
-      - { run: "grape    --version", expect: "Groovy Version: {{ groovy_version }}" }
-      - { run: "groovysh --version", expect: "Groovy Shell {{ groovy_version }}" }
-      - { run: "groovyc  --version", expect: "Groovy compiler version {{ groovy_version }}" }
+      - { run: groovy   --version, expect: "Groovy Version: {{ groovy_version }}" }
+      - { run: grape    --version, expect: "Groovy Version: {{ groovy_version }}" }
+      - { run: groovysh --version, expect: Groovy Shell } # http://goo.gl/kbIp12
+      - { run: groovyc  --version, expect: "Groovy compiler version {{ groovy_version }}" }

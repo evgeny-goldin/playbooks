@@ -11,4 +11,4 @@
     home:    "{{ gradle.home }}"
     env:     "{{ gradle_env }}"
     tests:
-      - { run: "gradle --version", expect: "Gradle {{ gradle_version }}" }
+      - { run: gradle --version, expect: "Gradle {{ gradle_version }}" }

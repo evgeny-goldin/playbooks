@@ -15,10 +15,10 @@
     home:    "{{ gatling.home }}"
     env:     "{{ gatling_env }}"
     tests:
-      - { run: "gatling.sh --help", expect: "Usage: compiler" }
-    cleanup:
-      - rm   -rf "{{ gatling_simulations }}"
-      - mkdir -p "{{ gatling_simulations }}"
+      - { run: gatling.sh --help, expect: 'Usage: compiler' }
+
+- file: path={{ gatling_simulations }} state=absent
+- file: path={{ gatling_simulations }} state=directory
 
 - name:  Setting light console
   shell: sed -i 's/#light = false/light = true/' '{{ gatling_home }}/conf/gatling.conf'

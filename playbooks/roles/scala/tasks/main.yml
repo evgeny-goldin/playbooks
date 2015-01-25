@@ -11,4 +11,4 @@
     home:    "{{ scala.home }}"
     env:     "{{ scala_env }}"
     tests:
-      - { run: "scala -version", expect: "Scala code runner version {{ scala_version }}" }
+      - { run: scala -version, expect: "Scala code runner version {{ scala_version }}" }

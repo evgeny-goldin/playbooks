@@ -2,7 +2,7 @@
 groovy: {
   version: latest, # 2.3.9, latest - https://dl.bintray.com/groovy/maven/
   latest: {
-    command: "curl -s '{{ common.urls.bintray }}/groovy/maven/' | grep '<pre>' | grep 'groovy-binary-' | sed -r 's/.*groovy-binary-//' | sed -r 's/\\.zip.*$//' | grep -v 'beta-' | grep -v 'rc-' | tail -1",
+    command: "curl -Ls '{{ common.urls.bintray }}/groovy/maven/' | grep '<pre>' | grep 'groovy-binary-' | sed -r 's/.*groovy-binary-//' | sed -r 's/\\.zip.*$//' | grep -v 'beta-' | grep -v 'rc-' | tail -1",
     pattern: '^\d+\.\d+\.\d+$'
   },
   url:     '{{ common.urls.bintray }}/groovy/maven/groovy-binary-<version>.zip',

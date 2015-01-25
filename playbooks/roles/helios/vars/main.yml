@@ -5,7 +5,7 @@ helios: {
   archive: /opt/helios-<version>.tar.gz,
   home:    /opt/helios,
   latest: {
-    command: "curl -s '{{ common.urls.github }}/spotify/helios/releases' | grep '/spotify/helios/releases/tag/' | sed -r 's/<[^>]+>//g' | sed -r 's/:.+//' | sed '/^\\s*$/d' | head -1 | awk '{print $1}'",
+    command: "curl -Ls '{{ common.urls.github }}/spotify/helios/releases' | grep '/spotify/helios/releases/tag/' | sed -r 's/<[^>]+>//g' | sed -r 's/:.+//' | sed '/^\\s*$/d' | head -1 | awk '{print $1}'",
     pattern: '^\d+\.\d+\.\d+$'
   },
   master: {

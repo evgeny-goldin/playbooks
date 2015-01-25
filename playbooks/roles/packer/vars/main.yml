@@ -2,13 +2,13 @@
 packer: {
   version: latest, # 0.7.5, latest - https://www.packer.io/downloads.html
   latest: {
-    command: "curl -s 'https://dl.bintray.com/mitchellh/packer/' | grep packer | grep linux | tail -1 | cut -d_ -f5",
+    command: "curl -Ls '{{ common.urls.bintray }}/mitchellh/packer/' | grep packer | grep linux | tail -1 | cut -d_ -f5",
     pattern: '^\d+\.\d+\.\d+$'
   },
   platform:     amd64, # '386', 'amd64' or 'arm' - http://www.packer.io/downloads.html
   dir:          /opt/packer,
   bin:          /usr/bin/packer,
-  download_url: 'https://dl.bintray.com/mitchellh/packer/<version>_linux_<platform>.zip',
+  download_url: '{{ common.urls.bintray }}/mitchellh/packer/<version>_linux_<platform>.zip',
   redownload:   false,
 
   store_aws_credentials: false,

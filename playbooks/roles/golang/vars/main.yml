@@ -2,7 +2,7 @@
 golang: {
   version: latest, # 1.4.1, latest - https://golang.org/dl/
   latest: {
-    command: "curl -s 'https://golang.org/dl/' | grep '.src.tar.gz' | sed -r 's/<[^>]+>//g' | sed 's/\\.src\\.tar\\.gz//g' | sed -r 's/go//' | awk '{print $1}' | head -1",
+    command: "curl -Ls '{{ common.urls.golang }}/dl/' | grep '.src.tar.gz' | sed -r 's/<[^>]+>//g' | sed 's/\\.src\\.tar\\.gz//g' | sed -r 's/go//' | awk '{print $1}' | head -1",
     pattern: '^\d+\.\d+'
   },
   url:     'https://storage.googleapis.com/golang/go<version>.linux-amd64.tar.gz',

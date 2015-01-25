@@ -3,7 +3,7 @@ ruby: {
   version: latest,  # 2.2.0, latest - https://www.ruby-lang.org/en/downloads/
   installer: 'rvm', # Or 'rbenv'
   latest: {
-    command: "curl -s 'https://www.ruby-lang.org/en/downloads/' | grep 'The current stable version is' | cut -d' ' -f6 | sed 's/\\.$//'",
+    command: "curl -Ls '{{ common.urls.ruby }}/en/downloads/' | grep 'The current stable version is' | cut -d' ' -f6 | sed 's/\\.$//'",
     pattern: '^\d+\.\d+\.\d+$'
   },
   gemrc: '/etc/gemrc',

@@ -5,7 +5,7 @@ artifactory: {
   timeout: 60,         # in seconds
   run:     standalone, # standalone, war
   latest: {
-    command: "curl -s '{{ common.urls.bintray }}/jfrog/artifactory/' | grep '<pre>' | grep 'artifactory-' | sed -r 's/<[^>]+>//g' | sed 's/artifactory-//' | sed 's/\\.zip$//' | tail -1",
+    command: "curl -Ls '{{ common.urls.bintray }}/jfrog/artifactory/' | grep '<pre>' | grep 'artifactory-' | sed -r 's/<[^>]+>//g' | sed 's/artifactory-//' | sed 's/\\.zip$//' | tail -1",
     pattern: '^\d+\.\d+\.\d+$'
   },
   standalone: {

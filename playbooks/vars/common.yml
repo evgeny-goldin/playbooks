@@ -16,12 +16,15 @@ common: {
   },
 
   urls: {
-    github:   'https://github.com',
-    jcenter:  'https://jcenter.bintray.com',
-    bintray:  'https://dl.bintray.com',
-    jfrog:    'https://repo.jfrog.org',
-    gradle:   'https://www.gradle.org',
-    scala:    'http://www.scala-lang.org'
+    bintray: 'https://dl.bintray.com',
+    github:  'https://github.com',
+    golang:  'https://golang.org',
+    gradle:  'https://gradle.org',
+    jcenter: 'https://jcenter.bintray.com',
+    jfrog:   'https://repo.jfrog.org',
+    pypi:    'https://pypi.python.org/pypi',
+    ruby:    'https://www.ruby-lang.org',
+    tomcat:  'https://tomcat.apache.org'
   },
 
   utils: {
