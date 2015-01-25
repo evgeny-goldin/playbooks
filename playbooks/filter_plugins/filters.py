@@ -23,7 +23,6 @@ def ext( url ):
      return 'tar.bz2'
   return url.split('.')[-1]
 
-
 def expand_path( env_dict, ansible_env ):
   '''Returns env variables dictionary where $PATH is replaced with ansible_env['PATH']'''
   if 'PATH' in env_dict:

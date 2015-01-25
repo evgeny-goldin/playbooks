@@ -6,6 +6,7 @@
     gatling_home:        "{{ gatling.home }}/gatling-charts-highcharts-bundle-{{ gatling_version }}"
 - set_fact:
     gatling_simulations: "{{ gatling_home }}/user-files/simulations"
+    gatling_config:      "{{ gatling_home }}/conf/gatling.conf"
 
 - include: "{{ common.utils.download }}"
   vars:
@@ -21,5 +22,9 @@
 - file: path={{ gatling_simulations }} state=directory
 
 - name:  Setting light console
-  shell: sed -i 's/#light = false/light = true/' '{{ gatling_home }}/conf/gatling.conf'
-  when:  gatling.light_console
+  shell: sed -i 's/#light = false/light = true/' '{{ gatling_config }}'
+  when:  gatling.console == 'light'
+
+- name:  Turning off console
+  shell: sed -i 's/#writers = "console, file"/writers = "file"/' '{{ gatling_config }}'
+  when:  not gatling.console
