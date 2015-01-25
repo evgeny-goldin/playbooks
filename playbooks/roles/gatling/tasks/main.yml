@@ -19,3 +19,7 @@
     cleanup:
       - rm   -rf "{{ gatling_simulations }}"
       - mkdir -p "{{ gatling_simulations }}"
+
+- name:  Setting light console
+  shell: sed -i 's/#light = false/light = true/' '{{ gatling_home }}/conf/gatling.conf'
+  when:  gatling.light_console

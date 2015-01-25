@@ -32,12 +32,14 @@ VB_BOXES = {
                    ports:        [ WEB_PORT ],
                    playbook:     'artifactory-ubuntu' },
                   #  playbook:     'nexus-ubuntu' },
-  'test-repo' => { memory:       1024,
-                   reports_dir:  '/vagrant',
-                   host:         "repo.#{ VAGRANT_DOMAIN }",
-                   port:         WEB_PORT,
-                   repo_name:    'Artifactory', path: '/artifactory/repo/' }
-                  #  repo_name:    'Nexus', path: '/nexus/content/repositories/central/' }
+  'test-repo' => { memory:          1024,
+                   reports_dir:     '/opt/gatling-reports',
+                   reports_archive: '/vagrant/gatling.tar.gz',
+                   clean_reports:   true,
+                   host:            "repo.#{ VAGRANT_DOMAIN }",
+                   port:            WEB_PORT,
+                   repo_name:       'Artifactory', path: '/artifactory/repo/' }
+                  #  repo_name:       'Nexus', path: '/nexus/content/repositories/central/' }
 }
 
 Vagrant.require_version '>= 1.7.0'

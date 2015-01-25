@@ -16,7 +16,7 @@ export AWS_SECRET_ACCESS_KEY="..."
 
 export AWS_AMI="ami-f0b11187"
 export AWS_INSTANCE_TYPE="c4.2xlarge"
-export AWS_EBS_SIZE="40"
+export AWS_EBS_SIZE="20"
 export AWS_SSH_USER="ubuntu"
 
 export REPO_PORT="8080"

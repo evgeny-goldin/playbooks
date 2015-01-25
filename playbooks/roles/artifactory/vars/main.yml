@@ -32,8 +32,8 @@ artifactory: {
     pass: password
   },
   import: {
-    archive: /opt/artifactory-import.<ext>,
-    home:    /opt/artifactory-import,
+    archive: /opt/repo-import.<ext>,
+    home:    /opt/repo-import,
     repo:    jcenter-cache
   }
 }

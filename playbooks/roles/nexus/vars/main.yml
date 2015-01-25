@@ -23,7 +23,7 @@ nexus: {
     { path: /nexus/service/local/attributes, status: 401 }
   ],
   import: {
-    archive: /opt/nexus-import.<ext>,
+    archive: /opt/repo-import.<ext>,
     home:    <home>/sonatype-work/nexus/storage,
     repo:    central
   }

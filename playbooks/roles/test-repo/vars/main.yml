@@ -1,7 +1,6 @@
 ---
 test_repo: {
-  artifacts: /opt,
-  log:       /opt/gatling.log,
+  files_dir: /opt,
   simulations: [
     { name: Warmup,  users: 1,   artifacts: all-artifacts-size-sorted.txt },
     { name: Get10,   users: 10,  artifacts: all-artifacts-name-sorted.txt },

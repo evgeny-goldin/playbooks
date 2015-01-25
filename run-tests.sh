@@ -5,6 +5,8 @@
 placement_group='TestRepo'
 inventory_file='inventory'
 connect="-i $inventory_file -u $AWS_SSH_USER --private-key=$AWS_SSH_PRIVATE_KEY"
+reports=/opt/gatling-reports
+reports_archive=/opt/gatling-reports.tar.gz
 
 clear
 echo '------------------------------------------'
@@ -81,17 +83,24 @@ set -x
 ansible-playbook 'playbooks/artifactory-ubuntu.yml' $connect --extra-vars "port=$REPO_PORT import='$REPO_IMPORT' java_options='$REPO_JAVA_OPTIONS'"
 set +x
 
+echo "== Running Test Artifactory playbook"
+set -x
+ansible-playbook 'playbooks/test-repo-ubuntu.yml' $connect --extra-vars "host=$repo_ip port=$REPO_PORT clean_reports=true reports_dir='$reports' reports_archive='$reports_archive' repo_name=Artifactory path=/artifactory/repo/"
+set +x
+
 echo "== Running Nexus playbook"
 set -x
 ansible-playbook 'playbooks/nexus-ubuntu.yml' $connect --extra-vars "port=$REPO_PORT import='$REPO_IMPORT' java_options='$REPO_JAVA_OPTIONS'"
 set +x
 
-echo "== Running Test Artifactory playbook"
-set -x
-ansible-playbook 'playbooks/test-repo-ubuntu.yml' $connect --extra-vars "host=$repo_ip port=$REPO_PORT reports_dir=/opt/reports repo_name=Artifactory path=/artifactory/repo/"
-set -x
-
 echo "== Running Test Nexus playbook"
 set -x
-ansible-playbook 'playbooks/test-repo-ubuntu.yml' $connect --extra-vars "host=$repo_ip port=$REPO_PORT reports_dir=/opt/reports repo_name=Nexus path=/nexus/content/repositories/central/"
+ansible-playbook 'playbooks/test-repo-ubuntu.yml' $connect --extra-vars "host=$repo_ip port=$REPO_PORT reports_dir='$reports' reports_archive='$reports_archive' repo_name=Nexus path=/nexus/content/repositories/central/"
+set +x
+
+echo "== Downloading reports archive"
 set -x
+scp -i $AWS_SSH_PRIVATE_KEY "$AWS_SSH_USER@$test_repo_ip:$reports_archive" .
+set +x
+
+echo "== Terminating EC2 instances"

@@ -1,24 +1,29 @@
 ---
 - set_fact:
-    repo: "http://{{ host }}:{{ port }}{{ path }}"
+    repo:        "http://{{ host }}:{{ port }}{{ path }}"
+    gatling_log: "{{ reports_dir }}/gatling.log"
 
 - debug: msg="Testing {{ repo_name }} repo {{ repo }} => '{{ reports_dir }}'"
+  when:  reports_archive is not defined
 
-- include: "{{ common.utils.mkdir }}"
-  vars:
-    file:  "{{ test_repo.log }}"
+- debug: msg="Testing {{ repo_name }} repo {{ repo }} => '{{ reports_dir }}' => '{{ reports_archive }}'"
+  when:  reports_archive is defined
+
+- file: path={{ gatling_log }} state=absent
+- file: path={{ reports_dir }} state=absent
+  when: clean_reports | default( False )
 
 - name: Creating directories
   file: path={{ item }} state=directory
   with_items:
-    - "{{ test_repo.artifacts }}"
+    - "{{ test_repo.files_dir }}"
     - "{{ gatling_simulations }}"
     - "{{ reports_dir }}"
 
 - name: Copying artifacts files
   copy:
     src:  "{{ item.artifacts }}"
-    dest: "{{ test_repo.artifacts }}/{{ item.artifacts }}"
+    dest: "{{ test_repo.files_dir }}/{{ item.artifacts }}"
   with_items: test_repo.simulations
 
 - name: Generating simulations
@@ -28,6 +33,22 @@
   with_items: test_repo.simulations
 
 - name: Running simulations
-  command: sleep 15 && gatling.sh -m --output-name {{ repo_name }}{{ item.name }} --simulation {{ repo_name }}{{ item.name }} --results-folder '{{ reports_dir }}' >> '{{ test_repo.log }}' 2>&1
+  command: "{{ ubuntu.bash }} -c 'gatling.sh -m --output-name {{ repo_name }}{{ item.name }} --simulation {{ repo_name }}{{ item.name }} --results-folder {{ reports_dir }} >> {{ gatling_log }} 2>&1'"
+  ignore_errors: yes
   environment: "{{ gatling_env | expand_path( ansible_env ) }}"
   with_items: test_repo.simulations
+
+- file: path={{ reports_archive }} state=absent
+  when: reports_archive is defined
+
+- name: Archiving reports (tar.gz)
+  command: tar -czf '{{ reports_archive }}' .
+  args:
+    chdir: "{{ reports_dir }}"
+  when: ( reports_archive is defined ) and ( reports_archive.endswith( '.tar.gz' ))
+
+- name: Archiving reports (zip)
+  command: zip -r9 '{{ reports_archive }}' .
+  args:
+    chdir: "{{ reports_dir }}"
+  when: ( reports_archive is defined ) and ( reports_archive.endswith( '.zip' ))
