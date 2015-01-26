@@ -100,7 +100,7 @@ set -x
 ansible-playbook 'playbooks/artifactory-ubuntu.yml' $connect \
                  --extra-vars "port=$REPO_PORT \
                                import='$REPO_IMPORT' \
-                               java_options='$REPO_JAVA_OPTIONS'"
+                               java_options='$ARTIFACTORY_JAVA_OPTIONS'"
 set +x
 
 echo "== Running Test Repo playbook for Artifactory"
@@ -128,7 +128,7 @@ set -x
 ansible-playbook 'playbooks/nexus-ubuntu.yml' $connect \
                  --extra-vars "port=$REPO_PORT \
                                import='$REPO_IMPORT' \
-                               java_options='$REPO_JAVA_OPTIONS'"
+                               java_options='$NEXUS_JAVA_OPTIONS'"
 set +x
 
 echo "== Running Test Repo playbook for Nexus"
