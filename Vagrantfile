@@ -36,7 +36,7 @@ VB_BOXES = {
   'test-repo' => { memory:          1024,
                    reports_dir:     '/opt/gatling-reports',
                    reports_archive: '/vagrant/gatling-reports.tar.gz',
-                   clean_reports:   true,
+                   run_simulations: false,
                    host:            "repo.#{ VAGRANT_DOMAIN }",
                    port:            WEB_PORT,
                    repo_name:       'Artifactory', path: '/artifactory/repo/' }
