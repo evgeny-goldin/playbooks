@@ -13,7 +13,7 @@
     url:  "{{ helios.agent.registrar_plugin.url | tokens( helios.agent.registrar_plugin ) }}"
     dest: "{{ registrar_plugin }}"
 
-- file: path={{ helios.agent.config_endpoints | expanduser | dirname }} state=directory
+- file: path={{ helios.agent.config_endpoints | dirname }} state=directory
 
 - name: Copying Helios agent configs
   template:
