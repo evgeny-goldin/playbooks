@@ -21,11 +21,11 @@ if [ "$repo_ip" == "" ] && [ "$test_repo_ip" == "" ]; then
   echo '------------------------------------------'
   echo "         Creating 2 EC2 instances"
   echo '------------------------------------------'
-  echo "Region:   $AWS_DEFAULT_REGION"
-  echo "Type:     $AWS_INSTANCE_TYPE"
-  echo "EBS Size: $AWS_EBS_SIZE"
-  echo "Keypair:  $AWS_KEYPAIR_NAME"
-  echo "SSH key:  $AWS_SSH_PRIVATE_KEY"
+  echo "Region:    $AWS_DEFAULT_REGION"
+  echo "Type:      $AWS_INSTANCE_TYPE"
+  echo "EBS Size:  $AWS_EBS_SIZE"
+  echo "Keypair:   $AWS_KEYPAIR_NAME"
+  echo "SSH key:   $AWS_SSH_PRIVATE_KEY"
   echo '------------------------------------------'
   echo "Press Enter to continue" && read
 
@@ -44,11 +44,16 @@ if [ "$repo_ip" == "" ] && [ "$test_repo_ip" == "" ]; then
   --block-device-mappings "[{ \"DeviceName\" : \"/dev/sda1\", \"Ebs\":{ \"VolumeSize\" : $AWS_EBS_SIZE }}]" \
   --subnet-id             "$AWS_SUBNET_ID" \
   --monitoring            "Enabled=value" \
-  --query                 "Instances[*].InstanceId" \
-  --output                "text" \
-  --associate-public-ip-address \
+  --security-group-ids    "$AWS_SECURITY_GROUP_ID" \
   --placement             "AvailabilityZone=${AWS_DEFAULT_REGION}a,GroupName=${placement_group},Tenancy=default" \
-  --ebs-optimized | tr '\t' ' ')
+  --ebs-optimized \
+  --query                 "Instances[*].InstanceId" \
+  --output                "text" | tr '\t' ' ')
+
+  if [ "$instance_ids" == "" ]; then
+    echo "Failed to create instances!"
+    exit 1
+  fi
 
   ids=(${instance_ids// / });
   aws ec2 create-tags --resources "${ids[0]}" --tags "Key=Name,Value=Repo"
