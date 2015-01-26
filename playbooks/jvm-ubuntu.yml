@@ -1,0 +1,17 @@
+---
+# Java, Groovy, Gradle, Scala playbook for Ubuntu
+
+- name:  JVM
+  hosts: all
+  sudo:  yes
+
+  vars_files:
+    - vars/common.yml
+    - vars/{{ ansible_distribution }}.yml
+
+  roles:
+    - { role: run-before, period: daily }
+    - groovy
+    - gradle
+    - scala
+    - run-after
