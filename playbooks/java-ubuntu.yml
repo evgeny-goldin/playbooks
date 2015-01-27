@@ -1,0 +1,15 @@
+---
+# Java playbook for Ubuntu
+
+- name:  Java
+  hosts: all
+  sudo:  yes
+
+  vars_files:
+    - vars/common.yml
+    - vars/{{ ansible_distribution }}.yml
+
+  roles:
+    - { role: run-before, period: daily }
+    - java
+    - run-after

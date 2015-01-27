@@ -22,7 +22,7 @@
     dest:   "{{ rvm_source_script }}"
     line:   "source {{ ruby.rvm.home }}/scripts/rvm"
     create: yes
-  when: ( not is_docker|bool )
+  when: not is_docker|bool
 
 - name: Writing templates
   template:

@@ -56,7 +56,7 @@
   register: grep_result
 
 - set_fact:
-    is_docker:     "{{ grep_result.stdout|int > 0 }}"
+    is_docker:     "{{ grep_result.stdout|int > 0   | bool }}"
     start_service: "{{ not ( ami | default( False ) | bool ) }}"
 
 - debug: var=is_docker

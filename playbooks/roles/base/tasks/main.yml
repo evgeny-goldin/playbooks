@@ -16,29 +16,5 @@
 - name: Updating 'apt' cache
   apt:  update_cache=yes
 
-- name: Upgrading installed packages
-  apt:  upgrade=dist
-  when: ( not is_docker|bool )
-
-- name: Installing base packages
-  apt:  name={{ item }} state=latest force=yes
-  with_items:
-    - vim
-    - htop
-    - wget
-    - curl
-    - git
-    - zip
-    - unzip
-    - upstart
-    - man
-    - build-essential
-    - psmisc # Needed for 'killall'
-
-- name:    Stopping and disabling Chef service, if found
-  service: name=chef-client state=stopped enabled=no
-  ignore_errors: yes
-
-- name:    Stopping and disabling Puppet service, if found
-  service: name=puppet state=stopped enabled=no
-  ignore_errors: yes
+- include: base-setup.yml
+  when:    not is_docker|bool

@@ -28,7 +28,7 @@
     dest: "{{ mysql.my_cnf }}"
     line: 'user            = root'
     regexp: ^user\s+=\s+mysql$
-  when: is_docker
+  when: is_docker|bool
 
 - name: Starting MySQL service
   service: name=mysql state=started

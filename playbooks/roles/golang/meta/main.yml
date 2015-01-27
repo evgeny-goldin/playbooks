@@ -1,3 +1,4 @@
 ---
 dependencies:
-  - { role: ansible, when: periodic }
+  - { role: base,    when: periodic }
+  - { role: ansible, when: periodic and ( not is_docker|bool ) }
