@@ -1,3 +1,7 @@
 ---
 - name: Installing OpenJDK
   apt: name=default-jdk state=latest force=yes
+
+- name: Setting java_home (Java 7)
+  set_fact:
+    java_home: "{{ java.open_jdk.java_home }}"

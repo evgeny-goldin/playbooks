@@ -20,5 +20,5 @@
   apt:  name={{ item }} state=latest force=yes
   with_items: base.packages
 
-- include: base-setup.yml
+- include: non-docker-setup.yml
   when:    not is_docker|bool

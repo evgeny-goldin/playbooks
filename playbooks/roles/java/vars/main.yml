@@ -1,7 +1,15 @@
 ---
+# Distribution can be specified using {{ java_distribution }}.
+# Possible values are: open_jdk, oracle_jdk, oracle_jre (default).
 java: {
   version: 8, # 7, 8 - applies only to 'oracle_jre' and 'oracle_jdk' distributions
   default_distribution: oracle_jre,
+  open_jdk: {
+    java_home: /usr/lib/jvm/java-7-openjdk-amd64
+  },
+  oracle_jdk: {
+    java_home: /usr/lib/jvm/java-<N>-oracle
+  },
   oracle_jre: {
     redownload:       false,
     installer_url:    'http://www.duinsoft.nl/pkg/pool/all/update-sun-jre.bin',
@@ -9,11 +17,6 @@ java: {
     installer_bin:    update-sun-jre.bin,
     installer_script: update-sun-jre,
     java_home_base:   /opt/java/64
-  },
-  oracle_jdk: {
-    java_home: /usr/lib/jvm/java-<N>-oracle
-  },
-  open_jdk: {
   }
 }
 
