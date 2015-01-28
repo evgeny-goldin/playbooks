@@ -15,3 +15,15 @@
     - oracle-java{{ java.version }}-set-default
 
 - command: update-java-alternatives -s java-{{ java.version }}-oracle
+
+- debug: var=java.oracle_jdk.java_home
+
+- name: Setting java_home (Java 7)
+  set_fact:
+    java_home: "{{ java.oracle_jdk.java_home | tokens({ 'N': 7 }) }}"
+  when: java.version == 7
+
+- name: Setting java_home (Java 8)
+  set_fact:
+    java_home: "{{ java.oracle_jdk.java_home | tokens({ 'N': 8 }) }}"
+  when: java.version == 8

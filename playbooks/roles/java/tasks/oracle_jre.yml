@@ -31,5 +31,6 @@
   shell:    ls '{{ java.oracle_jre.java_home_base }}' | grep jre | sort | tail -1
   register: java_home_dir
 
-- set_fact:
+- name: Setting java_home
+  set_fact:
     java_home: "{{ java.oracle_jre.java_home_base }}/{{ java_home_dir.stdout }}"

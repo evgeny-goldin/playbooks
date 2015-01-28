@@ -15,23 +15,16 @@
 - debug: msg="JAVA_HOME is set to '{{ java_home }}'"
 
 - name:     Running Java
-  shell:    "'{{ java_home }}/bin/java' -version 2>&1"
+  shell:    "'{{ java_home }}/bin/java'  -version 2>&1"
   register: java_out
 
 - name:     Running Javac
-  shell:    "'{{ java_home }}/bin/javac' -help 2>&1"
+  shell:    "'{{ java_home }}/bin/javac' -version 2>&1"
   register: javac_out
   when:     java_distribution in [ 'oracle_jdk', 'open_jdk' ]
 
 - debug: var=java_out.stdout
 - debug: var=javac_out.stdout
-
-- name:  Verifying Oracle Java
-  assert:
-    that:
-      - "'1.{{ java.version }}'            in java_out.stdout"
-      - "'Java(TM) SE Runtime Environment' in java_out.stdout"
-  when: java_distribution in [ 'oracle_jre', 'oracle_jdk' ]
 
 - name:  Verifying OpenJDK Java
   assert:
@@ -40,13 +33,24 @@
       - "'OpenJDK 64-Bit Server VM'    in java_out.stdout"
   when: java_distribution == 'open_jdk'
 
-- name:  Verifying Javac
+- name:  Verifying Oracle Java
   assert:
     that:
-      - "'Usage'                in javac_out.stdout"
-      - "'-bootclasspath'       in javac_out.stdout"
-      - "'Generate no warnings' in javac_out.stdout"
-  when: java_distribution in [ 'oracle_jdk', 'open_jdk' ]
+      - "'1.{{ java.version }}'            in java_out.stdout"
+      - "'Java(TM) SE Runtime Environment' in java_out.stdout"
+  when: java_distribution in [ 'oracle_jre', 'oracle_jdk' ]
+
+- name:  Verifying OpenJDK Javac
+  assert:
+    that:
+      - "'javac' in javac_out.stdout"
+  when: java_distribution == 'open_jdk'
+
+- name:  Verifying Oracle Javac
+  assert:
+    that:
+      - "'javac 1.{{ java.version }}' in javac_out.stdout"
+  when: java_distribution == 'oracle_jdk'
 
 - name: Generating Java environment variables file
   lineinfile:
