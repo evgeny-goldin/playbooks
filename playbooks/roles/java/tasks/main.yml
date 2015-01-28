@@ -1,36 +1,44 @@
 ---
 # https://help.ubuntu.com/community/Java
+- set_fact:  java_distribution={{ java_distribution | default( java.default_distribution ) }}
 - debug: var=java_distribution
 
-- name:    Running Oracle JRE installer
-  include: oracle-jre.yml
-  when:    java_distribution == 'oracle-jre'
+- include: open_jdk.yml
+  when:    java_distribution == 'open_jdk'
 
-- name:    Running Oracle JDK installer
-  include: oracle-jdk.yml
-  when:    java_distribution == 'oracle-jdk'
+- include: oracle_jdk.yml
+  when:    java_distribution == 'oracle_jdk'
 
-- name:    Running OpenJDK installer
-  include: open-jdk.yml
-  when:    java_distribution == 'open-jdk'
+- include: oracle_jre.yml
+  when:    java_distribution == 'oracle_jre'
+
+- debug: msg="JAVA_HOME is set to '{{ java_home }}'"
 
 - name:     Running Java
-  shell:    java -version 2>&1
+  shell:    "'{{ java_home }}/bin/java' -version 2>&1"
   register: java_out
-- debug:    var=java_out.stdout
-  when:     java_distribution in [ 'oracle-jre', 'oracle-jdk' ]
 
-- name:  Verifying Java version
+- name:     Running Javac
+  shell:    "'{{ java_home }}/bin/javac' -help 2>&1"
+  register: javac_out
+  when:     java_distribution in [ 'oracle_jdk', 'open_jdk' ]
+
+- debug: var=java_out.stdout
+- debug: var=javac_out.stdout
+
+- name:  Verifying Oracle Java
   assert:
     that:
       - "'1.{{ java.version }}'            in java_out.stdout"
       - "'Java(TM) SE Runtime Environment' in java_out.stdout"
-  when:     java_distribution in [ 'oracle-jre', 'oracle-jdk' ]
+  when: java_distribution in [ 'oracle_jre', 'oracle_jdk' ]
 
-- name:     Running Javac
-  shell:    javac -help 2>&1
-  register: javac_out
-  when:     java_distribution in [ 'oracle-jdk', 'open-jdk' ]
+- name:  Verifying OpenJDK Java
+  assert:
+    that:
+      - "'OpenJDK Runtime Environment' in java_out.stdout"
+      - "'OpenJDK 64-Bit Server VM'    in java_out.stdout"
+  when: java_distribution == 'open_jdk'
 
 - name:  Verifying Javac
   assert:
@@ -38,4 +46,13 @@
       - "'Usage'                in javac_out.stdout"
       - "'-bootclasspath'       in javac_out.stdout"
       - "'Generate no warnings' in javac_out.stdout"
-  when: java_distribution in [ 'oracle-jdk', 'open-jdk' ]
+  when: java_distribution in [ 'oracle_jdk', 'open_jdk' ]
+
+- name: Generating Java environment variables file
+  lineinfile:
+    dest:   "{{ ubuntu.envs_dir }}/java.sh"
+    create: yes
+    line:   'export {{ item.key }}="{{ item.value }}"'
+  with_dict:
+    JAVA_HOME: "{{ java_home }}"
+    PATH:      "$PATH:{{ java_home }}/bin"

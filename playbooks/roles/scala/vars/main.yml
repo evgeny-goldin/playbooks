@@ -11,5 +11,6 @@ scala: {
 }
 
 scala_env: {
-  PATH: "$PATH:{{ scala.home }}/scala-{{ scala_version }}/bin"
+  JAVA_HOME: "{{ java_home }}",
+  PATH:      "$PATH:{{ scala.home }}/scala-{{ scala_version }}/bin"
 }

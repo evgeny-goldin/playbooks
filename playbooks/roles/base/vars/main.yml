@@ -1,0 +1,29 @@
+---
+base: {
+  # Packages that are always installed
+  packages: [
+    # Needed for 'update-mime-database' which is needed for Oracle JRE
+    'shared-mime-info',
+    'unzip'
+  ],
+  # Pip packages that are always installed
+  pip: [
+    # Missing on AWS Ubuntu AMI
+    'httplib2'
+  ],
+  # Packages that are *not* installed for Docker containers
+  utils: [
+    'vim',
+    'htop',
+    'wget',
+    'curl',
+    'git',
+    'zip',
+    'unzip',
+    'upstart',
+    'man',
+    'build-essential',
+    # Needed for 'killall'
+    'psmisc'
+  ]
+}

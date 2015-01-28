@@ -11,5 +11,6 @@ groovy: {
 }
 
 groovy_env: {
-  PATH: "$PATH:{{ groovy.home }}/groovy-{{ groovy_version }}/bin"
+  JAVA_HOME: "{{ java_home }}",
+  PATH:      "$PATH:{{ groovy.home }}/groovy-{{ groovy_version }}/bin"
 }

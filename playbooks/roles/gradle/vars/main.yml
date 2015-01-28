@@ -11,5 +11,6 @@ gradle: {
 }
 
 gradle_env: {
-  PATH: "$PATH:{{ gradle.home }}/gradle-{{ gradle_version }}/bin"
+  JAVA_HOME: "{{ java_home }}",
+  PATH:      "$PATH:{{ gradle.home }}/gradle-{{ gradle_version }}/bin"
 }

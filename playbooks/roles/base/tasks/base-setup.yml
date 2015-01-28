@@ -2,28 +2,16 @@
 - name: Upgrading installed packages
   apt:  upgrade=dist
 
-- name: Installing base packages
+- name: Installing utility packages
   apt:  name={{ item }} state=latest force=yes
-  with_items:
-    - vim
-    - htop
-    - wget
-    - curl
-    - git
-    - zip
-    - unzip
-    - upstart
-    - man
-    - build-essential
-    - psmisc # Needed for 'killall'
+  with_items: base.utils
 
 - name: Installing python-pip
   apt:  name=python-pip state=latest force=yes
 
 - name: Installing base pip packages
   pip:  name={{ item }} state=latest
-  with_items:
-    - httplib2 # Missing on AWS Ubuntu AMI
+  with_items: base.pip
 
 - name:    Stopping and disabling Chef service, if found
   service: name=chef-client state=stopped enabled=no

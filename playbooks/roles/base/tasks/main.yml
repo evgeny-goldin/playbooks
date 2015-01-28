@@ -16,5 +16,9 @@
 - name: Updating 'apt' cache
   apt:  update_cache=yes
 
+- name: Installing base packages
+  apt:  name={{ item }} state=latest force=yes
+  with_items: base.packages
+
 - include: base-setup.yml
   when:    not is_docker|bool

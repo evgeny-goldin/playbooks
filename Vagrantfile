@@ -4,7 +4,7 @@
 VAGRANTFILE_API_VERSION = '2'
 
 CPUS               = 2
-MEMORY             = 512
+MEMORY             = 1024
 VAGRANT_DOMAIN     = 'vm'
 DNS_PORT           = 53
 ZOOKEEPER_PORT     = 2181
@@ -26,15 +26,13 @@ VB_BOXES = {
   'helios-master'  => HELIOS_PROPERTIES.merge( HELIOS_PORTS ),
   'helios-agent'   => HELIOS_PROPERTIES,
   helios:             HELIOS_PROPERTIES.merge( HELIOS_PORTS ).merge( helios_master: "helios.#{ VAGRANT_DOMAIN }" ),
-  repo:          { memory:       1024,
-                   port:         WEB_PORT,
+  repo:          { port:         WEB_PORT,
                    java_options: '-server -Xms512m -Xmx800m',
                   #  import:       M2_REPO_IMPORT,
                    ports:        [ WEB_PORT ],
                    playbook:     'artifactory-ubuntu' },
                   #  playbook:     'nexus-ubuntu' },
-  'test-repo' => { memory:          1024,
-                   reports_dir:     '/opt/gatling-reports',
+  'test-repo' => { reports_dir:     '/opt/gatling-reports',
                    reports_archive: '/vagrant/gatling-reports.tar.gz',
                    run_simulations: false,
                    host:            "repo.#{ VAGRANT_DOMAIN }",
@@ -86,6 +84,9 @@ Vagrant.configure( VAGRANTFILE_API_VERSION ) do | config |
           # Otherwise (when commented out) packages are updated automatically once a day
           # periodic: true
           # periodic: false
+
+          # Uncomment to simulate a Docker container behavior
+          # is_docker: true
         })
       end
     end

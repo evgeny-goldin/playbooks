@@ -1,19 +1,22 @@
 ---
 java: {
-  version: 8, # 7, 8 - applies only to 'oracle-jre' and 'oracle-jdk' distributions
-  oracle-jre: {
+  version: 8, # 7, 8 - applies only to 'oracle_jre' and 'oracle_jdk' distributions
+  default_distribution: oracle_jre,
+  oracle_jre: {
     redownload:       false,
     installer_url:    'http://www.duinsoft.nl/pkg/pool/all/update-sun-jre.bin',
     installer_home:   /update-sun-jre,
     installer_bin:    update-sun-jre.bin,
-    installer_script: update-sun-jre
+    installer_script: update-sun-jre,
+    java_home_base:   /opt/java/64
   },
-  oracle-jdk: {
-
+  oracle_jdk: {
   },
-  open-jdk: {
-
+  open_jdk: {
   }
 }
 
-java_distribution: open-jdk
+java_env: {
+  JAVA_HOME: "{{ java_home }}",
+  PATH:      "$PATH:{{ java_home }}/bin"
+}
