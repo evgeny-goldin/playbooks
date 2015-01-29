@@ -1,23 +1,26 @@
 ---
 - debug: msg="Setting up SkyDNS name server for domain '{{ skydns_domain }}'"
-
-- name: Downloading SkyDNS binary
-  get_url:
-    url:  "{{ skydns.url  }}"
-    dest: "{{ skydns.dest }}"
-- shell:  chmod +x '{{ skydns.dest }}'
+- set_fact:
+    skydns_bin: "{{ skydns.home }}/skydns"
 
 - include: "{{ common.utils.service }}"
   vars:
     service: skydns
     title:   SkyDNS
+    url:     "{{ skydns.url }}"
+    archive: "{{ skydns.archive }}"
+    home:    "{{ skydns.home }}"
     env:
       # https://github.com/skynetservices/skydns
+      PATH:               "$PATH:{{ skydns.home }}"
       SKYDNS_DOMAIN:      "{{ skydns_domain }}"
       SKYDNS_ADDR:        "{{ common.net.any_ip }}:{{ common.net.dns_port }}"
       ETCD_MACHINES:      "{{ common.net.localhost }}:{{ etcd_port }}"
       SKYDNS_NAMESERVERS: "{{ common.net.public_dns }}"
-    command: "skydns $SKYDNS_OPTS"
+    tests:
+      - { run: "'{{ skydns_bin }}' --help", expect: 'Usage of {{ skydns_bin }}:' }
+      - { run: "skydns --help",             expect: 'Usage of skydns:' }
+    command: "'{{ skydns_bin }}' $SKYDNS_OPTS"
     port:    "{{ common.net.dns_port }}"
 
 - name:     Running local dig

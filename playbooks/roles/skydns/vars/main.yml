@@ -1,6 +1,6 @@
 ---
 skydns: {
-  url:     '{{ common.urls.bintray }}/evgenyg/dependencies/skydns-ubuntu-2.0.1d',
-  dest:    '/usr/bin/skydns',
-  config:  "{{ ubuntu.etc_default }}/skydns"
+  url:     '{{ common.urls.bintray }}/evgenyg/dependencies/skydns-ubuntu-2.0.1d.tar.gz',
+  archive: /opt/skydns-ubuntu-2.0.1d.tar.gz,
+  home:    /opt/skydns
 }
