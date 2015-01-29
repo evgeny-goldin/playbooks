@@ -1,0 +1,25 @@
+---
+# -------------------------------------------------------------------------------------
+# Installs fake package to satisfy unmet dependency satisfied by other means.
+# http://eric.lubow.org/2010/system-administration/creating-dummy-packages-on-debian/
+# -------------------------------------------------------------------------------------
+
+- debug: Installing fake package '{{ package }}'
+
+- name: Installing equivs
+  apt:  name=equivs state=latest force=yes
+
+- template:
+    src:  "{{ playbook_dir }}/utils/templates/fake-package"
+    dest: "/opt/{{ package }}"
+
+- name:  Creating fake package '{{ package }}'
+  shell: equivs-build '{{ package }}'
+  args:
+    chdir: /opt
+
+- shell:    ls /opt/{{ package }}*.deb
+  register: deb_name
+
+- name: Installing fake package '{{ package }}'
+  apt:  deb="{{ deb_name.stdout }}"

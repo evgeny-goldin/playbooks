@@ -11,6 +11,11 @@
 - debug: msg="ansible_fqdn = '{{ ansible_fqdn }}'"
 - debug: msg="facter_ipaddress_eth1 = '{{ facter_ipaddress_eth1 }}'"
 
+- include: "{{ common.utils.fake }}"
+  vars:
+    # We have Java 8 JRE installed already
+    package: java7-runtime
+
 - name: Calculating Helios version
   set_fact:
     helios_version:     "{{ helios.version     | calculate( helios.latest ) }}"
