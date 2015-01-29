@@ -4,6 +4,7 @@ owner='evgenyg'
 image="$1"
 tag="$2"
 dockerfile="docker/$image/Dockerfile"
+git_tag="$owner/$image/$tag"
 
 if [ "$image" == "" ] || [ "$tag" == "" ]; then
   echo "Arguments: <image> <tag>"
@@ -28,9 +29,13 @@ set -x
 time docker push "$owner/$image"
 time docker push "$owner/$image:$tag"
 
-echo '---------------------------------------'
-echo "Remeber to update the image description"
-echo '---------------------------------------'
+if [ "$(git tag | grep "$git_tag")" == "$git_tag" ]; then
+  git tag -d       "$git_tag"
+  git push origin :"$git_tag"
+fi
+git tag -a       "$git_tag" -m "$git_tag"
+git push origin  "$git_tag"
+
 open "https://registry.hub.docker.com/u/$owner/$image/"
 
 set +e
