@@ -1,4 +1,3 @@
 ---
 dependencies:
   - { role: etcd, when: periodic }
-  - { role: golang }

@@ -1,25 +1,11 @@
 ---
-- debug: var=skydns_domain
+- debug: msg="Setting up SkyDNS name server for domain '{{ skydns_domain }}'"
 
-- set_fact:
-    skydns_root: "{{ golang.path }}/src/{{ skydns.url }}"
-- set_fact:
-    skydns_bin:  "{{ skydns_root }}/skydns"
-
-- name:        Downloading SkyDNS
-  command:     go get '{{ skydns.url }}'
-  environment: "{{ golang_env | expand_path( ansible_env ) }}"
-
-- name: Switching SkyDNS tag
-  command: git checkout '{{ skydns.version }}'
-  args:
-    chdir: "{{ skydns_root }}"
-
-- name: Building SkyDNS
-  command: go build -v
-  args:
-    chdir: "{{ skydns_root }}"
-  environment: "{{ golang_env | expand_path( ansible_env ) }}"
+- name: Downloading SkyDNS binary
+  get_url:
+    url:  "{{ skydns.url  }}"
+    dest: "{{ skydns.dest }}"
+- shell:  chmod +x '{{ skydns.dest }}'
 
 - include: "{{ common.utils.service }}"
   vars:
@@ -31,7 +17,7 @@
       SKYDNS_ADDR:        "{{ common.net.any_ip }}:{{ common.net.dns_port }}"
       ETCD_MACHINES:      "{{ common.net.localhost }}:{{ etcd_port }}"
       SKYDNS_NAMESERVERS: "{{ common.net.public_dns }}"
-    command: "{{ skydns_bin }} $SKYDNS_OPTS"
+    command: "skydns $SKYDNS_OPTS"
     port:    "{{ common.net.dns_port }}"
 
 - name:     Running local dig

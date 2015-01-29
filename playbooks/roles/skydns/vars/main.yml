@@ -1,6 +1,6 @@
 ---
 skydns: {
-  version: 2.0.1d, # https://github.com/skynetservices/skydns/releases
-  url:     github.com/skynetservices/skydns,
+  url:     '{{ common.urls.bintray }}/evgenyg/dependencies/skydns-ubuntu-2.0.1d',
+  dest:    '/usr/bin/skydns',
   config:  "{{ ubuntu.etc_default }}/skydns"
 }
