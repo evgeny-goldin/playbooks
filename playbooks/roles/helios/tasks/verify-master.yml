@@ -30,7 +30,7 @@
     host:  "{{ master }}"
     port:  "{{ etcd_port }}"
     verify:
-      - { path: /version, content: etcd }
+      - { path: /version, content: '"releaseVersion"' }
 
 - include: "{{ common.utils.verify }}"
   vars:
