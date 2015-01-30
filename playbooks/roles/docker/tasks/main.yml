@@ -23,10 +23,17 @@
     - docker images
 
 - command:    "docker pull '{{ item }}'"
-  with_items: images
-  when: images is defined
+  with_items: pull
+  when: pull is defined
 
-- include: auto-start.yml
-  when:    auto_start is defined
-  vars:
-    image: "{{ auto_start }}"
+- shell:    docker images | grep -v 'IMAGE ID' | awk '{print $1}' | sort -u
+  register: docker_images
+
+- debug: var=docker_images.stdout_lines
+
+- fail: msg="Image '{{ item }}' is not found in the list of images pulled - {{ docker_images.stdout_lines }}"
+  when: item not in docker_images.stdout_lines
+  with_items: pull | default([])
+
+- include: start.yml
+  when: start is defined

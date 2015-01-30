@@ -1,9 +1,9 @@
 ---
 - set_fact:
     # evgenyg/echo -> echo, ubuntu -> ubuntu
-    name: "{{ name | default( image[ image.find('/') + 1 : ] ) }}"
+    name: "{{ name | default( start[ start.find('/') + 1 : ] ) }}"
 
-- debug: msg="Setting up auto-start of Docker image '{{ image }}' as '{{ name }}'"
+- debug: msg="Setting up auto-start of Docker image '{{ start }}' as '{{ name }}'"
 
 # [ port1, port2, port3 ] => "-p port1:port1 -p port2:port1 -p port3:port3"
 - name:     Setting Docker ports
@@ -32,5 +32,5 @@
   vars:
     service: docker-{{ name }}
     title:   Docker app '{{ name }}'
-    command: "docker kill '{{ name }}'; docker rm '{{ name }}'; docker pull '{{ image }}'; docker run {{ docker_ports | default('') }} {{ docker_env | default ('') }} --name '{{ name }}' '{{ image }}'"
+    command: "docker kill '{{ name }}'; docker rm '{{ name }}'; docker pull '{{ start }}'; docker run {{ docker_ports | default('') }} {{ docker_env | default ('') }} --name '{{ name }}' '{{ start }}'"
     timeout: "{{ docker.pull_timeout }}"
