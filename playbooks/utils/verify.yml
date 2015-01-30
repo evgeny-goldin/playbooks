@@ -16,7 +16,7 @@
 - debug: msg="Verifying {{ title }} endpoint {{ v_host }}:{{ v_port }}"
 
 - name: Waiting for {{ title }} endpoint
-  wait_for: host={{ v_host }} port={{ v_port }} timeout={{ timeout | default( 5 ) }}
+  wait_for: host={{ v_host }} port={{ v_port }} timeout={{ timeout | default( 10 ) }}
 
 - name: Waiting for {{ title }} HTTP endpoint
   uri:
@@ -26,7 +26,7 @@
   register: http_wait_out
   until: "{{ ( http_wait_out.content is defined ) and ( item.content in http_wait_out.content ) }}"
   # https://github.com/ansible/ansible/issues/5865
-  retries: 40 # "{{ timeout | default( 5 ) | int // 3 }}"
+  retries: 40 # "{{ timeout | default( 10 ) | int // 3 }}"
   delay:   3
   with_items:
     - "{{ wait }}"

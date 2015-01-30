@@ -1,0 +1,35 @@
+---
+- set_fact:
+    # evgenyg/echo -> echo, ubuntu -> ubuntu
+    name: "{{ name | default( image[ image.find('/') + 1 : ] ) }}"
+
+- debug: msg="Setting up auto-start of Docker image '{{ image }}' as '{{ name }}'"
+
+# [ port1, port2, port3 ] => "-p port1:port1 -p port2:port1 -p port3:port3"
+- name:     Setting Docker ports
+  set_fact: docker_ports="{{ ports | default([ port ]) | transform( "-p {0}:{0}" ) | join( ' ' ) }}"
+  when:     ( ports is defined ) or ( port is defined )
+
+- set_fact: env_file="/opt/{{ name }}.env"
+  when: env_vars is defined
+
+- set_fact: docker_env="--env-file '{{ env_file }}'"
+  when: env_vars is defined
+
+- file: path="{{ env_file }}" state=absent
+  when: env_vars is defined
+
+- name: Creating Docker env file
+  lineinfile:
+    # http://docs.ansible.com/faq.html#how-do-i-access-a-variable-name-programmatically
+    line:   "{{ item }}={{ hostvars[ inventory_hostname ][ item ] | mandatory }}"
+    dest:   "{{ env_file }}"
+    create: yes
+  with_items: env_vars
+  when: env_vars is defined
+
+- include: "{{ common.utils.service }}"
+  vars:
+    service: docker-{{ name }}
+    title:   Docker app {{ name }}
+    command: "docker kill '{{ name }}'; docker rm '{{ name }}'; docker pull '{{ image }}'; docker run {{ docker_ports | default('') }} {{ docker_env | default ('') }} --name '{{ name }}' '{{ image }}'"

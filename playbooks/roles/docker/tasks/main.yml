@@ -5,18 +5,28 @@
   apt_key: keyserver=hkp://keyserver.ubuntu.com:80 id=36A1D7869245C8950F966E92D8576A8BA88D21E9
 
 - name:           Adding Docker repository
-  apt_repository: repo='deb https://get.docker.io/ubuntu docker main' update_cache=yes
+  apt_repository: repo='deb {{ common.urls.docker }}/ubuntu docker main' update_cache=yes
 
 - name: Installing Docker
-  apt:  name=lxc-docker force=yes
+  apt:  name=lxc-docker state=latest force=yes
 
 - name:     Running Docker version
   command:  docker --version
   register: docker_version_out
 - assert:
     that:
-      - "'Docker' in docker_version_out.stdout"
+      - "'Docker version' in docker_version_out.stdout"
 
-- name:    Generating auto boot script for Docker image '{{ image }}'
-  include: auto-boot.yml
-  when:    image is defined
+- command: "{{ item }}"
+  with_items:
+    - docker ps
+    - docker images
+
+- command:    "docker pull '{{ item }}'"
+  with_items: images
+  when: images is defined
+
+- include: auto-start.yml
+  when:    auto_start is defined
+  vars:
+    image: "{{ auto_start }}"

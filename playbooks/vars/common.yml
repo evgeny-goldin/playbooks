@@ -17,6 +17,7 @@ common: {
 
   urls: {
     bintray: 'https://dl.bintray.com',
+    docker:  'https://get.docker.com',
     github:  'https://github.com',
     golang:  'https://golang.org',
     gradle:  'https://gradle.org',
