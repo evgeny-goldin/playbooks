@@ -1,6 +1,7 @@
 ---
 dependencies:
-  - { role: zookeeper, when: periodic and (( helios_role is undefined ) or ( helios_role == 'master' )) }
-  - { role: exhibitor, when: periodic and (( helios_role is undefined ) or ( helios_role == 'master' )) }
-  - { role: skydns,    when: periodic and (( helios_role is undefined ) or ( helios_role == 'master' )) }
-  - { role: docker,    when: periodic and (( helios_role is undefined ) or ( helios_role == 'agent'  )) }
+  - { role: java }
+  - { role: zookeeper, when: periodic|bool and (( helios_role is undefined ) or ( helios_role == 'master' )) }
+  - { role: exhibitor, when: periodic|bool and (( helios_role is undefined ) or ( helios_role == 'master' )) }
+  - { role: skydns,    when: periodic|bool and (( helios_role is undefined ) or ( helios_role == 'master' )) }
+  - { role: docker,    when: periodic|bool and (( helios_role is undefined ) or ( helios_role == 'agent'  )) }
