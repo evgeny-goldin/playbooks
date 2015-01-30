@@ -14,7 +14,7 @@
 - debug: msg="service = '{{ service }}'"
 - debug: msg="command = '{{ command }}'"
 
-- include: download.yml
+- include: "{{ common.utils.download }}"
 
 - set_fact:
     upstart_script: "{{ ubuntu.init_dir }}/{{ service }}.conf"
@@ -30,5 +30,5 @@
   service: name={{ service }} state=restarted enabled=yes
 - pause:   seconds=3
 
-- include: verify.yml
-  when:    port is defined
+- include: "{{ common.utils.verify }}"
+  when:    ports is defined
