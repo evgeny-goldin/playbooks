@@ -1,4 +1,3 @@
 ---
 docker: {
-  pull_timeout: 300
 }

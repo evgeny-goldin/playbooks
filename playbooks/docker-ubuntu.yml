@@ -12,5 +12,5 @@
 
   roles:
     - { role: run-before, period: daily }
-    - { role: docker, pull: [ evgenyg/echo, evgenyg/ansible, ubuntu ], start: evgenyg/echo, ports: [ 8080 ] }
+    - { role: docker, start: evgenyg/echo, ports: [ 8080 ], wait: [{ path: / }], verify: [{ path: / }] }
     - run-after

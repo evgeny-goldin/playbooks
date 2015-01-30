@@ -21,7 +21,7 @@
 - set_fact:
     upstart_script: "{{ ubuntu.init_dir }}/{{ service }}.conf"
 
-- debug: msg="Starting {{ title }} service '{{ service }}' with '{{ command }}' in '{{ upstart_script }}'"
+- debug: msg="Starting {{ title }} service '{{ service }}' with [{{ command }}] in '{{ upstart_script }}'"
 
 - name: Generating {{ title }} upstart script
   template:

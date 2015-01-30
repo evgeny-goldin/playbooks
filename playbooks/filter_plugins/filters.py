@@ -11,6 +11,10 @@ import os.path
 from   ansible import errors
 from   timeit  import default_timer as timer
 
+def contains( l, element ):
+  '''Finds if any list element contains the element specified'''
+  return any( element in e for e in l )
+
 def re_escape( pattern ):
   '''Returns \Qpattern\E, regex-escaped'''
   return re.escape( pattern )
@@ -105,6 +109,7 @@ class FilterModule( object ):
 
   def filters( self ):
     return {
+      'contains'      : contains,
       're_escape'     : re_escape,
       'ext'           : ext,
       'expand_path'   : expand_path,
