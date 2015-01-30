@@ -36,7 +36,7 @@
 - debug: var=run_env
 
 - debug: msg="Downloading {{ title }} - '{{ url }}' => '{{ archive }}'"
-  when:  download and ( not unpack )
+  when:  download|bool and ( not unpack|bool )
 
 - debug: msg="Downloading and unpacking {{ title }} - '{{ url }}' => '{{ archive }}' => '{{ home }}'"
   when:  unpack

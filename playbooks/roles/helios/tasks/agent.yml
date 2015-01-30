@@ -8,10 +8,11 @@
   service: name=helios-agent state=stopped
   ignore_errors: yes
 
-- name: Downloading registrar plugin
-  get_url:
-    url:  "{{ helios.agent.registrar_plugin.url | tokens( helios.agent.registrar_plugin ) }}"
-    dest: "{{ registrar_plugin }}"
+- include: "{{ common.utils.download }}"
+  vars:
+    title:   registrar plugin
+    url:     "{{ helios.agent.registrar_plugin.url | tokens( helios.agent.registrar_plugin ) }}"
+    archive: "{{ registrar_plugin }}"
 
 - file: path={{ helios.agent.config_endpoints | dirname }} state=directory
 
