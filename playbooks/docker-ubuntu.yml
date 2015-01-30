@@ -12,5 +12,5 @@
 
   roles:
     - { role: run-before, period: daily }
-    - { role: docker, auto_start: evgenyg/echo }
+    - { role: docker, auto_start: evgenyg/echo, ports: [ 8080 ] }
     - run-after

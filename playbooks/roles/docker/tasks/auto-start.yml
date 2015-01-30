@@ -31,6 +31,6 @@
 - include: "{{ common.utils.service }}"
   vars:
     service: docker-{{ name }}
-    title:   Docker app {{ name }}
+    title:   Docker app '{{ name }}'
     command: "docker kill '{{ name }}'; docker rm '{{ name }}'; docker pull '{{ image }}'; docker run {{ docker_ports | default('') }} {{ docker_env | default ('') }} --name '{{ name }}' '{{ image }}'"
     timeout: "{{ docker.pull_timeout }}"
