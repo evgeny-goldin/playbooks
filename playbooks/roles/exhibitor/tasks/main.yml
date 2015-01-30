@@ -47,7 +47,6 @@
     service: exhibitor
     command: "java -jar '{{ exhibitor_jar }}' -c file --port {{ exhibitor_port }}"
     port:    "{{ exhibitor_port }}"
-    timeout: 10
     verify:
       - { status: 404 }
       - { path: /exhibitor, status: 404 }

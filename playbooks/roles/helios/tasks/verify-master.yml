@@ -6,9 +6,11 @@
 
 - include: "{{ common.utils.verify }}"
   vars:
-    title: Helios master DNS
+    title: Helios master DNS and ZooKepper
     host:  "{{ master }}"
-    port:  "{{ common.net.dns_port }}"
+    ports:
+      - "{{ common.net.dns_port }}"
+      - "{{ zookeeper_port }}"
 
 - include: "{{ common.utils.verify }}"
   vars:
@@ -17,12 +19,6 @@
     port:  "{{ helios_master_port }}"
     verify:
       - { status: 404 }
-
-- include: "{{ common.utils.verify }}"
-  vars:
-    title: Helios master ZooKeeper
-    host:  "{{ master }}"
-    port:  "{{ zookeeper_port }}"
 
 - include: "{{ common.utils.verify }}"
   vars:

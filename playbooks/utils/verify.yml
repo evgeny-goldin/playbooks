@@ -2,43 +2,63 @@
 # ===================================================================================================
 # Verifies endpoint is available and responds appropriately
 # ===================================================================================================
-# - Verifies endpoint is reachable at {{ host }}:{{ port }} within {{ timeout }} seconds
-# - Waits for HTTP endpoint to respond with {{ wait }}
+# - Verifies endpoints are reachable at {{ host }}:{{ port/ports }} within {{ timeout }} seconds
+# - Waits for HTTP endpoint (first port in a list) to respond with {{ wait }}
 # - Verifies HTTP endpoint content with {{ verify }}
 # ===================================================================================================
-# - Required variables are: title, port. Others are optional.
+# - Required variables are: title, port or ports. Others are optional.
 # ===================================================================================================
 
 - set_fact:
-    v_host: "{{ host | default( common.net.localhost ) }}"
-    v_port: "{{ port }}"
+    v_host:    "{{ host    | default( common.net.localhost ) }}"
+    v_timeout: "{{ timeout | default( 10 ) }}"
 
-- debug: msg="Verifying {{ title }} endpoint {{ v_host }}:{{ v_port }}"
+- fail: msg="Either 'port' or 'ports' variable needs to be defined"
+  when: ( port is not defined ) and ( ports is not defined )
 
-- name: Waiting for {{ title }} endpoint
-  wait_for: host={{ v_host }} port={{ v_port }} timeout={{ timeout | default( 10 ) }}
+- fail: msg="Both 'port' ({{ port }}) and 'ports' ({{ ports }}) variables can not be defined"
+  when: ( port is defined ) and ( ports is defined )
+
+- set_fact:
+    v_ports:
+      - "{{ port }}"
+  when: port is defined
+
+- set_fact:
+    v_ports: "{{ ports }}"
+  when: ports is defined
+
+- name: Checking list of ports to verify is not empty
+  fail: msg="Empty list of ports to verify - {{ v_ports }}"
+  when: v_ports | length < 1
+
+- debug: msg="Verifying {{ title }} endpoints {{ v_host }}:{{ v_ports | join(',') }}, timeout {{ v_timeout }} sec"
+
+- name: Waiting for {{ title }} endpoints
+  wait_for:   host={{ v_host }} port={{ item }} timeout={{ v_timeout }}
+  with_items: v_ports
 
 - name: Waiting for {{ title }} HTTP endpoint
   uri:
-    url:            "http://{{ v_host }}:{{ v_port }}{{ item.path | default('')}}"
+    url:            "http://{{ v_host }}:{{ v_ports[0] }}{{ item.path | default('')}}"
     status_code:    "{{ item.status | default( 200 )}}"
+    timeout:        "{{ v_timeout }}"
     return_content: yes
   register: http_wait_out
   until: "{{ ( http_wait_out.content is defined ) and ( item.content in http_wait_out.content ) }}"
   # https://github.com/ansible/ansible/issues/5865
   retries: 40 # "{{ timeout | default( 10 ) | int // 3 }}"
   delay:   3
-  with_items:
-    - "{{ wait }}"
+  with_items: wait
   when: wait is defined
 
 - name: Verifying {{ title }} HTTP endpoint
   uri:
-    url: "http://{{ v_host }}:{{ v_port }}{{ item.path | default('')}}"
+    url:            "http://{{ v_host }}:{{ v_ports[0] }}{{ item.path | default('')}}"
+    timeout:        "{{ v_timeout }}"
     return_content: yes
   register: http_verify_out
-  with_items:
-    - "{{ verify }}"
+  with_items: verify
   # https://github.com/ansible/ansible/issues/10017
   failed_when: ( '{{ item.content | default('') }}' not in http_verify_out.content ) or ( {{ item.status | default( 200 ) }} != http_verify_out.status )
   when: verify is defined

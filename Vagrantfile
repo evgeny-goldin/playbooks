@@ -19,19 +19,19 @@ HELIOS_PROPERTIES  = { helios_master:      "helios-master.#{ VAGRANT_DOMAIN }",
                        etcd_port:          ETCD_PORT,
                        exhibitor_port:     WEB_PORT,
                        skydns_domain:      VAGRANT_DOMAIN }
-HELIOS_PORTS       = { ports: [ DNS_PORT, ZOOKEEPER_PORT, HELIOS_MASTER_PORT, ETCD_PORT, WEB_PORT ] }
+HELIOS_PORTS       = { vagrant_ports: [ DNS_PORT, ZOOKEEPER_PORT, HELIOS_MASTER_PORT, ETCD_PORT, WEB_PORT ] }
 
 VB_BOXES = {
   jvm:    {},
-  docker: { port: WEB_PORT },
+  docker: { vagrant_ports: [ WEB_PORT ] },
   'helios-master'  => HELIOS_PROPERTIES.merge( HELIOS_PORTS ),
   'helios-agent'   => HELIOS_PROPERTIES,
   helios:             HELIOS_PROPERTIES.merge( HELIOS_PORTS ).merge( helios_master: "helios.#{ VAGRANT_DOMAIN }" ),
-  repo:          { port:         WEB_PORT,
-                   java_options: '-server -Xms512m -Xmx800m',
+  repo:          { port:          WEB_PORT,
+                   java_options:  '-server -Xms512m -Xmx800m',
                   #  import:       M2_REPO_IMPORT,
-                   ports:        [ WEB_PORT ],
-                   playbook:     'artifactory-ubuntu' },
+                   vagrant_ports: [ WEB_PORT ],
+                   playbook:      'artifactory-ubuntu' },
                   #  playbook:     'nexus-ubuntu' },
   'test-repo' => { reports_dir:     '/opt/gatling-reports',
                    reports_archive: '/vagrant/gatling-reports.tar.gz',
@@ -63,7 +63,7 @@ Vagrant.configure( VAGRANTFILE_API_VERSION ) do | config |
                                        # 2) Landrush needs a proper hostname ending with config.landrush.tld
       b.vm.synced_folder 'playbooks', '/playbooks'
 
-      ( variables[ :ports ] || [] ).each { | port |
+      ( variables[ :vagrant_ports ] || [] ).each { | port |
         b.vm.network 'forwarded_port', guest: port, host: port, auto_correct: true
       }
 
