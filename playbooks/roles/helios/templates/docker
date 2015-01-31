@@ -1,1 +1,1 @@
-export DOCKER_OPTS="--restart=false -D=true -H=tcp://0.0.0.0:{{ common.net.ports.docker }} -H=unix:///var/run/docker.sock --dns={{ helios_master }}"
+export DOCKER_OPTS="-D=true -H={{ helios.agent.docker.tcp }} -H=unix:///var/run/docker.sock --dns={{ helios_master_ip }}"

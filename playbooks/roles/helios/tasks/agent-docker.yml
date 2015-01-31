@@ -1,0 +1,33 @@
+---
+# ---------------------------------------------------------------
+# Handles Docker-related steps in Helios agent setup
+# ---------------------------------------------------------------
+- name: Reading '{{ helios_master }}' IP address
+  shell: dig '@{{ helios_master }}' '{{ helios_master }}' | grep '{{ helios_master }}.' | grep -v '^;' | head -1 | awk '{print $5}'
+  register: helios_master_ip_out
+- set_fact: helios_master_ip="{{ helios_master_ip_out.stdout }}"
+
+- debug:   msg="Helios master IP is [{{ helios_master_ip }}]"
+- include: verify-master.yml master={{ helios_master_ip }}
+
+- name: Updating Docker config
+  template:
+    src:  docker
+    dest: "{{ ubuntu.etc_default }}/docker"
+
+- name:    Restarting Docker service
+  service: name=docker state=restarted enabled=yes
+
+- name:     Running Docker
+  command:  docker ps
+  register: docker_out
+
+- fail: msg="Failed to run 'docker ps', result is [{{ docker_out.stdout }}]"
+  when: not ( 'CONTAINER ID' in docker_out.stdout )
+
+- name: Checking Docker remote API
+  uri: url="{{ helios.agent.docker.http }}/info" return_content=yes timeout=5
+  register: docker_api
+
+- fail: msg="Failed to call '{{ helios.agent.docker.http }}/info', result JSON has no 'OperatingSystem' - [{{ docker_api.json }}]"
+  when: not ( 'OperatingSystem' in docker_api.json )

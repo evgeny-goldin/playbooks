@@ -25,13 +25,7 @@
 - name:  Updating Helios agent script
   shell: sed -i "s|exec java|exec '{{ java_home }}/bin/java'|" '{{ helios.agent.script }}'
 
-- name: Updating Docker config
-  template:
-    src:  docker
-    dest: "{{ ubuntu.etc_default }}/docker"
-
-- name:    Restarting Docker service
-  service: name=docker state=restarted enabled=yes
+- include: agent-docker.yml
 
 - name:    Starting Helios agent service
   service: name=helios-agent state=started enabled=yes

@@ -22,6 +22,10 @@ helios: {
       url:     '{{ common.urls.github }}/spotify/helios-skydns/releases/download/<version>/helios-skydns-<version>.jar',
       archive: /opt/helios-skydns-<version>.jar
     },
-    script: /usr/bin/helios-agent
+    script: /usr/bin/helios-agent,
+    docker: {
+      tcp:  'tcp://localhost:{{ common.net.ports.docker }}',
+      http: 'http://localhost:{{ common.net.ports.docker }}'
+    }
   }
 }
