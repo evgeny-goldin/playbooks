@@ -29,14 +29,6 @@
       - { path: /version,         content: '"releaseVersion":' }
       - { path: /v2/stats/leader, content: '{"leader":"' }
 
-- include: "{{ common.utils.verify }}"
-  vars:
-    title: Helios master Exhibitor
-    host:  "{{ master }}"
-    port:  "{{ exhibitor_port }}"
-    verify:
-      - { path: /exhibitor/v1/ui/index.html, content: Exhibitor for ZooKeeper }
-
 - include: "{{ common.roles.register }}"
   vars:
     etcd_host:   "{{ master }}"

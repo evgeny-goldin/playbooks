@@ -6,7 +6,6 @@
 - debug: msg="helios_master_port = '{{ helios_master_port }}'"
 - debug: msg="zookeeper_port = '{{ zookeeper_port }}'"
 - debug: msg="etcd_port = '{{ etcd_port }}'"
-- debug: msg="exhibitor_port = '{{ exhibitor_port }}'"
 - debug: msg="skydns_domain = '{{ skydns_domain }}'"
 - debug: msg="ansible_fqdn = '{{ ansible_fqdn }}'"
 - debug: msg="facter_ipaddress_eth1 = '{{ facter_ipaddress_eth1 }}'"
