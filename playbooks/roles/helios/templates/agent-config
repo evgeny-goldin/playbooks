@@ -1,2 +1,2 @@
-ENABLED=true
-HELIOS_AGENT_OPTS="--syslog --state-dir={{ helios.agent.state_dir }} --name={{ ansible_fqdn }} --zk {{ helios_master }}:{{ zookeeper_port }} --service-registry http://{{ helios_master }}:{{ etcd_port }} --service-registrar-plugin {{ registrar_plugin }} --domain {{ skydns_domain }}"
+export ENABLED=true
+export HELIOS_AGENT_OPTS="--state-dir={{ helios.agent.state_dir }} --name={{ ansible_fqdn }} --zk {{ helios_master }}:{{ zookeeper_port }} --service-registry http://{{ helios_master }}:{{ etcd_port }} --service-registrar-plugin {{ registrar_plugin }} --domain {{ skydns_domain }}"
