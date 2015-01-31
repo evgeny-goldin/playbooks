@@ -2,15 +2,15 @@
 # ---------------------------------------------------------
 # Called by other roles to register a host with SkyDNS
 # ---------------------------------------------------------
-- debug: msg="Sending registration request to '{{ etcd_host }}' for '{{ fqdn }}' => '{{ ip }}'"
+- debug: msg="Sending registration request to '{{ etcd_host }}' for '{{ host }}' => '{{ ip }}'"
 - debug: msg="etcd_port = '{{ etcd_port }}'"
 - debug: msg="skydns_host = '{{ skydns_host }}'"
 
 - set_fact:
-    registration_url: "http://{{ etcd_host }}:{{ etcd_port }}/v2/keys/skydns/{{ '/'.join( fqdn.split( '.' )[::-1] ) }}"
+    registration_url: "http://{{ etcd_host }}:{{ etcd_port }}/v2/keys/skydns/{{ '/'.join( host.split( '.' )[::-1] ) }}"
 - set_fact:
     registration_command: "curl -XPUT '{{ registration_url }}' -d value='{ \"host\" : \"{{ ip }}\" }'"
-    dig_command:          "dig @{{ skydns_host }} '{{ fqdn }}'"
+    dig_command:          "dig @{{ skydns_host }} '{{ host }}'"
 
 - debug: msg="Running '{{ registration_command }}'"
 
@@ -24,12 +24,12 @@
   #   body:    "{ 'host' : '{{ ip }}' }"
   #   timeout: 3
 
-- name:     Running "{{ dig_command }}"
-  command:  "{{ dig_command }}"
+- debug:    msg="Running [{{ dig_command }}]"
+- command:  "{{ dig_command }}"
   register: dig_out
 
 - name: Verifying dig
   assert:
     that:
-      - "'{{ fqdn }}' in dig_out.stdout"
+      - "'{{ host }}' in dig_out.stdout"
       - "'{{ ip }}'   in dig_out.stdout"
