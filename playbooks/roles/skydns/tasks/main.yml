@@ -20,8 +20,14 @@
     tests:
       - { run: "'{{ skydns_bin }}' --help", expect: 'Usage of {{ skydns_bin }}:' }
       - { run: "skydns --help",             expect: 'Usage of skydns:' }
-    command: "'{{ skydns_bin }}' $SKYDNS_OPTS"
-    port:    "{{ common.net.dns_port }}"
+    # Waiting a bit while etcd service is starting
+    command: "sleep 5 && '{{ skydns_bin }}' $SKYDNS_OPTS"
+    ports:
+      - "{{ etcd_port }}"
+      - "{{ common.net.dns_port }}"
+    verify:
+      - { path: /version, content: '"releaseVersion":"{{ etcd.version }}"' }
+      - { path: /v2/keys, content: '{"action":"get"' }
 
 - name:     Running local dig
   command:  dig @{{ common.net.localhost }}

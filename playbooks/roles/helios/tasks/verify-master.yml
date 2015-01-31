@@ -1,7 +1,7 @@
 ---
-# ---------------------------------------------
-# Verifies connectivity with Helios master
-# ---------------------------------------------
+# ---------------------------------------------------------
+#   Verifies connectivity with Helios master and services
+# ---------------------------------------------------------
 - debug: msg="Verifying Helios master '{{ master }}' endpoints"
 
 - include: "{{ common.utils.verify }}"
@@ -26,7 +26,8 @@
     host:  "{{ master }}"
     port:  "{{ etcd_port }}"
     verify:
-      - { path: /version, content: '"releaseVersion"' }
+      - { path: /version, content: '"releaseVersion":' }
+      - { path: /v2/keys, content: '{"action":"get"'   }
 
 - include: "{{ common.utils.verify }}"
   vars:

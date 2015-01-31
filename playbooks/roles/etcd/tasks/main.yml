@@ -18,7 +18,9 @@
       ETCD_BIND_ADDR: "{{ common.net.any_ip }}:{{ etcd_port }}"
     tests:
       - { run: "{{ etcd_bin }} --version", expect: "{{ etcd.version }}" }
-    command: "{{ etcd_bin }} $ETCD_OPTS"
-    port:    "{{ etcd_port }}"
+    command:   "{{ etcd_bin }} $ETCD_OPTS"
+    dependent: skydns
+    port:      "{{ etcd_port }}"
     verify:
       - { path: /version, content: '"releaseVersion":"{{ etcd.version }}"' }
+      - { path: /v2/keys, content: '{"action":"get"' }

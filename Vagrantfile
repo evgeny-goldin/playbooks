@@ -83,10 +83,10 @@ Vagrant.configure( VAGRANTFILE_API_VERSION ) do | config |
           # Uncomment and set to true to forcefully update all packages
           # Uncomment and set to false to disable periodic run
           # Otherwise (when commented out) packages are updated automatically once a day
-          # periodic: true
-          # periodic: false
+          # periodic: true,
+          # periodic: false,
 
-          # Uncomment to simulate a Docker container behavior
+          # Uncomment to simulate a Docker container behavior (less packages are installed)
           # is_docker: true
         })
       end
