@@ -14,7 +14,7 @@
       # https://github.com/skynetservices/skydns
       PATH:               "$PATH:{{ skydns.home }}"
       SKYDNS_DOMAIN:      "{{ skydns_domain }}"
-      SKYDNS_ADDR:        "{{ common.net.any_ip }}:{{ common.net.dns_port }}"
+      SKYDNS_ADDR:        "{{ common.net.any_ip }}:{{ common.net.ports.dns }}"
       ETCD_MACHINES:      "{{ common.net.localhost }}:{{ etcd_port }}"
       SKYDNS_NAMESERVERS: "{{ common.net.public_dns }}"
     tests:
@@ -25,7 +25,7 @@
     command: "sleep 5 && '{{ skydns_bin }}' $SKYDNS_OPTS"
     ports:
       - "{{ etcd_port }}"
-      - "{{ common.net.dns_port }}"
+      - "{{ common.net.ports.dns }}"
     verify:
       - { path: /version,         content: '"releaseVersion":"{{ etcd.version }}"' }
       - { path: /v2/stats/leader, content: '{"leader":"' }
@@ -39,4 +39,4 @@
     that:
       - "'Got answer'       in dig_out.stdout"
       - "'QUESTION SECTION' in dig_out.stdout"
-      - "'SERVER: {{ common.net.localhost }}#{{ common.net.dns_port }}({{ common.net.localhost }})' in dig_out.stdout"
+      - "'SERVER: {{ common.net.localhost }}#{{ common.net.ports.dns }}({{ common.net.localhost }})' in dig_out.stdout"

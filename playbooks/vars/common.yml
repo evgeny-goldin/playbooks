@@ -8,7 +8,10 @@ common: {
   },
 
   net: {
-    dns_port:  53,
+    ports: {
+      dns:    53,
+      docker: 2375
+    },
     localhost: 127.0.0.1,
     any_ip:    0.0.0.0,
     # https://developers.google.com/speed/public-dns/

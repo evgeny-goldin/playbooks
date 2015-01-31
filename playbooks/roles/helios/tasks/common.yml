@@ -29,3 +29,9 @@
 
 - name: Installing Helios services
   apt:  deb="{{ helios.home }}/helios-services_{{ helios_version }}_all.deb"
+
+- name: Installing Python pip
+  apt:  name=python-pip state=latest force=yes
+
+- name: Installing zk-shell
+  pip:  name=zk-shell state=latest

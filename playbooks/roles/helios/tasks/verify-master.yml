@@ -9,7 +9,7 @@
     title: Helios master DNS and ZooKepper
     host:  "{{ master }}"
     ports:
-      - "{{ common.net.dns_port }}"
+      - "{{ common.net.ports.dns }}"
       - "{{ zookeeper_port }}"
 
 - include: "{{ common.utils.verify }}"

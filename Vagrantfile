@@ -24,14 +24,15 @@ VB_BOXES = {
   jvm:    {},
   docker: { vagrant_ports: [ WEB_PORT ] },
   'helios-master'  => HELIOS_PROPERTIES.merge( HELIOS_PORTS ),
-  'helios-agent'   => HELIOS_PROPERTIES,
+  'helios-agent1'  => HELIOS_PROPERTIES.merge( playbook: 'helios-agent' ),
+  'helios-agent2'  => HELIOS_PROPERTIES.merge( playbook: 'helios-agent' ),
   helios:             HELIOS_PROPERTIES.merge( HELIOS_PORTS ).merge( helios_master: "helios.#{ VAGRANT_DOMAIN }" ),
   repo:          { port:          WEB_PORT,
                    java_options:  '-server -Xms512m -Xmx800m',
                   #  import:       M2_REPO_IMPORT,
                    vagrant_ports: [ WEB_PORT ],
-                   playbook:      'artifactory-ubuntu' },
-                  #  playbook:     'nexus-ubuntu' },
+                   playbook:      'artifactory' },
+                  #  playbook:     'nexus' },
   'test-repo' => { reports_dir:     '/opt/gatling-reports',
                    reports_archive: '/vagrant/gatling-reports.tar.gz',
                    run_simulations: false,
@@ -77,7 +78,7 @@ Vagrant.configure( VAGRANTFILE_API_VERSION ) do | config |
 
       b.vm.provision :ansible do | ansible |
         ansible.verbose    = VERBOSE if VERBOSE != ''
-        ansible.playbook   = "playbooks/#{ variables[ :playbook ] || "#{ box }-ubuntu" }.yml"
+        ansible.playbook   = "playbooks/#{ variables[ :playbook ] || "#{ box }" }-ubuntu.yml"
         ansible.extra_vars = variables.merge({
           # Uncomment and set to true to forcefully update all packages
           # Uncomment and set to false to disable periodic run
