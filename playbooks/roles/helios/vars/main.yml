@@ -19,7 +19,7 @@ helios: {
     registrar_plugin: {
       version: 0.1, # https://github.com/spotify/helios-skydns/releases
       url:     '{{ common.urls.github }}/spotify/helios-skydns/releases/download/<version>/helios-skydns-<version>.jar',
-      jar:     /opt/helios-skydns-<version>.jar
+      archive: /opt/helios-skydns-<version>.jar
     }
   }
 }
