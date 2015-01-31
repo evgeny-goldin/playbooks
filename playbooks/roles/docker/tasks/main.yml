@@ -21,6 +21,8 @@
 - name: Installing Docker
   apt:  name=lxc-docker state=latest force=yes
 
+- service: name=docker state=started
+
 - name:     Running Docker version
   command:  docker --version
   register: docker_version_out
