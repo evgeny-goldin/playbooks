@@ -4,7 +4,7 @@
 # http://eric.lubow.org/2010/system-administration/creating-dummy-packages-on-debian/
 # -------------------------------------------------------------------------------------
 
-- debug: Installing fake package '{{ package }}'
+- debug: msg="Installing fake package '{{ package }}'"
 
 - name: Installing equivs
   apt:  name=equivs state=latest force=yes

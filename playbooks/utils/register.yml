@@ -10,6 +10,7 @@
     registration_url: "http://{{ etcd_host }}:{{ etcd_port }}/v2/keys/skydns/{{ '/'.join( fqdn.split( '.' )[::-1] ) }}"
 - set_fact:
     registration_command: "curl -XPUT '{{ registration_url }}' -d value='{ \"host\" : \"{{ ip }}\" }'"
+    dig_command:          "dig @{{ skydns_host }} '{{ fqdn }}'"
 
 - debug: msg="Running '{{ registration_command }}'"
 
@@ -23,8 +24,8 @@
   #   body:    "{ 'host' : '{{ ip }}' }"
   #   timeout: 3
 
-- name:     Running dig
-  command:  dig @{{ skydns_host }} '{{ fqdn }}'
+- name:     Running "{{ dig_command }}"
+  command:  "{{ dig_command }}"
   register: dig_out
 
 - name: Verifying dig

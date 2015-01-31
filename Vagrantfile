@@ -18,7 +18,7 @@ HELIOS_PROPERTIES  = { helios_master:      "helios-master.#{ VAGRANT_DOMAIN }",
                        zookeeper_port:     ZOOKEEPER_PORT,
                        etcd_port:          ETCD_PORT,
                        skydns_domain:      VAGRANT_DOMAIN }
-HELIOS_PORTS       = { vagrant_ports: [ DNS_PORT, ZOOKEEPER_PORT, HELIOS_MASTER_PORT, ETCD_PORT ] }
+HELIOS_PORTS       = { vagrant_ports: [ DNS_PORT, ZOOKEEPER_PORT, ETCD_PORT, HELIOS_MASTER_PORT ] }
 
 VB_BOXES = {
   jvm:    {},

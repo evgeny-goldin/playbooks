@@ -3,6 +3,12 @@
   set_fact:
     ansible_version: "{{ ansible.version | calculate( ansible.latest ) }}"
 
+- name: Installing Python pip
+  apt:  name={{ item }} state=latest force=yes
+  with_items:
+    - python-pip
+    - python-dev # Needed for installing Ansible in AWS Ubuntu AMI
+
 - name: Installing Ansible
   pip:  name=ansible version={{ ansible_version }} extra_args="--upgrade"
 

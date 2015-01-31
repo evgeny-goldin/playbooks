@@ -8,7 +8,6 @@
 - debug: msg="etcd_port = '{{ etcd_port }}'"
 - debug: msg="skydns_domain = '{{ skydns_domain }}'"
 - debug: msg="ansible_fqdn = '{{ ansible_fqdn }}'"
-- debug: msg="facter_ipaddress_eth1 = '{{ facter_ipaddress_eth1 }}'"
 
 - include: "{{ common.utils.fake }}"
   vars:

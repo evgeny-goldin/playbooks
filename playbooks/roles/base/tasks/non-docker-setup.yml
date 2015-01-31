@@ -6,9 +6,6 @@
   apt:  name={{ item }} state=latest force=yes
   with_items: base.utils
 
-- name: Installing python-pip
-  apt:  name=python-pip state=latest force=yes
-
 - name:    Stopping and disabling Chef service, if found
   service: name=chef-client state=stopped enabled=no
   ignore_errors: yes

@@ -38,9 +38,13 @@
 - fail: msg="Running [{{ zk_shell_command }}] - 'zookeeper' is not in [{{ zk_shell.stdout }}]"
   when: not ( 'zookeeper' in zk_shell.stdout )
 
-- include: "{{ common.roles.register }}"
+- set_fact: my_ip="{{ facter_ipaddress_eth1 | default( ansible_default_ipv4.address )}}"
+#                         VirtualBox                              AWS
+- debug:    msg="My IP is [{{ my_ip }}]"
+
+- include: "{{ common.utils.register }}"
   vars:
     etcd_host:   "{{ master }}"
     skydns_host: "{{ master }}"
     fqdn:        "{{ ansible_fqdn }}"
-    ip:          "{{ facter_ipaddress_eth1 }}"
+    ip:          "{{ my_ip }}"
