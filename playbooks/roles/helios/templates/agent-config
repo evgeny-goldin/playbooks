@@ -1,3 +1,3 @@
 export DOCKER_HOST={{ helios.agent.docker.http }}
 export ENABLED=true
-export HELIOS_AGENT_OPTS="--state-dir={{ helios.agent.state_dir }} --name={{ ansible_hostname }} --zk {{ helios_master }}:{{ zookeeper_port }} --service-registry http://{{ helios_master }}:{{ etcd_port }} --service-registrar-plugin {{ registrar_plugin }} --domain {{ skydns_domain }}"
+export HELIOS_AGENT_OPTS="--state-dir={{ helios.agent.state_dir }} --name={{ ansible_hostname }} --zk {{ helios_master }}:{{ zookeeper_port }} --service-registry http://{{ helios_master }}:{{ etcd_port }} --service-registrar-plugin {{ registrar_plugin }} --domain {{ domain }}"

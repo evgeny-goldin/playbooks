@@ -1,5 +1,5 @@
 ---
-- debug: msg="Setting up SkyDNS name server for domain '{{ skydns_domain }}'"
+- debug: msg="Setting up SkyDNS name server for domain '{{ domain }}'"
 - set_fact:
     skydns_bin: "{{ skydns.home }}/skydns"
 
@@ -13,7 +13,7 @@
     env:
       # https://github.com/skynetservices/skydns
       PATH:               "$PATH:{{ skydns.home }}"
-      SKYDNS_DOMAIN:      "{{ skydns_domain }}"
+      SKYDNS_DOMAIN:      "{{ domain }}"
       SKYDNS_ADDR:        "{{ common.net.any_ip }}:{{ common.net.ports.dns }}"
       ETCD_MACHINES:      "{{ common.net.localhost }}:{{ etcd_port }}"
       SKYDNS_NAMESERVERS: "{{ common.net.public_dns }}"
