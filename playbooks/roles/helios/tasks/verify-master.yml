@@ -26,8 +26,8 @@
     host:  "{{ master }}"
     port:  "{{ etcd_port }}"
     verify:
-      - { path: /version, content: '"releaseVersion":' }
-      - { path: /v2/keys, content: '{"action":"get"'   }
+      - { path: /version,         content: '"releaseVersion":' }
+      - { path: /v2/stats/leader, content: '{"leader":"' }
 
 - include: "{{ common.utils.verify }}"
   vars:

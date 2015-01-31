@@ -27,8 +27,8 @@
       - "{{ etcd_port }}"
       - "{{ common.net.dns_port }}"
     verify:
-      - { path: /version, content: '"releaseVersion":"{{ etcd.version }}"' }
-      - { path: /v2/keys, content: '{"action":"get"' }
+      - { path: /version,         content: '"releaseVersion":"{{ etcd.version }}"' }
+      - { path: /v2/stats/leader, content: '{"leader":"' }
 
 - name:     Running local dig
   command:  dig @{{ common.net.localhost }}
