@@ -4,6 +4,8 @@
 # ---------------------------------------------------------
 - debug: msg="Verifying Helios master '{{ master }}' endpoints"
 
+- set_fact: zk_shell_command="echo 'ls /' | zk-shell '{{ master }}:{{ zookeeper_port }}' --run-from-stdin"
+
 - include: "{{ common.utils.verify }}"
   vars:
     title: Helios master DNS and ZooKepper
@@ -28,6 +30,13 @@
     verify:
       - { path: /version,         content: '"releaseVersion":' }
       - { path: /v2/stats/leader, content: '{"leader":"' }
+
+- name: Runing zk-shell
+  shell:    "{{ zk_shell_command }}"
+  register: zk_shell
+
+- fail: msg="Running [{{ zk_shell_command }}] - 'zookeeper' is not in [{{ zk_shell.stdout }}]"
+  when: not ( 'zookeeper' in zk_shell.stdout )
 
 - include: "{{ common.roles.register }}"
   vars:
