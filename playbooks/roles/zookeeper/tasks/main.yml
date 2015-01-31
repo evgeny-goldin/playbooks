@@ -12,6 +12,8 @@
     home:    "{{ zookeeper.home }}"
     configs:
       - { from: zoo.cfg, to: "{{ zookeeper_home }}/conf/zoo.cfg" }
+    env:
+      PATH:  "$PATH:{{ zookeeper_home }}/bin"
     command: "{{ zookeeper_home }}/bin/zkServer.sh start-foreground"
     port:    "{{ zookeeper_port }}"
 
