@@ -1,6 +1,9 @@
 ---
 - include: verify-master.yml master={{ helios_master }}
 
+- set_fact:
+    registrar_plugin: "{{ helios.agent.registrar_plugin.archive | tokens( helios.agent.registrar_plugin ) }}"
+
 - name: Stopping Helios agent service
   service: name=helios-agent state=stopped
   ignore_errors: yes
@@ -11,10 +14,10 @@
   vars:
     title:   Helios agent
     url:     "{{ helios.agent.registrar_plugin.url     | tokens( helios.agent.registrar_plugin ) }}"
-    archive: "{{ helios.agent.registrar_plugin.archive | tokens( helios.agent.registrar_plugin ) }}"
+    archive: "{{ registrar_plugin }}"
     configs:
-      - { from: agent-config,           to: "{{ helios.agent.config }}" }
-      - { from: agent-config-endpoints, to: "{{ helios.agent.config_endpoints }}" }
+      - { role: helios, from: agent-config,           to: "{{ helios.agent.config }}" }
+      - { role: helios, from: agent-config-endpoints, to: "{{ helios.agent.config_endpoints }}" }
 
 - name: Installing Helios agent
   apt:  deb="{{ helios.home }}/helios-agent_{{ helios_version }}_all.deb"
