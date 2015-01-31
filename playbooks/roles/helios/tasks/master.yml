@@ -11,6 +11,9 @@
 - name: Installing Helios master
   apt:  deb="{{ helios.home }}/helios-master_{{ helios_version }}_all.deb"
 
+- name:  Updating Helios master script
+  shell: sed -i "s|exec java|exec '{{ java_home }}/bin/java'|" '{{ helios.master.script }}'
+
 - name: Starting Helios master service
   service: name=helios-master state=started enabled=yes
 

@@ -19,7 +19,6 @@
     tests:
       - { run: "{{ etcd_bin }} --version", expect: "{{ etcd.version }}" }
     command:   "{{ etcd_bin }} $ETCD_OPTS"
-    dependent: skydns
     port:      "{{ etcd_port }}"
     verify:
       - { path: /version, content: '"releaseVersion":"{{ etcd.version }}"' }

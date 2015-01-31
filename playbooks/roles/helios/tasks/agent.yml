@@ -22,5 +22,8 @@
 - name: Installing Helios agent
   apt:  deb="{{ helios.home }}/helios-agent_{{ helios_version }}_all.deb"
 
+- name:  Updating Helios agent script
+  shell: sed -i "s|exec java|exec '{{ java_home }}/bin/java'|" '{{ helios.agent.script }}'
+
 - name: Starting Helios agent service
   service: name=helios-agent state=started enabled=yes

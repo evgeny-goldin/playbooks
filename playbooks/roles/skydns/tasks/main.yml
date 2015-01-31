@@ -21,6 +21,7 @@
       - { run: "'{{ skydns_bin }}' --help", expect: 'Usage of {{ skydns_bin }}:' }
       - { run: "skydns --help",             expect: 'Usage of skydns:' }
     # Waiting a bit while etcd service is starting
+    depends: etcd
     command: "sleep 5 && '{{ skydns_bin }}' $SKYDNS_OPTS"
     ports:
       - "{{ etcd_port }}"

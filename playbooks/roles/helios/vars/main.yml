@@ -10,7 +10,8 @@ helios: {
   },
   master: {
     port:   5801,
-    config: "{{ ubuntu.etc_default }}/helios-master"
+    config: "{{ ubuntu.etc_default }}/helios-master",
+    script: /usr/bin/helios-master
   },
   agent: {
     config:           "{{ ubuntu.etc_default }}/helios-agent",
@@ -20,6 +21,7 @@ helios: {
       version: 0.1, # https://github.com/spotify/helios-skydns/releases
       url:     '{{ common.urls.github }}/spotify/helios-skydns/releases/download/<version>/helios-skydns-<version>.jar',
       archive: /opt/helios-skydns-<version>.jar
-    }
+    },
+    script: /usr/bin/helios-agent
   }
 }

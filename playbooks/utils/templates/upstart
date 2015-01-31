@@ -1,17 +1,17 @@
 description "{{ service }}"
 
+start on runlevel [2345]
+
 # http://upstart.ubuntu.com/cookbook/#start-depends-on-another-service
 
 {% if depends is defined %}
 start on started {{ depends }}
 {% endif %}
-
 {% if dependent is defined %}
 start on starting {{ dependent }}
 {% endif %}
 
 {% if (( depends is not defined ) and ( dependent is not defined )) %}
-start on runlevel [2345]
 {% endif %}
 
 stop  on runlevel [!2345]
