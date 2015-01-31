@@ -18,11 +18,11 @@ HELIOS_PROPERTIES  = { helios_master:      "helios-master.#{ VAGRANT_DOMAIN }",
                        zookeeper_port:     ZOOKEEPER_PORT,
                        etcd_port:          ETCD_PORT,
                        skydns_domain:      VAGRANT_DOMAIN }
-HELIOS_PORTS       = { vagrant_ports: [ DNS_PORT, ZOOKEEPER_PORT, HELIOS_MASTER_PORT, ETCD_PORT, WEB_PORT ] }
+HELIOS_PORTS       = { vagrant_ports: [ DNS_PORT, ZOOKEEPER_PORT, HELIOS_MASTER_PORT, ETCD_PORT ] }
 
 VB_BOXES = {
   jvm:    {},
-  docker: { vagrant_ports: [ WEB_PORT ] },
+  docker: {},
   'helios-master'  => HELIOS_PROPERTIES.merge( HELIOS_PORTS ),
   'helios-agent1'  => HELIOS_PROPERTIES.merge( playbook: 'helios-agent' ),
   'helios-agent2'  => HELIOS_PROPERTIES.merge( playbook: 'helios-agent' ),
