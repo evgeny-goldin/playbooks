@@ -8,7 +8,7 @@
 - set_fact: helios_master_ip="{{ helios_master_ip_out.stdout }}"
 
 - debug:   msg="Helios master IP is [{{ helios_master_ip }}]"
-- include: verify-master.yml master={{ helios_master_ip }}
+- include: verify-master.yml master={{ helios_master_ip }} host="{{ agent_name }}"
 
 - name: Updating Docker config
   template:

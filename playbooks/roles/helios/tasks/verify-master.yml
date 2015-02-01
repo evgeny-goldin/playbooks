@@ -46,5 +46,4 @@
   vars:
     etcd_host:   "{{ master }}"
     skydns_host: "{{ master }}"
-    host:        "{{ ansible_hostname }}.{{ domain }}"
     ip:          "{{ my_ip }}"

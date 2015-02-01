@@ -12,6 +12,6 @@
 
   roles:
     - { role: run-before, period: daily }
-    - { role: docker, pull: [ evgenyg/echo ] }
+    - { role: docker, pull: [ evgenyg/echo, nginx ] }
     - { role: helios, helios_role: agent }
     - run-after

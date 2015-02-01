@@ -1,4 +1,7 @@
 ---
+- set_fact:
+    master_name: "{{ ansible_hostname }}.{{ domain }}"
+
 - name: Stopping Helios master service
   service: name=helios-master state=stopped
   ignore_errors: yes
@@ -17,5 +20,6 @@
 - name: Starting Helios master service
   service: name=helios-master state=started enabled=yes
 
-- include: verify-master.yml master={{ common.net.localhost }}
-- include: verify-master.yml master={{ helios_master }}
+- include: verify-master.yml master={{ common.net.localhost }} host="{{ master_name }}"
+- include: verify-master.yml master={{ helios_master }}        host="{{ master_name }}"
+- include: verify-helios.yml master={{ helios_master }}

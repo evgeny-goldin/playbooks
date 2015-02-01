@@ -1,8 +1,9 @@
 ---
-- include: verify-master.yml master={{ helios_master }}
-
 - set_fact:
     registrar_plugin: "{{ helios.agent.registrar_plugin.archive | tokens( helios.agent.registrar_plugin ) }}"
+    agent_name:       "{{ ansible_hostname }}.{{ domain }}"
+
+- include: verify-master.yml master={{ helios_master }} host="{{ agent_name }}"
 
 - name: Stopping Helios agent service
   service: name=helios-agent state=stopped
@@ -29,3 +30,5 @@
 
 - name:    Starting Helios agent service
   service: name=helios-agent state=started enabled=yes
+
+- include: verify-helios.yml master={{ helios_master }} agent={{ agent_name }}
