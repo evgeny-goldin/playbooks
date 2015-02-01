@@ -23,17 +23,13 @@
 
 - service: name=docker state=started
 
-- name:     Running Docker version
-  command:  docker --version
-  register: docker_version_out
-- assert:
-    that:
-      - "'Docker version' in docker_version_out.stdout"
-
-- command: "{{ item }}"
-  with_items:
-    - docker ps
-    - docker images
+- include: "{{ common.utils.run }}"
+  vars:
+    title: Docker status
+    commands:
+      - { run: 'docker --version', expect: 'Docker version'  }
+      - { run: 'docker ps',        expect: [ CONTAINER ID, IMAGE, COMMAND, CREATED, STATUS, PORTS, NAMES ]}
+      - { run: 'docker images',    expect: [ REPOSITORY, TAG, IMAGE ID, CREATED, VIRTUAL SIZE ]}
 
 - command:    "docker pull '{{ item }}'"
   with_items: docker_pull
