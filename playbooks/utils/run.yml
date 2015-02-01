@@ -1,0 +1,12 @@
+---
+# ===================================================================================================
+# Runs commands and verifies their output. Required variables: title, commands or command.
+# ===================================================================================================
+- debug: msg="Running {{ title }} commands"
+
+- command:     "{{ ubuntu.bash }} -c '{{ item.run }} 2>&1'"
+  environment: "{{ env | default({}) }}"
+  register:    command_out
+  failed_when: not ( command_out.stdout_lines | contains( item.expect ))
+  with_items:
+    - "{{ commands | default([ command ]) }}"

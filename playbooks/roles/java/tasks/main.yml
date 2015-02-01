@@ -14,42 +14,24 @@
 
 - debug: msg="JAVA_HOME is set to '{{ java_home }}'"
 
-- name:     Running Java
-  shell:    "'{{ java_home }}/bin/java'  -version 2>&1"
-  register: java_out
-
-- name:     Running Javac
-  shell:    "'{{ java_home }}/bin/javac' -version 2>&1"
-  register: javac_out
-  when:     java_distribution in [ 'oracle_jdk', 'open_jdk' ]
-
-- debug: var=java_out.stdout
-- debug: var=javac_out.stdout
-
-- name:  Verifying OpenJDK Java
-  assert:
-    that:
-      - "'OpenJDK Runtime Environment' in java_out.stdout"
-      - "'OpenJDK 64-Bit Server VM'    in java_out.stdout"
+- include: "{{ common.utils.run }}"
+  vars:
+    title:   OpenJDK java/javac
+    commands:
+      - { run: '"{{ java_home }}/bin/java"  -version', expect: [ 'OpenJDK Runtime Environment', 'OpenJDK 64-Bit Server VM' ] }
+      - { run: '"{{ java_home }}/bin/javac" -version', expect: 'javac' }
   when: java_distribution == 'open_jdk'
 
-- name:  Verifying Oracle Java
-  assert:
-    that:
-      - "'1.{{ java.version }}'            in java_out.stdout"
-      - "'Java(TM) SE Runtime Environment' in java_out.stdout"
+- include: "{{ common.utils.run }}"
+  vars:
+    title:   Oracle java
+    command: { run: '"{{ java_home }}/bin/java" -version', expect: [ '1.{{ java.version }}', 'Java(TM) SE Runtime Environment' ] }
   when: java_distribution in [ 'oracle_jre', 'oracle_jdk' ]
 
-- name:  Verifying OpenJDK Javac
-  assert:
-    that:
-      - "'javac' in javac_out.stdout"
-  when: java_distribution == 'open_jdk'
-
-- name:  Verifying Oracle Javac
-  assert:
-    that:
-      - "'javac 1.{{ java.version }}' in javac_out.stdout"
+- include: "{{ common.utils.run }}"
+  vars:
+    title:   Oracle javac
+    command: { run: '"{{ java_home }}/bin/javac" -version', expect: 'javac 1.{{ java.version }}' }
   when: java_distribution == 'oracle_jdk'
 
 - name: Generating Java environment variables file

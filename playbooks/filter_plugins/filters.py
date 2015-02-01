@@ -11,9 +11,12 @@ import os.path
 from   ansible import errors
 from   timeit  import default_timer as timer
 
-def contains( l, element ):
-  '''Finds if any list element contains the element specified'''
-  return any( element in e for e in l )
+def contains( llist, element ):
+  '''Finds if any list element contains the element or all elements specified'''
+  if type( element ) is list:
+    return all( contains( llist, e ) for e in element )
+  else:
+    return any( str(element) in str(l) for l in llist )
 
 def re_escape( pattern ):
   '''Returns \Qpattern\E, regex-escaped'''

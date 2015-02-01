@@ -36,7 +36,8 @@ common: {
     service:  "{{ playbook_dir }}/utils/service.yml",
     verify:   "{{ playbook_dir }}/utils/verify.yml",
     fake:     "{{ playbook_dir }}/utils/fake.yml",
-    register: "{{ playbook_dir }}/utils/register.yml"
+    register: "{{ playbook_dir }}/utils/register.yml",
+    run:      "{{ playbook_dir }}/utils/run.yml",
   },
 
   vars: {
