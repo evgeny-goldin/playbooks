@@ -12,6 +12,7 @@
 
   roles:
     - { role: run-before, period: daily }
-    - { role: docker, pull: [ evgenyg/echo, nginx ] }
+    # nginx image should be identical to that in roles/helios/vars/main.yml => helios.docker.nginx.image
+    - { role: docker, pull: [ evgenyg/echo, 'nginx:1.7.9' ] }
     - helios
     - run-after

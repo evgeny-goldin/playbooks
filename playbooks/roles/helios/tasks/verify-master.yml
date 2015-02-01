@@ -1,7 +1,7 @@
 ---
-# ---------------------------------------------------------
-#   Verifies connectivity with Helios master and services
-# ---------------------------------------------------------
+# ---------------------------------------------------------------
+#    Verifies connectivity with Helios master and its services
+# ---------------------------------------------------------------
 - debug: msg="Verifying Helios master '{{ master }}' endpoints"
 
 - set_fact: zk_shell_command="echo 'ls /' | zk-shell '{{ master }}:{{ zookeeper_port }}' --run-from-stdin"

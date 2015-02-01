@@ -4,6 +4,13 @@ helios: {
   url:     '{{ common.urls.github }}/spotify/helios/releases/download/<version>/helios-debs.tar.gz',
   archive: /opt/helios-<version>.tar.gz,
   home:    /opt/helios,
+  docker: {
+    nginx: {
+      image: 'nginx:1.7.9',
+      port:  8080,
+      job:   'nginx:v1'
+    }
+  },
   latest: {
     command: "curl -Ls '{{ common.urls.github }}/spotify/helios/releases' | grep '/spotify/helios/releases/tag/' | sed -r 's/<[^>]+>//g' | sed -r 's/:.+//' | sed '/^\\s*$/d' | head -1 | awk '{print $1}'",
     pattern: '^\d+\.\d+\.\d+$'

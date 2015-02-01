@@ -9,6 +9,9 @@
 - debug: msg="etcd_port = '{{ etcd_port }}'"
 - debug: msg="domain = '{{ domain }}'"
 
+- set_fact: helios_command="helios -z 'http://{{ helios_master }}:{{ helios_master_port }}'"
+- debug: msg="helios_command = '{{ helios_command }}'"
+
 - include: "{{ common.utils.fake }}"
   vars:
     # We have Java 8 JRE installed already
@@ -26,8 +29,9 @@
     archive: "{{ helios.archive | tokens({ 'version': helios_version }) }}"
     home:    "{{ helios.home }}"
 
-- name: Installing Helios services
+- name: Installing Helios packages
   apt:  deb="{{ helios.home }}/helios-services_{{ helios_version }}_all.deb"
+- apt:  deb="{{ helios.home }}/helios_{{ helios_version }}_all.deb"
 
 - name: Installing Python pip
   apt:  name=python-pip state=latest force=yes

@@ -7,6 +7,6 @@
 - command:     "{{ ubuntu.bash }} -c '{{ item.run }} 2>&1'"
   environment: "{{ env | default({}) }}"
   register:    command_out
-  failed_when: not ( command_out.stdout_lines | contains( item.expect ))
+  failed_when: not ( command_out.stdout_lines | default(['']) | contains( item.expect | default('') ))
   with_items:
     - "{{ commands | default([ command ]) }}"

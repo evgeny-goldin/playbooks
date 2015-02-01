@@ -4,6 +4,11 @@
     agent_name:       "{{ ansible_hostname }}.{{ domain }}"
 
 - include: verify-master.yml master={{ helios_master }} host="{{ agent_name }}"
+- include: verify-helios.yml
+
+- debug: msg="De-registering Helios agent '{{ agent_name }}'"
+- command: "{{ helios_command }} deregister --yes '{{ agent_name }}'"
+  ignore_errors: yes
 
 - name: Stopping Helios agent service
   service: name=helios-agent state=stopped
@@ -31,4 +36,5 @@
 - name:    Starting Helios agent service
   service: name=helios-agent state=started enabled=yes
 
-- include: verify-helios.yml master={{ helios_master }} agent={{ agent_name }}
+- pause:   seconds=5
+- include: verify-helios.yml agent={{ agent_name }}
