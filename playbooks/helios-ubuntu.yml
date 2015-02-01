@@ -3,7 +3,7 @@
 # https://github.com/spotify/helios
 
 - name:  Helios
-  hosts: all
+  hosts: helios
   sudo:  yes
 
   vars_files:
