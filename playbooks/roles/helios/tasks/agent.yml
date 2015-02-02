@@ -18,7 +18,7 @@
 
 - include: "{{ common.utils.download }}"
   vars:
-    title:   Helios agent
+    title:   Helios registrar plugin
     url:     "{{ helios.agent.registrar_plugin.url     | tokens( helios.agent.registrar_plugin ) }}"
     archive: "{{ registrar_plugin }}"
     configs:

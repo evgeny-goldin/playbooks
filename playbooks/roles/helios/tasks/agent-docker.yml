@@ -2,10 +2,17 @@
 # ---------------------------------------------------------------
 # Handles Docker-related steps in Helios agent setup
 # ---------------------------------------------------------------
+- set_fact: helios_master_ip="{{ helios_master }}"
+  when: helios_master | match( common.net.ip_regex )
+
+# Translating Helios master host into its IP, knowing it registered itself already
 - name: Reading '{{ helios_master }}' IP address
   shell: dig '@{{ helios_master }}' '{{ helios_master }}' | grep '{{ helios_master }}.' | grep -v '^;' | head -1 | awk '{print $5}'
   register: helios_master_ip_out
+  when: not ( helios_master | match( common.net.ip_regex ))
+
 - set_fact: helios_master_ip="{{ helios_master_ip_out.stdout }}"
+  when: not ( helios_master | match( common.net.ip_regex ))
 
 - debug:   msg="Helios master IP is [{{ helios_master_ip }}]"
 - include: verify-master.yml master={{ helios_master_ip }} host="{{ agent_name }}"

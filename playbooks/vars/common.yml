@@ -16,6 +16,7 @@ common: {
     any_ip:    0.0.0.0,
     # https://developers.google.com/speed/public-dns/
     public_dns: "8.8.8.8:53,8.8.4.4:53",
+    ip_regex:   "(\\d+\\.){3}\\d+"
   },
 
   urls: {
