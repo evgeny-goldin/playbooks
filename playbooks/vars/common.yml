@@ -29,7 +29,8 @@ common: {
     jfrog:   'https://repo.jfrog.org',
     pypi:    'https://pypi.python.org/pypi',
     ruby:    'https://www.ruby-lang.org',
-    tomcat:  'https://tomcat.apache.org'
+    tomcat:  'https://tomcat.apache.org',
+    jenkins: 'https://updates.jenkins-ci.org'
   },
 
   utils: {

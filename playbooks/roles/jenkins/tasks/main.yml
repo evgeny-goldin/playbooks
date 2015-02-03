@@ -1,76 +1,70 @@
 ---
 # https://wiki.jenkins-ci.org/display/JENKINS/Installing+Jenkins+on+Ubuntu
+- set_fact: plugins_dir="{{ jenkins.home }}/plugins"
 
 - name:    Adding Jenkins repository key
-  apt_key: url='https://jenkins-ci.org/debian/jenkins-ci.org.key'
+  apt_key: url='{{ jenkins.key }}'
 
 - name:           Adding Jenkins repository
-  apt_repository: repo='deb http://pkg.jenkins-ci.org/debian binary/' update_cache=yes
+  apt_repository: repo='{{ jenkins.repo }}' update_cache=yes
 
 - name: Installing Jenkins
   apt:  name=jenkins state=latest force=yes
 
-- name: Writing Jenkins files
+- name: Creating directories for Jenkins jobs
+  file:
+    path:  "{{ jenkins.home }}/jobs/{{ item.name }}"
+    state: directory
+    owner: "{{ jenkins.user }}"
+    group: "{{ jenkins.user }}"
+  with_items: jobs | default([])
+
+- name: Creating directory for Jenkins plugins
+  file:
+    path: "{{ plugins_dir }}"
+    state: directory
+    owner: "{{ jenkins.user }}"
+    group: "{{ jenkins.user }}"
+
+- name: Generating Jenkins global configs
   template:
     src:   "{{ item }}"
     dest:  "{{ jenkins.home }}"
-    owner: jenkins
-    group: jenkins
+    owner: "{{ jenkins.user }}"
+    group: "{{ jenkins.user }}"
     mode:  "{{ common.mode.file }}"
   with_items:
     - config.xml
     - hudson.plugins.s3.S3BucketPublisher.xml
 
-- name: Creating directories for Jenkins jobs
-  file:
-    path: "{{ jenkins.home }}/jobs/{{ item }}"
-    state: directory
-    owner: jenkins
-    group: jenkins
-    mode:  "{{ common.mode.directory }}"
-  with_items: jenkins.jobs
-  when: ( jenkins.jobs | default([]))
+- name: Generating Jenkins jobs configs
+  template:
+    src:  job-config.xml
+    dest: "{{ jenkins.home }}/jobs/{{ item.name }}/config.xml"
+  with_items: jobs | default([])
 
-- name: Creating XML configs for Jenkins jobs
-  copy:
-    src:  "roles/jenkins/files/jobs/{{ item }}.xml"
-    dest: "{{ jenkins.home }}/jobs/{{ item }}/config.xml"
-  with_items: jenkins.jobs
-  when: ( jenkins.jobs | default([]))
-
-- name: Creating directory for Jenkins plugins
-  file:
-    path: "{{ jenkins.home }}/plugins"
-    state: directory
-    owner: jenkins
-    group: jenkins
-    mode:  "{{ common.mode.directory }}"
-
-- name: Installing Jenkins plugins (latest)
-  with_dict: jenkins.plugins.install | default({})
-  when: item.value == '*'
+- name: Downloading Jenkins plugins (latest)
   get_url:
     # https://updates.jenkins-ci.org/latest/s3.hpi
-    url:   "{{ jenkins.plugins.root }}/latest/{{ item.key }}.hpi"
-    dest:  "{{ jenkins.home }}/plugins/{{ item.key }}.hpi"
-    force: "{{ jenkins.plugins.redownload }}"
+    url:   "{{ common.urls.jenkins }}/latest/{{ item.key }}.hpi"
+    dest:  "{{ plugins_dir }}/{{ item.key }}.hpi"
+  with_dict: jenkins.plugins | default({})
+  when: item.value == '*'
 
-- name: Installing Jenkins plugins (explicit)
-  with_dict: jenkins.plugins.install | default({})
-  when: ( item.value != '*' ) and ( not item.value.startswith( 'http' ))
+- name: Downloading Jenkins plugins (version)
   get_url:
-    # https://updates.jenkins-ci.org/download/plugins/s3/0.6/s3.hpi
-    url:   "{{ jenkins.plugins.root }}/download/plugins/{{ item.key }}/{{ item.value }}/{{ item.key }}.hpi"
-    dest:  "{{ jenkins.home }}/plugins/{{ item.key }}.hpi"
-    force: "{{ jenkins.plugins.redownload }}"
+    # https://updates.jenkins-ci.org/download/plugins/s3/0.7/s3.hpi
+    url:   "{{ common.urls.jenkins }}/download/plugins/{{ item.key }}/{{ item.value }}/{{ item.key }}.hpi"
+    dest:  "{{ plugins_dir }}/{{ item.key }}.hpi"
+  with_dict: jenkins.plugins | default({})
+  when: ( item.value != '*' ) and ( not item.value.startswith( 'http' ))
 
-- name: Installing Jenkins plugins (custom)
-  with_dict: jenkins.plugins.install | default({})
-  when: item.value.startswith( 'http' )
+- name: Downloading Jenkins plugins (custom)
   get_url:
     url:   "{{ item.value }}"
-    dest:  "{{ jenkins.home }}/plugins/{{ item.key }}.hpi"
-    force: "{{ jenkins.plugins.redownload }}"
+    dest:  "{{ plugins_dir }}/{{ item.key }}.hpi"
+  with_dict: jenkins.plugins | default({})
+  when: item.value.startswith( 'http' )
 
 - name:    Stopping Jenkins service
   service: name=jenkins state=stopped
@@ -79,3 +73,8 @@
 - name:    Restarting Jenkins service
   service: name=jenkins state=restarted
   when:    start_service
+
+- name: Updating sudoers file
+  lineinfile:
+    dest: "{{ ubuntu.sudoers }}"
+    line: "{{ jenkins.user }} = (root) NOPASSWD:/usr/bin/docker"

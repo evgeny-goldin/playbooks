@@ -2,8 +2,8 @@
 <hudson.plugins.s3.S3BucketPublisher_-DescriptorImpl plugin="s3@0.6">
   <profiles>
 
-    {% if ( jenkins.s3 is defined ) and ( jenkins.s3 ) %}
-    {% for name, value in jenkins.s3.iteritems() %}
+    {% if ( jenkins_s3 is defined ) and ( jenkins_s3 ) %}
+    {% for name, value in jenkins_s3.iteritems() %}
 
     <hudson.plugins.s3.S3Profile>
       <name>{{ name }}</name>

@@ -5,11 +5,11 @@
   <numExecutors>2</numExecutors>
   <mode>NORMAL</mode>
   <useSecurity>true</useSecurity>
-  {% if ( jenkins.github_auth              is defined ) and
-        ( jenkins.github_auth.admins       is defined ) and
-        ( jenkins.github_auth.admins )                  and
-        ( jenkins.github_auth.clientID     is defined ) and
-        ( jenkins.github_auth.clientSecret is defined ) %}
+  {% if ( jenkins_auth              is defined ) and
+        ( jenkins_auth.admins       is defined ) and
+        ( jenkins_auth.admins )                  and
+        ( jenkins_auth.clientID     is defined ) and
+        ( jenkins_auth.clientSecret is defined ) %}
 
   <authorizationStrategy class="org.jenkinsci.plugins.GithubAuthorizationStrategy" plugin="github-oauth@0.19">
     <rootACL>
@@ -18,7 +18,7 @@
       </organizationNameList>
       <adminUserNameList class="linked-list">
 
-        {% for admin in jenkins.github_auth.admins %}
+        {% for admin in jenkins_auth.admins %}
         <string>{{ admin }}</string>
         {% endfor %}
 
@@ -34,8 +34,8 @@
   <securityRealm class="org.jenkinsci.plugins.GithubSecurityRealm">
     <githubWebUri>https://github.com</githubWebUri>
     <githubApiUri>https://api.github.com</githubApiUri>
-    <clientID>{{ jenkins.github_auth.clientID }}</clientID>
-    <clientSecret>{{ jenkins.github_auth.clientSecret }}</clientSecret>
+    <clientID>{{ jenkins_auth.clientID }}</clientID>
+    <clientSecret>{{ jenkins_auth.clientSecret }}</clientSecret>
   </securityRealm>
 
   {% endif %}

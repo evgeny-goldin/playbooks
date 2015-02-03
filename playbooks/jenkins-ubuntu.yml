@@ -3,7 +3,7 @@
 # http://jenkins-ci.org/
 
 - name:  Jenkins
-  hosts: all
+  hosts: jenkins
   sudo:  yes
 
   vars_files:
@@ -12,5 +12,7 @@
 
   roles:
     - { role: run-before, period: daily }
-    - jenkins
+    - { role: docker,  when: periodic, pull: [ 'nginx:1.7.9', 'ubuntu:14.04.1', 'evgenyg/ansible:1.8.2' ]}
+    - { role: helios,  when: periodic, helios_role: cli }
+    - { role: jenkins, jobs: [{ name: echo-service, repo: 'https://github.com/evgeny-goldin/echo-service.git' }]}
     - run-after
