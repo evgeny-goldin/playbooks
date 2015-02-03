@@ -74,7 +74,11 @@
   service: name=jenkins state=restarted
   when:    start_service
 
-- name: Updating sudoers file
+- name: Updating sudoers file (if Docker role was activated)
   lineinfile:
-    dest: "{{ ubuntu.sudoers }}"
-    line: "{{ jenkins.user }} = (root) NOPASSWD:/usr/bin/docker"
+    dest:     "{{ ubuntu.sudoers }}"
+    line:     "%{{ jenkins.user }} ALL=(ALL)NOPASSWD:{{ docker.bin }}"
+    validate: 'visudo -cf %s'
+    backup:   yes
+    insertbefore: '# See sudoers'
+  when: ( docker is defined ) and ( docker.bin is defined )
