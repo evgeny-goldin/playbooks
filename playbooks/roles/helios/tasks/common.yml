@@ -33,8 +33,7 @@
   apt:  deb="{{ helios.home }}/helios-services_{{ helios_version }}_all.deb"
 - apt:  deb="{{ helios.home }}/helios_{{ helios_version }}_all.deb"
 
-- name: Installing Python pip
-  apt:  name=python-pip state=latest force=yes
-
-- name: Installing zk-shell
-  pip:  name=zk-shell state=latest
+- include: "{{ common.utils.run }}"
+  vars:
+    title:   Helios
+    command: { run: 'helios --version', expect: 'Spotify Helios CLI {{ helios_version }}'  }

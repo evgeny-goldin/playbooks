@@ -1,0 +1,16 @@
+---
+# Helios CLI playbook for Ubuntu
+# https://github.com/spotify/helios
+
+- name:  Helios CLI
+  hosts: all
+  sudo:  yes
+
+  vars_files:
+    - vars/common.yml
+    - vars/{{ ansible_distribution }}.yml
+
+  roles:
+    - { role: run-before, period: daily }
+    - { role: helios, helios_role: cli  }
+    - run-after
