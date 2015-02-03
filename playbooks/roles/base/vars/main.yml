@@ -21,6 +21,7 @@ base: {
     # Needed for 'killall'
     'psmisc',
     # Missing on AWS Ubuntu AMI
-    'python-httplib2'
+    'python-httplib2',
+    'tree'
   ]
 }

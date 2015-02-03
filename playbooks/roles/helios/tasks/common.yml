@@ -3,7 +3,7 @@
 #   Common tasks for Helios master and agent
 # --------------------------------------------
 - include: check-vars.yml
-  when:    helios_master is defined
+  when: helios_master is defined
 
 - include: "{{ common.utils.fake }}"
   vars:
@@ -30,3 +30,11 @@
   vars:
     title:   Helios
     command: { run: 'helios --version', expect: 'Spotify Helios CLI {{ helios_version }}'  }
+
+- name: Installing Python pip
+  apt:  name=python-pip state=latest force=yes
+  when: helios_master is defined
+
+- name: Installing zk-shell
+  pip:  name=zk-shell state=latest
+  when: helios_master is defined

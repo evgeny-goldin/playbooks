@@ -3,12 +3,6 @@
     registrar_plugin: "{{ helios.agent.registrar_plugin.archive | tokens( helios.agent.registrar_plugin ) }}"
     agent_name:       "{{ ansible_hostname }}.{{ domain }}"
 
-- name: Installing Python pip
-  apt:  name=python-pip state=latest force=yes
-
-- name: Installing zk-shell
-  pip:  name=zk-shell state=latest
-
 - include: verify-master.yml master={{ helios_master }} host="{{ agent_name }}"
 - include: verify-helios.yml
 
