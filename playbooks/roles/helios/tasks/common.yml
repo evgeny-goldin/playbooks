@@ -24,6 +24,8 @@
 
 - name: Installing Helios packages
   apt:  deb="{{ helios.home }}/helios-services_{{ helios_version }}_all.deb"
+  when: helios_master is defined
+
 - apt:  deb="{{ helios.home }}/helios_{{ helios_version }}_all.deb"
 
 - include: "{{ common.utils.run }}"
