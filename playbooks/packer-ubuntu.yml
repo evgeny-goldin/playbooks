@@ -12,9 +12,8 @@
 
   roles:
     - { role: run-before, period: daily }
-    - { role: docker,     when:   "( periodic|bool and ( not is_docker|bool ))" }
+    - { role: docker,     when:   "periodic|bool and ( not is_docker|bool )" }
     - { role: vagrant,    when:   periodic }
-    - { role: virtualbox, when:   periodic }
     - { role: ruby,       when:   periodic }
     - packer
     - run-after

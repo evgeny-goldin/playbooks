@@ -63,6 +63,10 @@
     copy: false
   when: unpack
 
+- name: Installing {{ title }}
+  apt:  deb="{{ archive }}"
+  when: download|bool and archive.endswith( '.deb' )
+
 - file: path={{ item.to | dirname }} state=directory
   with_items:
     - "{{ configs }}"

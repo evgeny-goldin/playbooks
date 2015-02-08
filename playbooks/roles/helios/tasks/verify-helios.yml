@@ -13,14 +13,14 @@
 
 - include: "{{ common.utils.run }}"
   vars:
-    title: Helios master '{{ helios_command }}' status
+    title: Helios master '{{ helios_command }}' status checks
     commands:
       - { run:    '{{ helios_command }} jobs',
-          expect: [ JOB ID, NAME, VERSION, HOSTS, COMMAND, ENVIRONMENT ]  }
+          expect: [ JOB ID, NAME, VERSION, HOSTS, COMMAND, ENVIRONMENT ]}
       - { run:    '{{ helios_command }} hosts',
-          expect: [ HOST, STATUS, DEPLOYED, RUNNING, CPUS, MEM, LOAD AVG, MEM USAGE, OS, HELIOS, DOCKER ] }
+          expect: [ HOST, STATUS, DEPLOYED, RUNNING, CPUS, MEM, LOAD AVG, MEM USAGE, OS, HELIOS, DOCKER ]}
       - { run:    '{{ helios_command }} {{ create_nginx_job }}',
-          expect: [ 'Creating job:', '"id":"{{ helios.docker.nginx.job }}:', 'Done.' ] }
+          expect: [ 'Creating job:', '"id":"{{ helios.docker.nginx.job }}:', 'Done.' ]}
       - { run:    '{{ helios_command }} inspect "{{ helios.docker.nginx.job }}"',
           expect: 'Ports: http=80:{{ helios.docker.nginx.port }}/tcp' }
       - { run:    '{{ helios_command }} jobs',
@@ -28,24 +28,24 @@
 
 - include: "{{ common.utils.run }}"
   vars:
-    title: Helios agent '{{ agent }}'
+    title: Helios agent '{{ agent }}' checks
     commands:
       - { run:    '{{ helios_command }} hosts',
           expect: '{{ agent }}.    Up ' }
       - { run:    '{{ helios_command }} undeploy --yes "{{ helios.docker.nginx.job }}" "{{ agent }}" || echo "{{ agent }}: done"',
-          expect: [ 'Undeploying {{ helios.docker.nginx.job }}:', '{{ agent }}: done' ] }
+          expect: [ 'Undeploying {{ helios.docker.nginx.job }}:', '{{ agent }}: done' ]}
       - { run:    '{{ helios_command }} deploy "{{ helios.docker.nginx.job }}" "{{ agent }}"',
-          expect: [ 'Deploying Deployment{jobId={{ helios.docker.nginx.job }}:', 'on [{{ agent }}]', '{{ agent }}: done' ] }
+          expect: [ 'Deploying Deployment{jobId={{ helios.docker.nginx.job }}:', 'on [{{ agent }}]', '{{ agent }}: done' ]}
       - { run:    'sleep 15 && echo OK',
           expect: OK }
       - { run:    '{{ helios_command }} status --job "{{ helios.docker.nginx.job }}"',
-          expect: [ '{{ helios.docker.nginx.job }}', '{{ agent }}.    START    RUNNING' ] }
+          expect: [ '{{ helios.docker.nginx.job }}', '{{ agent }}.    START    RUNNING' ]}
       - { run:    '{{ helios_command }} status --host "{{ agent }}"',
-          expect: [ '{{ helios.docker.nginx.job }}', '{{ agent }}.    START    RUNNING' ] }
-      - { run:    'docker ps',
-          expect: [ 'nginx', 'seconds ago', ' Up ', '443/tcp, 0.0.0.0:{{ helios.docker.nginx.port }}->80/tcp' ] }
+          expect: [ '{{ helios.docker.nginx.job }}', '{{ agent }}.    START    RUNNING' ]}
+      - { run:    docker ps,
+          expect: [ 'nginx', 'seconds ago', ' Up ', '443/tcp, 0.0.0.0:{{ helios.docker.nginx.port }}->80/tcp' ]}
       - { run:    'curl -s http://localhost:{{ helios.docker.nginx.port }}',
-          expect: [ 'Welcome to nginx!', 'Thank you for using nginx.' ] }
+          expect: [ 'Welcome to nginx!', 'Thank you for using nginx.' ]}
       - { run:    '{{ helios_command }} undeploy --yes "{{ helios.docker.nginx.job }}" "{{ agent }}"',
-          expect: [ 'Undeploying {{ helios.docker.nginx.job }}:', '{{ agent }}: done' ] }
+          expect: [ 'Undeploying {{ helios.docker.nginx.job }}:', '{{ agent }}: done' ]}
   when: agent is defined

@@ -12,4 +12,5 @@ rake --version
 gem update --system
 gem install bundler
 gem update
-ln -s '{{ ruby.rvm.home }}/gems/ruby-{{ ruby_version }}' '{{ ruby.rvm.home }}/gems/default'
+rm -rf '{{ ruby.rvm.home }}/gems/default'
+ln -s  '{{ ruby.rvm.home }}/gems/ruby-{{ ruby_version }}' '{{ ruby.rvm.home }}/gems/default'

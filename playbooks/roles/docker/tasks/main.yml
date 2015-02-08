@@ -2,7 +2,7 @@
 # http://docs.docker.com/installation/ubuntulinux/
 
 - set_fact:
-    docker_pull: "{{ [ start ] }}"
+    docker_pull: "{{ [ start ]}}"
   when: start is defined
 
 - set_fact:
@@ -25,23 +25,20 @@
 
 - include: "{{ common.utils.run }}"
   vars:
-    title: Docker status
+    title: Docker status checks
     commands:
-      - { run: 'docker --version', expect: 'Docker version'  }
-      - { run: 'docker ps',        expect: [ CONTAINER ID, IMAGE, COMMAND, CREATED, STATUS, PORTS, NAMES ]}
-      - { run: 'docker images',    expect: [ REPOSITORY, TAG, IMAGE ID, CREATED, VIRTUAL SIZE ]}
+      - { run: docker --version, expect: 'Docker version'  }
+      - { run: docker ps,        expect: [ CONTAINER ID, IMAGE, COMMAND, CREATED, STATUS, PORTS, NAMES ]}
+      - { run: docker images,    expect: [ REPOSITORY, TAG, IMAGE ID, CREATED, VIRTUAL SIZE ]}
 
 - command:    "docker pull '{{ item }}'"
   with_items: docker_pull
 
-- shell:    docker images | grep -v 'IMAGE ID' | awk '{print $1":"$2}' | sort -u
-  register: docker_images
-
-- debug: var=docker_images.stdout_lines
-
-- fail: msg="Image '{{ item }}' is not found in the list of images pulled - {{ docker_images.stdout_lines }}"
-  when: "{{ not ( docker_images.stdout_lines | contains( item )) }}"
-  with_items: docker_pull
+- include: "{{ common.utils.run }}"
+  vars:
+    title: Docker images check
+    command: { run:    "docker images | grep -v 'IMAGE ID' | awk '{print $1\":\"$2}' | sort -u",
+               expect: "{{ docker_pull }}" }
 
 - include: start.yml
   when: start is defined

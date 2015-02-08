@@ -16,21 +16,21 @@
 
 - include: "{{ common.utils.run }}"
   vars:
-    title:   OpenJDK java/javac
+    title:   OpenJDK java/javac checks
     commands:
-      - { run: '"{{ java_home }}/bin/java"  -version', expect: [ 'OpenJDK Runtime Environment', 'OpenJDK 64-Bit Server VM' ] }
+      - { run: '"{{ java_home }}/bin/java"  -version', expect: [ 'OpenJDK Runtime Environment', 'OpenJDK 64-Bit Server VM' ]}
       - { run: '"{{ java_home }}/bin/javac" -version', expect: 'javac' }
   when: java_distribution == 'open_jdk'
 
 - include: "{{ common.utils.run }}"
   vars:
-    title:   Oracle java
-    command: { run: '"{{ java_home }}/bin/java" -version', expect: [ '1.{{ java.version }}', 'Java(TM) SE Runtime Environment' ] }
+    title:   Oracle java checks
+    command: { run: '"{{ java_home }}/bin/java" -version', expect: [ '1.{{ java.version }}', 'Java(TM) SE Runtime Environment' ]}
   when: java_distribution in [ 'oracle_jre', 'oracle_jdk' ]
 
 - include: "{{ common.utils.run }}"
   vars:
-    title:   Oracle javac
+    title:   Oracle javac checks
     command: { run: '"{{ java_home }}/bin/javac" -version', expect: 'javac 1.{{ java.version }}' }
   when: java_distribution == 'oracle_jdk'
 

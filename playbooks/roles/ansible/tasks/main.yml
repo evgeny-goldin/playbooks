@@ -23,24 +23,10 @@
     dest:  "{{ ansible.inventory_file }}"
     line:  localhost
 
-- name:     Running Ansible version
-  command:  ansible --version
-  register: ansible_version_out
-
-- name:     Running Ansible Playbook version
-  command:  ansible-playbook --version
-  register: ansible_playbook_version_out
-
-- name:     Running Ansible setup module
-  command:  ansible localhost -c local -m setup
-  register: inventory_out
-
-- name: Verifying Ansible version
-  assert:
-    that:
-      - ansible_version     in ansible_version_out.stdout
-      - ansible_version     in ansible_playbook_version_out.stdout
-      - "'ansible'          in ansible_version_out.stdout"
-      - "'ansible-playbook' in ansible_playbook_version_out.stdout"
-      - "'ansible_facts'    in inventory_out.stdout"
-      - "'Ubuntu'           in inventory_out.stdout"
+- include: "{{ common.utils.run }}"
+  vars:
+    title: Ansible checks
+    commands:
+      - { run: ansible --version,                   expect: "ansible {{ ansible_version }}" }
+      - { run: ansible-playbook --version,          expect: "ansible-playbook {{ ansible_version }}" }
+      - { run: ansible localhost -c local -m setup, expect: [ 'ansible_facts', 'ansible_date_time' ]}

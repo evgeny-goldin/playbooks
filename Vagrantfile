@@ -7,6 +7,7 @@ CPUS               = 2
 MEMORY             = 1024
 VAGRANT_DOMAIN     = 'vm'
 DNS_PORT           = 53
+MYSQL_PORT         = 3306
 ZOOKEEPER_PORT     = 2181
 ETCD_PORT          = 4001
 HELIOS_MASTER_PORT = 5801
@@ -18,12 +19,13 @@ HELIOS_PROPERTIES  = { helios_master:      "helios-master.#{ VAGRANT_DOMAIN }",
                        zookeeper_port:     ZOOKEEPER_PORT,
                        etcd_port:          ETCD_PORT,
                        domain:             VAGRANT_DOMAIN }
-HELIOS_PORTS       = { vagrant_ports: [ DNS_PORT, ZOOKEEPER_PORT, ETCD_PORT, HELIOS_MASTER_PORT ] }
+HELIOS_PORTS       = { vagrant_ports: [ DNS_PORT, ZOOKEEPER_PORT, ETCD_PORT, HELIOS_MASTER_PORT ]}
 
 VB_BOXES = {
   jvm:     {},
-  docker:  {},
-  jenkins: { vagrant_ports: [ WEB_PORT ] },
+  packer:  {},
+  mysql:   { vagrant_ports: [ MYSQL_PORT ]},
+  jenkins: { vagrant_ports: [ WEB_PORT ]},
   'helios-master'  => HELIOS_PROPERTIES.merge( HELIOS_PORTS ),
   'helios-agent1'  => HELIOS_PROPERTIES.merge( playbook:      'helios-agent',
                                                vagrant_ports: [ WEB_PORT ] ),

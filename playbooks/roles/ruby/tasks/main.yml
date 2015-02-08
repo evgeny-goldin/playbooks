@@ -12,13 +12,7 @@
   include: rvm.yml
   when:    "{{ ruby.installer == 'rvm' }}"
 
-- name:     Running Ruby version
-  command:  "{{ ruby_bin }}/ruby --version"
-  register: ruby_version_out
-- debug:    var=ruby_version_out.stdout
-
-- name: Verifying Ruby version
-  assert:
-    that:
-      - ruby_version in ruby_version_out.stdout
-      - "'ruby'      in ruby_version_out.stdout"
+- include: "{{ common.utils.run }}"
+  vars:
+    title: Ruby checks
+    command: { run: "{{ ruby_bin }}/ruby --version", expect: "ruby {{ ruby_version }}" }

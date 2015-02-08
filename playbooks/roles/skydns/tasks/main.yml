@@ -30,13 +30,8 @@
       - { path: /version,         content: '"releaseVersion":"{{ etcd.version }}"' }
       - { path: /v2/stats/leader, content: '{"leader":"' }
 
-- name:     Running local dig
-  command:  dig @{{ common.net.localhost }}
-  register: dig_out
-
-- name: Verifying local dig
-  assert:
-    that:
-      - "'Got answer'       in dig_out.stdout"
-      - "'QUESTION SECTION' in dig_out.stdout"
-      - "'SERVER: {{ common.net.localhost }}#{{ common.net.ports.dns }}({{ common.net.localhost }})' in dig_out.stdout"
+- include: "{{ common.utils.run }}"
+  vars:
+    title: local dig
+    command: { run:    "dig @{{ common.net.localhost }}",
+               expect: [ Got answer, QUESTION SECTION, 'SERVER: {{ common.net.localhost }}#{{ common.net.ports.dns }}({{ common.net.localhost }})' ]}

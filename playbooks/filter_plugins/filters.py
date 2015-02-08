@@ -13,6 +13,7 @@ from   timeit  import default_timer as timer
 
 def contains( llist, element ):
   '''Finds if any list element contains the element or all elements specified'''
+  # print "[[" + str(llist) + "//" + str(element) + "]]"
   if type( element ) is list:
     return all( contains( llist, e ) for e in element )
   else:

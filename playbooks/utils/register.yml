@@ -12,20 +12,17 @@
     registration_command: "curl -XPUT '{{ registration_url }}' -d value='{ \"host\" : \"{{ ip }}\" }'"
     dig_command:          "dig @{{ skydns_host }} '{{ host }}'"
 
-- debug: msg="Running '{{ registration_command }}'"
+# https://github.com/ansible/ansible-modules-core/issues/265
+# uri:
+#   method:  POST
+#   url:     "{{ registration_url }}"
+#   body:    "{ 'host' : '{{ ip }}' }"
+#   timeout: 3
 
-- name:    Sending registration request
-  command: "{{ registration_command }}"
+- debug:    msg="Running [{{ registration_command }}] and [{{ dig_command }}]"
 
-  # https://github.com/ansible/ansible-modules-core/issues/265
-  # uri:
-  #   method:  POST
-  #   url:     "{{ registration_url }}"
-  #   body:    "{ 'host' : '{{ ip }}' }"
-  #   timeout: 3
-
-- debug:    msg="Running [{{ dig_command }}]"
-- command:  "{{ dig_command }}"
+- command: "{{ registration_command }}"
+- command: "{{ dig_command }}"
   register: dig_out
 
 - name: Verifying dig

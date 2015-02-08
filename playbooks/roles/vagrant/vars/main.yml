@@ -5,7 +5,6 @@ vagrant: {
     command: "curl -Ls '{{ common.urls.bintray }}/mitchellh/vagrant/' | grep vagrant | grep '.deb' | tail -1 | cut -d_ -f5",
     pattern: '^\d+\.\d+\.\d+$'
   },
-  platform:     x86_64, # 'i686' or 'x86_64' - http://www.vagrantup.com/downloads.html
-  download_url: '{{ common.urls.bintray }}/mitchellh/vagrant/vagrant_<version>_<platform>.deb',
-  redownload:   false
+  url:     '{{ common.urls.bintray }}/mitchellh/vagrant/vagrant_<version>_x86_64.deb',
+  archive: /opt/vagrant-<version>.deb
 }

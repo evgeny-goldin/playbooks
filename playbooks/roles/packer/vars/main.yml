@@ -5,17 +5,7 @@ packer: {
     command: "curl -Ls '{{ common.urls.bintray }}/mitchellh/packer/' | grep packer | grep linux | tail -1 | cut -d_ -f5",
     pattern: '^\d+\.\d+\.\d+$'
   },
-  platform:     amd64, # '386', 'amd64' or 'arm' - http://www.packer.io/downloads.html
-  dir:          /opt/packer,
-  bin:          /usr/bin/packer,
-  download_url: '{{ common.urls.bintray }}/mitchellh/packer/<version>_linux_<platform>.zip',
-  redownload:   false,
-
-  store_aws_credentials: false,
-
-  # AWS credentials: AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
-  # If 'store_aws_credentials' is true:
-    # If true  - loaded from "vars/aws.yml"
-    # If false - need to be provided as Ansible extra variables
-  load_aws_credentials: false
+  url:      '{{ common.urls.bintray }}/mitchellh/packer/packer_<version>_linux_amd64.zip',
+  archive:  /opt/packer-<version>.zip,
+  home:     /opt/packer
 }

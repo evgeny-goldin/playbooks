@@ -30,16 +30,11 @@
     chdir: "{{ exhibitor.home }}"
   when: exhibitor_jar_missing
 
-- name:     Running Exhibitor standalone help
-  command:  java -jar '{{ exhibitor_jar }}' --help
-  register: exhibitor_help_out
-
-- name:  Verifying Exhibitor standalone help
-  assert:
-    that:
-      - "'Exhibitor v{{ exhibitor_version }}' in exhibitor_help_out.stdout"
-      - "'Print this help'                    in exhibitor_help_out.stdout"
-      - "'Default Property Names'             in exhibitor_help_out.stdout"
+- include: "{{ common.utils.run }}"
+  vars:
+    title: Exhibitor standalone checks
+    command: { run:    'java -jar "{{ exhibitor_jar }}" --help',
+               expect: [ 'Exhibitor v{{ exhibitor_version }}', 'Print this help', 'Default Property Names' ]}
 
 - include: "{{ common.utils.service }}"
   vars:
