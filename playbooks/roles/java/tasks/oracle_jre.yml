@@ -13,13 +13,13 @@
     installer_jre_version: '-7'
   when: java.version == 7
 
-- name: Downloading JRE installer
+- name: Downloading Oracle JRE installer
   get_url:
     url:   "{{ java.oracle_jre.installer_url }}"
     dest:  "{{ java.oracle_jre.installer_home }}/{{ java.oracle_jre.installer_bin }}"
     force: "{{ java.oracle_jre.redownload }}"
 
-- name:  Running JRE installer
+- name:  Running Oracle JRE installer
   command: "{{ item }}"
   args:
     chdir: "{{ java.oracle_jre.installer_home }}"

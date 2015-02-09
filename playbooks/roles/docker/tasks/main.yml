@@ -2,7 +2,7 @@
 # http://docs.docker.com/installation/ubuntulinux/
 
 - set_fact:
-    docker_pull: "{{ [ start ]}}"
+    docker_pull: "{{ [ start ] }}"
   when: start is defined
 
 - set_fact:
