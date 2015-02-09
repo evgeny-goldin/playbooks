@@ -13,7 +13,7 @@ ETCD_PORT          = 4001
 HELIOS_MASTER_PORT = 5801
 WEB_PORT           = 8080
 VERBOSE            = '' # Ansible verbosity level: '', 'v', 'vv', 'vvv', 'vvvv'
-M2_REPO_IMPORT     = 'https://s3-eu-west-1.amazonaws.com/evgenyg-ansible/repo-import.zip'
+REPO_IMPORT        = 'https://dropbox.artifactoryonline.com/dropbox/stress-test-dataset/repo-import.zip'
 HELIOS_PROPERTIES  = { helios_master:      "helios-master.#{ VAGRANT_DOMAIN }",
                        helios_master_port: HELIOS_MASTER_PORT,
                        zookeeper_port:     ZOOKEEPER_PORT,
@@ -34,7 +34,7 @@ VB_BOXES = {
   helios:             HELIOS_PROPERTIES.merge( HELIOS_PORTS ).merge( helios_master: "helios.#{ VAGRANT_DOMAIN }" ),
   repo:          { port:          WEB_PORT,
                    java_options:  '-server -Xms512m -Xmx800m',
-                  #  import:        M2_REPO_IMPORT,
+                  #  import:        REPO_IMPORT,
                    vagrant_ports: [ WEB_PORT ],
                    playbook:      'artifactory' },
                   #  playbook:      'nexus' },
