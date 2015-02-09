@@ -96,15 +96,15 @@ $test_repo_ip
 EOF
 
 echo "== Running Artifactory playbook"
-set -x
+set -ex
 ansible-playbook 'playbooks/artifactory-ubuntu.yml' $connect \
                  --extra-vars "port=$REPO_PORT \
                                import='$REPO_IMPORT' \
                                java_options='$ARTIFACTORY_JAVA_OPTIONS'"
-set +x
+set +ex
 
 echo "== Running Test Repo playbook for Artifactory"
-set -x
+set -ex
 ansible-playbook 'playbooks/test-repo-ubuntu.yml' $connect \
                  --extra-vars "host=$repo_ip \
                                port=$REPO_PORT \
@@ -114,25 +114,25 @@ ansible-playbook 'playbooks/test-repo-ubuntu.yml' $connect \
                                run_simulations=false \
                                repo_name=Artifactory \
                                path=/artifactory/repo/"
-set +x
+set +ex
 
 # Running Gatling simulations outside Ansible
 # https://github.com/ansible/ansible/issues/7319
 echo "== Running Artifactory Gatling simulations"
-set -x
+set -ex
 ssh $ssh_options $ssh_user@$test_repo_ip sudo "$simulations_script"
-set +x
+set +ex
 
 echo "== Running Nexus playbook"
-set -x
+set -ex
 ansible-playbook 'playbooks/nexus-ubuntu.yml' $connect \
                  --extra-vars "port=$REPO_PORT \
                                import='$REPO_IMPORT' \
                                java_options='$NEXUS_JAVA_OPTIONS'"
-set +x
+set +ex
 
 echo "== Running Test Repo playbook for Nexus"
-set -x
+set -ex
 ansible-playbook 'playbooks/test-repo-ubuntu.yml' $connect \
                  --extra-vars "host=$repo_ip \
                                port=$REPO_PORT \
@@ -142,18 +142,18 @@ ansible-playbook 'playbooks/test-repo-ubuntu.yml' $connect \
                                run_simulations=false \
                                repo_name=Nexus \
                                path=/nexus/content/repositories/central/"
-set +x
+set +ex
 
 echo "== Running Nexus Gatling simulations"
-set -x
+set -ex
 ssh $ssh_options $ssh_user@$test_repo_ip sudo "$simulations_script"
-set +x
+set +ex
 
 echo "== Downloading Gatling reports archive"
-set -x
+set -ex
 ssh $ssh_user@$test_repo_ip ls -lh "$reports_archive"
 scp $ssh_user@$test_repo_ip:$reports_archive .
-set +x
+set +ex
 
 if [ "$instance_ids" != "" ]; then
 
