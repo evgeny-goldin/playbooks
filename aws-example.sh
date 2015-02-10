@@ -3,8 +3,8 @@
 # Modify the variables below accorind to your AWS account and save this file as "aws.sh" in the same directory
 # =============================================================================================================
 
-export AWS_DEFAULT_REGION="eu-west-1"
-export AWS_AVAILABILITY_ZONE="eu-west-1a"
+export AWS_DEFAULT_REGION="eu-west-1"     # One of https://docs.aws.amazon.com/general/latest/gr/rande.html#ec2_region
+export AWS_AVAILABILITY_ZONE="eu-west-1a" # One of http://www.stelligent.com/cloud/list-all-the-availability-zones/
 export AWS_KEYPAIR_NAME="..."
 export AWS_SSH_PRIVATE_KEY="..."
 export AWS_SUBNET_ID="..."
