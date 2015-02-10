@@ -13,7 +13,7 @@ ETCD_PORT          = 4001
 HELIOS_MASTER_PORT = 5801
 WEB_PORT           = 8080
 VERBOSE            = '' # Ansible verbosity level: '', 'v', 'vv', 'vvv', 'vvvv'
-REPO_IMPORT        = 'https://dropbox.artifactoryonline.com/dropbox/stress-test-dataset/repo-import.zip'
+REPO_IMPORT        = 'https://s3-eu-west-1.amazonaws.com/evgenyg-ansible/repo-import.zip'
 HELIOS_PROPERTIES  = { helios_master:      "helios-master.#{ VAGRANT_DOMAIN }",
                        helios_master_port: HELIOS_MASTER_PORT,
                        zookeeper_port:     ZOOKEEPER_PORT,
