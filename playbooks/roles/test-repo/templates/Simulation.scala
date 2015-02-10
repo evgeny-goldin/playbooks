@@ -5,10 +5,23 @@ import io.gatling.http.Predef._
 
 class {{ repo_name }}{{ item.name }} extends Simulation {
 
-  val scn = Source.fromFile( "{{ test_repo.files_dir }}/{{ item.artifacts }}" ).getLines().
-            foldLeft( scenario( "{{ repo_name }}{{ item.name }}" )) {
-    ( scn, artifact ) => scn.exec( http( artifact.split( '/' ).last ).get( artifact ))
+  val chain = Source.fromFile( "{{ test_repo.files_dir }}/{{ item.artifacts }}" ).getLines().
+              foldLeft( exec( http( "Root" ).get( "/" ))){
+    ( e, artifact ) => e.exec( http( artifact.split( '/' ).last ).get( artifact ))
   }
+
+  // http://gatling.io/docs/2.1.4/general/scenario.html#scenario-loops
+
+  val scn = scenario( "{{ repo_name }}{{ item.name }}" ).
+            exec(
+              {% if ( item.duration | default(0)) > 0 %}
+                during( {{ item.duration }} ){ chain }
+              {% elif ( item.repeat | default(0)) > 0 %}
+                repeat( {{ item.repeat }} ){ chain }
+              {% else %}
+                chain
+              {% endif %}
+            )
 
   val httpConf = http.baseURL( "{{ repo }}" ).
                       acceptHeader( "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" ).

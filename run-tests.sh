@@ -17,7 +17,7 @@ ssh_user="-i $AWS_SSH_PRIVATE_KEY $AWS_SSH_USER"
 ssh_options='-o ServerAliveInterval=60 -o BatchMode=yes -o ConnectTimeout=5 -o StrictHostKeyChecking=no'
 clear_console='\r                                                          \r'
 
-if [ "$repo_ip" == "" ] && [ "$test_repo_ip" == "" ]; then
+if [ "$repo_ip" == "" ] || [ "$test_repo_ip" == "" ]; then
   echo '------------------------------------------'
   echo "         Creating 2 EC2 instances"
   echo '------------------------------------------'
