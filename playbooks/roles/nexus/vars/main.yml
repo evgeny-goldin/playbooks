@@ -22,6 +22,10 @@ nexus: {
     { path: /nexus, content: Loading Nexus UI },
     { path: /nexus/service/local/attributes, status: 401 }
   ],
+  auth: {
+    user: admin,
+    pass: admin123
+  },
   import: {
     archive: /opt/repo-import.<ext>,
     home:    <home>/sonatype-work/nexus/storage,

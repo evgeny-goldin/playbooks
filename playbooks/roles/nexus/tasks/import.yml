@@ -14,3 +14,17 @@
     archive: "{{ nexus.import.archive | tokens({ 'ext' : import | ext }) }}"
     home:    "{{ import_dir }}"
     clean:   false
+
+# https://support.sonatype.com/entries/38605563-Can-I-directly-update-artifacts-in-Nexus-local-storage-on-disk-
+
+- name: Rebuilding Nexus index
+  uri:
+    url:         "http://{{ common.net.localhost }}:{{ nexus_port }}/nexus/service/local/{{ item }}"
+    user:        "{{ nexus.auth.user }}"
+    password:    "{{ nexus.auth.pass }}"
+    method:      DELETE
+    status_code: 202,204
+  with_items:
+    - "repositories/{{ nexus.import.repo }}/routing"
+    - "metadata/repositories/{{ nexus.import.repo }}/content/"
+    - "data_index/repositories/{{ nexus.import.repo }}/content"
