@@ -4,6 +4,7 @@
 # =============================================================================================================
 
 export AWS_DEFAULT_REGION="eu-west-1"
+export AWS_AVAILABILITY_ZONE="eu-west-1a"
 export AWS_KEYPAIR_NAME="..."
 export AWS_SSH_PRIVATE_KEY="..."
 export AWS_SUBNET_ID="..."

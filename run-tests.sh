@@ -45,7 +45,7 @@ if [ "$repo_ip" == "" ] && [ "$test_repo_ip" == "" ]; then
   --subnet-id             "$AWS_SUBNET_ID" \
   --monitoring            "Enabled=value" \
   --security-group-ids    "$AWS_SECURITY_GROUP_ID" \
-  --placement             "AvailabilityZone=${AWS_DEFAULT_REGION}a,GroupName=${placement_group},Tenancy=default" \
+  --placement             "AvailabilityZone=${AWS_AVAILABILITY_ZONE},GroupName=${placement_group},Tenancy=default" \
   --ebs-optimized \
   --query                 "Instances[*].InstanceId" \
   --output                "text" | tr '\t' ' ')
@@ -56,8 +56,6 @@ if [ "$repo_ip" == "" ] && [ "$test_repo_ip" == "" ]; then
   fi
 
   ids=(${instance_ids// / });
-  aws ec2 create-tags --resources "${ids[0]}" --tags "Key=Name,Value=Repo"
-  aws ec2 create-tags --resources "${ids[1]}" --tags "Key=Name,Value=Test-Repo"
 
   echo "== Waiting for instances to start"
   state=''
@@ -67,6 +65,10 @@ if [ "$repo_ip" == "" ] && [ "$test_repo_ip" == "" ]; then
     state=$(aws ec2 describe-instances --instance-ids $instance_ids --query "Reservations[*].Instances[*].State.Name" --output text | tr '\t' '\n' | sort -u)
   done
   printf $clear_console
+
+  echo "== Tagging instances"
+  aws ec2 create-tags --resources "${ids[0]}" --tags "Key=Name,Value=Repo"
+  aws ec2 create-tags --resources "${ids[1]}" --tags "Key=Name,Value=Test-Repo"
 
   echo "== Reading instances IPs"
   repo_ip=$(aws ec2 describe-instances --instance-ids "${ids[0]}" --query "Reservations[*].Instances[*].PublicIpAddress" --output text)
