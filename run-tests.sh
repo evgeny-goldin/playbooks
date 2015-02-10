@@ -95,9 +95,35 @@ $repo_ip
 $test_repo_ip
 EOF
 
+echo "== Running Nexus playbook"
+set -ex
+time ansible-playbook 'playbooks/nexus-ubuntu.yml' $connect \
+                 --extra-vars "port=$REPO_PORT \
+                               import='$REPO_IMPORT' \
+                               java_options='$NEXUS_JAVA_OPTIONS'"
+set +ex
+
+echo "== Running Test Repo playbook for Nexus"
+set -ex
+time ansible-playbook 'playbooks/test-repo-ubuntu.yml' $connect \
+                 --extra-vars "host=$repo_ip \
+                               port=$REPO_PORT \
+                               clean_reports=true \
+                               reports_dir='$reports' \
+                               simulations_script='$simulations_script' \
+                               run_simulations=false \
+                               repo_name=Nexus \
+                               path=/nexus/content/repositories/central/"
+set +ex
+
+echo "== Running Nexus Gatling simulations"
+set -ex
+time ssh $ssh_options $ssh_user@$test_repo_ip sudo "$simulations_script"
+set +ex
+
 echo "== Running Artifactory playbook"
 set -ex
-ansible-playbook 'playbooks/artifactory-ubuntu.yml' $connect \
+time ansible-playbook 'playbooks/artifactory-ubuntu.yml' $connect \
                  --extra-vars "port=$REPO_PORT \
                                import='$REPO_IMPORT' \
                                java_options='$ARTIFACTORY_JAVA_OPTIONS'"
@@ -105,11 +131,11 @@ set +ex
 
 echo "== Running Test Repo playbook for Artifactory"
 set -ex
-ansible-playbook 'playbooks/test-repo-ubuntu.yml' $connect \
+time ansible-playbook 'playbooks/test-repo-ubuntu.yml' $connect \
                  --extra-vars "host=$repo_ip \
                                port=$REPO_PORT \
-                               clean_reports=true \
                                reports_dir='$reports' \
+                               reports_archive='$reports_archive' \
                                simulations_script='$simulations_script' \
                                run_simulations=false \
                                repo_name=Artifactory \
@@ -120,33 +146,7 @@ set +ex
 # https://github.com/ansible/ansible/issues/7319
 echo "== Running Artifactory Gatling simulations"
 set -ex
-ssh $ssh_options $ssh_user@$test_repo_ip sudo "$simulations_script"
-set +ex
-
-echo "== Running Nexus playbook"
-set -ex
-ansible-playbook 'playbooks/nexus-ubuntu.yml' $connect \
-                 --extra-vars "port=$REPO_PORT \
-                               import='$REPO_IMPORT' \
-                               java_options='$NEXUS_JAVA_OPTIONS'"
-set +ex
-
-echo "== Running Test Repo playbook for Nexus"
-set -ex
-ansible-playbook 'playbooks/test-repo-ubuntu.yml' $connect \
-                 --extra-vars "host=$repo_ip \
-                               port=$REPO_PORT \
-                               reports_dir='$reports' \
-                               reports_archive='$reports_archive' \
-                               simulations_script='$simulations_script' \
-                               run_simulations=false \
-                               repo_name=Nexus \
-                               path=/nexus/content/repositories/central/"
-set +ex
-
-echo "== Running Nexus Gatling simulations"
-set -ex
-ssh $ssh_options $ssh_user@$test_repo_ip sudo "$simulations_script"
+time ssh $ssh_options $ssh_user@$test_repo_ip sudo "$simulations_script"
 set +ex
 
 echo "== Downloading Gatling reports archive"
