@@ -6,7 +6,7 @@ import io.gatling.http.Predef._
 class {{ repo_name }}{{ item.name }} extends Simulation {
 
   val chain = Source.fromFile( "{{ test_repo.files_dir }}/{{ item.artifacts }}" ).getLines().
-              foldLeft( exec( http( "Root" ).get( "/" ))){
+              foldLeft( exec( http( "Root" ).get( "" ))){
     ( e, artifact ) => e.exec( http( artifact.split( '/' ).last ).get( artifact ))
   }
 
