@@ -74,6 +74,11 @@ if [ "$repo_ip" == "" ] && [ "$test_repo_ip" == "" ]; then
   repo_ip=$(aws ec2 describe-instances --instance-ids "${ids[0]}" --query "Reservations[*].Instances[*].PublicIpAddress" --output text)
   test_repo_ip=$(aws ec2 describe-instances --instance-ids "${ids[1]}" --query "Reservations[*].Instances[*].PublicIpAddress" --output text)
   echo "== IPs are [$repo_ip] and [$test_repo_ip]"
+
+  if [ "$repo_ip" == "" ] || [ "$test_repo_ip" == "" ]; then
+    echo "Failed to read instances public IPs. Make sure instances '${ids[0]}' and '${ids[1]}' have public IPs."
+    exit 1
+  fi
 fi
 
 for ip in $repo_ip $test_repo_ip; do
