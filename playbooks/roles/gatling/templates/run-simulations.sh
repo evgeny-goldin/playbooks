@@ -6,9 +6,10 @@ mkdir -p '{{ reports_dir }}'
 
 echo "-=-= Running simulation {{ simulation }} =-=-"
 
-'{{ gatling_sh }}' -m --output-name    '{{ simulation }}' \
-                      --simulation     '{{ simulation }}' \
-                      --results-folder '{{ reports_dir }}' >> '{{ reports_dir }}/{{ simulation }}.log' 2>&1
+JAVA_OPTS="{{ gatling_java_opts | default('') }}" '{{ gatling_sh }}' -m \
+    --output-name    '{{ simulation }}' \
+    --simulation     '{{ simulation }}' \
+    --results-folder '{{ reports_dir }}' >> '{{ reports_dir }}/{{ simulation }}.log' 2>&1
 
 echo "-=-= Running simulation {{ simulation }} - DONE =-=-"
 sleep 10

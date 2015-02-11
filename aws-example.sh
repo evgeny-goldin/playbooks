@@ -22,6 +22,7 @@ export AWS_EBS_SIZE="20"
 export AWS_SSH_USER="ubuntu"
 
 export REPO_PORT="8080"
+export GATLING_JAVA_OPTIONS="-server -Xms512m -Xmx14000m"
 export ARTIFACTORY_JAVA_OPTIONS="-server -Xms512m -Xmx14000m"
 export NEXUS_JAVA_OPTIONS="-server -Xms512m -Xmx14000m"
 export REPO_IMPORT="https://s3-eu-west-1.amazonaws.com/evgenyg-ansible/repo-import.zip"

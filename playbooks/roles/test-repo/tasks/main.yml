@@ -1,12 +1,30 @@
 ---
-- set_fact:
-    repo: "http://{{ host }}:{{ port }}{{ path }}"
-
-- debug: msg="Testing {{ repo_name }} repo {{ repo }} => '{{ reports_dir }}'"
+- debug: msg="Testing {{ repo_name }} repo => '{{ reports_dir }}'"
   when:  reports_archive is not defined
 
-- debug: msg="Testing {{ repo_name }} repo {{ repo }} => '{{ reports_dir }}' => '{{ reports_archive }}'"
+- debug: msg="Testing {{ repo_name }} repo => '{{ reports_dir }}' => '{{ reports_archive }}'"
   when:  reports_archive is defined
+
+- debug: msg="repo = [{{ repo }}]"
+- debug: msg="quick_search = [{{ quick_search }}]"
+
+- set_fact:
+    is_artifactory: "{{ '/artifactory/' in repo }}"
+    is_nexus:       "{{ '/nexus/'       in repo }}"
+
+- include_vars: "{{ playbook_dir }}/roles/artifactory/vars/main.yml"
+  when: is_artifactory
+- set_fact: import_repo="{{ artifactory.import.repo }}"
+  when: is_artifactory
+
+- include_vars: "{{ playbook_dir }}/roles/nexus/vars/main.yml"
+  when: is_nexus
+- set_fact: import_repo="{{ nexus.import.repo }}"
+  when: is_nexus
+
+- debug: var=is_artifactory
+- debug: var=is_nexus
+- debug: var=import_repo
 
 - file: path={{ reports_dir }} state=absent
   when: clean_reports | default( False )
@@ -24,7 +42,7 @@
     dest: "{{ test_repo.files_dir }}/{{ item.artifacts }}"
   with_items: test_repo.simulations
 
-- name: Generating simulations
+- name: Generating Scala simulations
   template:
     src:  Simulation.scala
     dest: "{{ gatling_simulations }}/{{ repo_name }}{{ item.name }}.scala"

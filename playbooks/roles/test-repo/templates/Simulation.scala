@@ -5,10 +5,31 @@ import io.gatling.http.Predef._
 
 class {{ repo_name }}{{ item.name }} extends Simulation {
 
-  val chain = Source.fromFile( "{{ test_repo.files_dir }}/{{ item.artifacts }}" ).getLines().
-              foldLeft( exec( http( "Root" ).get( "" ))){
-    ( e, artifact ) => e.exec( http( artifact.split( '/' ).last ).get( artifact ))
+  val artifacts = Source.fromFile( "{{ test_repo.files_dir }}/{{ item.artifacts }}" ).getLines()
+
+  {% if ( item.search | default('')) == 'quick' %}
+  // "activemq/activemq/3.2-M1/activemq-3.2-M1.pom" => "activemq"
+  val chain = artifacts.map( a => a.split( '/' ).last.split( '-' )( 0 )).
+              toSet.toList.sorted.
+              foldLeft( exec()){
+    ( e, name ) =>
+    e.exec( http( name ).get( "{{ quick_search }}".replace( "<name>", name )))
   }
+  {% elif ( item.search | default('')) == 'class' %}
+
+  // Do Nothing
+
+  {% elif ( item.search | default('')) == 'gavc' %}
+
+  // Do Nothing
+
+  {% else %}
+  val chain = artifacts.
+              foldLeft( exec()){
+    ( e, artifact ) =>
+    e.exec( http( artifact.split( '/' ).last ).get( "{{ repo }}".replace( "<repo>", "{{ import_repo }}" ).replace( "<artifact>", artifact )))
+  }
+  {% endif %}
 
   // http://gatling.io/docs/2.1.4/general/scenario.html#scenario-loops
 
@@ -23,7 +44,7 @@ class {{ repo_name }}{{ item.name }} extends Simulation {
               {% endif %}
             )
 
-  val httpConf = http.baseURL( "{{ repo }}" ).
+  val httpConf = http.baseURL( "http://{{ host }}:{{ port }}" ).
                       acceptHeader( "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" ).
                       doNotTrackHeader( "1" ).
                       acceptLanguageHeader( "en-US,en;q=0.5" ).

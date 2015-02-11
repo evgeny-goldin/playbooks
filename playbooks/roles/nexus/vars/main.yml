@@ -29,6 +29,6 @@ nexus: {
   import: {
     archive: /opt/repo-import.<ext>,
     home:    <home>/sonatype-work/nexus/storage,
-    repo:    central
+    repo:    releases
   }
 }

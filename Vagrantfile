@@ -43,8 +43,12 @@ VB_BOXES = {
                    run_simulations: false,
                    host:            "repo.#{ VAGRANT_DOMAIN }",
                    port:            WEB_PORT,
-                   repo_name:       'Artifactory', path: '/artifactory/repo/' }
-                  #  repo_name:       'Nexus', path: '/nexus/content/repositories/central/' }
+                   repo_name:       'Artifactory',
+                   repo:            '/artifactory/<repo>/<artifact>',
+                   quick_search:    '/artifactory/api/search/artifact?name=<name>' }
+                  #  repo_name:       'Nexus',
+                  #  repo:            '/nexus/content/repositories/<repo>/<artifact>',
+                  #  quick_search:    '/nexus/service/local/lucene/search?q=<name>' }
 }
 
 Vagrant.require_version '>= 1.7.0'

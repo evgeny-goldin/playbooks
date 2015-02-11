@@ -124,9 +124,11 @@ time ansible-playbook 'playbooks/test-repo-ubuntu.yml' $connect \
                                clean_reports=true \
                                reports_dir='$reports' \
                                simulations_script='$simulations_script' \
+                               gatling_java_opts='$GATLING_JAVA_OPTIONS' \
                                run_simulations=false \
                                repo_name=Nexus \
-                               path=/nexus/content/repositories/central/"
+                               repo=/nexus/content/repositories/<repo>/<artifact> \
+                               quick_search=/nexus/service/local/lucene/search?q=<name>"
 set +ex
 
 echo "== Running Nexus Gatling simulations"
@@ -150,9 +152,11 @@ time ansible-playbook 'playbooks/test-repo-ubuntu.yml' $connect \
                                reports_dir='$reports' \
                                reports_archive='$reports_archive' \
                                simulations_script='$simulations_script' \
+                               gatling_java_opts='$GATLING_JAVA_OPTIONS' \
                                run_simulations=false \
                                repo_name=Artifactory \
-                               path=/artifactory/repo/"
+                               repo=/artifactory/<repo>/<artifact> \
+                               quick_search=/artifactory/api/search/artifact?name=<name>"
 set +ex
 
 # Running Gatling simulations outside Ansible
