@@ -7,9 +7,9 @@ test_repo: {
     { name: Get50,          users: 50,  artifacts: all-artifacts-name-sorted.txt },
     { name: Get100,         users: 100, artifacts: all-artifacts-name-sorted.txt },
     { name: Get400,         users: 400, artifacts: all-artifacts-name-sorted.txt },
-    { name: SearchQuick10,  users: 10,  artifacts: all-artifacts-name-sorted.txt, search: quick }
-    { name: SearchQuick50,  users: 50,  artifacts: all-artifacts-name-sorted.txt, search: quick }
-    { name: SearchQuick100, users: 100, artifacts: all-artifacts-name-sorted.txt, search: quick }
-    { name: SearchQuick400, users: 400, artifacts: all-artifacts-name-sorted.txt, search: quick }
+    { name: QuickSearch10,  users: 10,  artifacts: all-artifacts-name-sorted.txt, search: quick }
+    { name: QuickSearch50,  users: 50,  artifacts: all-artifacts-name-sorted.txt, search: quick }
+    { name: QuickSearch100, users: 100, artifacts: all-artifacts-name-sorted.txt, search: quick }
+    { name: QuickSearch400, users: 400, artifacts: all-artifacts-name-sorted.txt, search: quick }
   ]
 }
