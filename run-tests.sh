@@ -128,11 +128,11 @@ time ansible-playbook 'playbooks/test-repo-ubuntu.yml' $connect \
                                run_simulations=false \
                                repo_name=Nexus \
                                repo=/nexus/content/repositories/<repo>/<artifact> \
-                               quick_search=/nexus/service/local/lucene/search?count=10000000&q=<name> \
-                               groupId_search=/nexus/service/local/lucene/search?count=10000000&g=<g> \
-                               artifactId_search=/nexus/service/local/lucene/search?count=10000000&a=<a> \
-                               version_search=/nexus/service/local/lucene/search?count=10000000&v=<v> \
-                               gav_search=/nexus/service/local/lucene/search?count=10000000&g=<g>&a=<a>&v=<v>"
+                               quick_search=/nexus/service/local/lucene/search?q=<name>&count=10000000 \
+                               groupId_search=/nexus/service/local/lucene/search?g=<g>&count=10000000 \
+                               artifactId_search=/nexus/service/local/lucene/search?a=<a>&count=10000000 \
+                               version_search=/nexus/service/local/lucene/search?v=<v>&count=10000000 \
+                               gav_search=/nexus/service/local/lucene/search?g=<g>&a=<a>&v=<v>&count=10000000"
 set +ex
 
 echo "== Running Nexus Gatling simulations"
