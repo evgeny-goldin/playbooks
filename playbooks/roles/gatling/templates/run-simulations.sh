@@ -5,13 +5,17 @@ mkdir -p '{{ reports_dir }}'
 {% for simulation in simulations %}
 
 echo "-=-= Running simulation {{ simulation }} =-=-"
+STARTTIME=$(date +%s)
 
 JAVA_OPTS="{{ gatling_java_opts | default('') }}" '{{ gatling_sh }}' -m \
     --output-name    '{{ simulation }}' \
     --simulation     '{{ simulation }}' \
     --results-folder '{{ reports_dir }}' 2>&1 | tee -a '{{ reports_dir }}/{{ simulation }}.log'
 
-echo "-=-= Running simulation {{ simulation }} - DONE =-=-"
+ENDTIME=$(date +%s)
+echo "-=-= Running simulation {{ simulation }} - DONE ($(($ENDTIME - $STARTTIME)) sec) =-=-"
+
+echo "-=-= Sleeping for 10 seconds =-=-"
 sleep 10
 
 {% endfor %}
