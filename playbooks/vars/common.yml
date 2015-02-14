@@ -39,7 +39,7 @@ common: {
     verify:   "{{ playbook_dir }}/utils/verify.yml",
     fake:     "{{ playbook_dir }}/utils/fake.yml",
     register: "{{ playbook_dir }}/utils/register.yml",
-    run:      "{{ playbook_dir }}/utils/run.yml",
+    run:      "{{ playbook_dir }}/utils/run.yml"
   },
 
   vars: {
@@ -52,6 +52,6 @@ common: {
     exhibitor: "{{ playbook_dir }}/roles/exhibitor/tasks/main.yml",
     gradle:    "{{ playbook_dir }}/roles/gradle/tasks/main.yml",
     register:  "{{ playbook_dir }}/roles/skydns/register-host.yml",
-    gatling:   "{{ playbook_dir }}/roles/gatling/run-simulations.yml",
+    gatling:   "{{ playbook_dir }}/roles/gatling/run-simulations.yml"
   }
 }

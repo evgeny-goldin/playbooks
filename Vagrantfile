@@ -33,7 +33,6 @@ VB_BOXES = {
                                                vagrant_ports: [ WEB_PORT ] ),
   helios:             HELIOS_PROPERTIES.merge( HELIOS_PORTS ).merge( helios_master: "helios.#{ VAGRANT_DOMAIN }" ),
   repo:          { port:          WEB_PORT,
-                   java_options:  '-server -Xms512m -Xmx800m',
                   #  import:        REPO_IMPORT,
                    vagrant_ports: [ WEB_PORT ],
                    playbook:      'artifactory' },
