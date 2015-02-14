@@ -36,5 +36,5 @@
     return_content: yes
   register: nexus_search
   until:    "{{ ( nexus_search.content is defined ) and ( not ( '<totalCount>0</totalCount>' in nexus_search.content )) }}"
-  retries:  100
+  retries:  200
   delay:    3

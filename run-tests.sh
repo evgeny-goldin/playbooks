@@ -128,7 +128,11 @@ time ansible-playbook 'playbooks/test-repo-ubuntu.yml' $connect \
                                run_simulations=false \
                                repo_name=Nexus \
                                repo=/nexus/content/repositories/<repo>/<artifact> \
-                               quick_search=/nexus/service/local/lucene/search?q=<name>"
+                               quick_search=/nexus/service/local/lucene/search?count=10000000&q=<name> \
+                               groupId_search=/nexus/service/local/lucene/search?count=10000000&g=<g> \
+                               artifactId_search=/nexus/service/local/lucene/search?count=10000000&a=<a> \
+                               version_search=/nexus/service/local/lucene/search?count=10000000&v=<v> \
+                               gav_search=/nexus/service/local/lucene/search?count=10000000&g=<g>&a=<a>&v=<v>"
 set +ex
 
 echo "== Running Nexus Gatling simulations"
@@ -156,7 +160,11 @@ time ansible-playbook 'playbooks/test-repo-ubuntu.yml' $connect \
                                run_simulations=false \
                                repo_name=Artifactory \
                                repo=/artifactory/<repo>/<artifact> \
-                               quick_search=/artifactory/api/search/artifact?name=<name>"
+                               quick_search=/artifactory/api/search/artifact?name=<name> \
+                               groupId_search=/artifactory/api/search/gavc?g=<g> \
+                               artifactId_search=/artifactory/api/search/gavc?a=<a> \
+                               version_search=/artifactory/api/search/gavc?v=<v> \
+                               gav_search=/artifactory/api/search/gavc?g=<g>&a=<a>&v=<v>"
 set +ex
 
 # Running Gatling simulations outside Ansible

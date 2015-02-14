@@ -38,17 +38,32 @@ VB_BOXES = {
                    vagrant_ports: [ WEB_PORT ],
                    playbook:      'artifactory' },
                   #  playbook:      'nexus' },
-  'test-repo' => { reports_dir:     '/opt/gatling-reports',
-                   reports_archive: '/vagrant/gatling-reports.tar.gz',
-                   run_simulations: false,
-                   host:            "repo.#{ VAGRANT_DOMAIN }",
-                   port:            WEB_PORT,
-                   repo_name:       'Artifactory',
-                   repo:            '/artifactory/<repo>/<artifact>',
-                   quick_search:    '/artifactory/api/search/artifact?name=<name>' }
-                  #  repo_name:       'Nexus',
-                  #  repo:            '/nexus/content/repositories/<repo>/<artifact>',
-                  #  quick_search:    '/nexus/service/local/lucene/search?q=<name>' }
+  'test-repo' => { reports_dir:       '/opt/gatling-reports',
+                   clean_reports:     true,
+                   run_simulations:   false,
+                   reports_archive:   '/vagrant/gatling-reports.tar.gz',
+                   host:              "repo.#{ VAGRANT_DOMAIN }",
+                   port:              WEB_PORT,
+                  # -------------------------------------------
+                  # https://www.jfrog.com/confluence/display/RTF/Artifactory+REST+API#ArtifactoryRESTAPI-ArtifactSearch%28QuickSearch%29
+                  # -------------------------------------------
+                   repo_name:         'Artifactory',
+                   repo:              '/artifactory/<repo>/<artifact>',
+                   quick_search:      '/artifactory/api/search/artifact?name=<name>',
+                   groupId_search:    '/artifactory/api/search/gavc?g=<g>',
+                   artifactId_search: '/artifactory/api/search/gavc?a=<a>',
+                   version_search:    '/artifactory/api/search/gavc?v=<v>',
+                   gav_search:        '/artifactory/api/search/gavc?g=<g>&a=<a>&v=<v>' }
+                  # -------------------------------------------
+                  # https://repository.sonatype.org/nexus-indexer-lucene-plugin/default/docs/path__lucene_search.html
+                  # -------------------------------------------
+                  #  repo_name:         'Nexus',
+                  #  repo:              '/nexus/content/repositories/<repo>/<artifact>',
+                  #  quick_search:      '/nexus/service/local/lucene/search?count=10000000&q=<name>',
+                  #  groupId_search:    '/nexus/service/local/lucene/search?count=10000000&g=<g>',
+                  #  artifactId_search: '/nexus/service/local/lucene/search?count=10000000&a=<a>',
+                  #  version_search:    '/nexus/service/local/lucene/search?count=10000000&v=<v>',
+                  #  gav_search:        '/nexus/service/local/lucene/search?count=10000000&g=<g>&a=<a>&v=<v>' }
 }
 
 Vagrant.require_version '>= 1.7.0'

@@ -7,27 +7,43 @@ class {{ repo_name }}{{ item.name }} extends Simulation {
 
   val artifacts = Source.fromFile( "{{ test_repo.files_dir }}/{{ item.artifacts }}" ).getLines()
 
-  {% if ( item.search | default('')) == 'quick' %}
-  // "activemq/activemq/3.2-M1/activemq-3.2-M1.pom" => "activemq"
-  val chain = artifacts.map( a => a.split( '/' ).last.split( '-' )( 0 )).
-              toSet.toList.sorted.
-              foldLeft( exec()){
-    ( e, name ) =>
-    e.exec( http( name ).get( "{{ quick_search }}".replace( "<name>", name )))
+  def buildChain( coordinateName: String, path: String, extractor: String => String ) =
+    artifacts.map( extractor ).toList.distinct.sorted.foldLeft( exec()){
+    ( e, coordinate ) =>
+    val query = path.replace( s"<${coordinateName}>", coordinate )
+    e.exec( http( query ).get( query ))
   }
-  {% elif ( item.search | default('')) == 'class' %}
 
-  // Do Nothing
+  def groupId   ( artifact:String ) = { val array = artifact.split( "/" )
+                                        array.take( array.size - 3 ).mkString( "." )}
+  def artifactId( artifact:String ) = artifact.split( "/" ).takeRight( 3 )( 0 )
+  def version   ( artifact:String ) = artifact.split( "/" ).takeRight( 2 )( 0 )
 
-  {% elif ( item.search | default('')) == 'gavc' %}
-
-  // Do Nothing
-
-  {% else %}
-  val chain = artifacts.
-              foldLeft( exec()){
+  {% if   ( item.search | default('')) == 'quick' %}
+  val chain = buildChain( "name", "{{ quick_search }}", artifactId( _ ).split( '-' )( 0 ))
+  {% elif ( item.search | default('')) == 'groupId' %}
+  val chain = buildChain( "g", "{{ groupId_search }}", groupId )
+  {% elif ( item.search | default('')) == 'artifactId' %}
+  val chain = buildChain( "a", "{{ artifactId_search }}", artifactId )
+  {% elif ( item.search | default('')) == 'version' %}
+  val chain = buildChain( "v", "{{ version_search }}", version )
+  {% elif ( item.search | default('')) == 'gav' %}
+  val chain = artifacts.foldLeft( exec()){
     ( e, artifact ) =>
-    e.exec( http( artifact.split( '/' ).last ).get( "{{ repo }}".replace( "<repo>", "{{ import_repo }}" ).replace( "<artifact>", artifact )))
+    val g     = groupId( artifact )
+    val a     = artifactId( artifact )
+    val v     = version( artifact )
+    val query = "{{ gav_search }}".replace( "<g>", g ).
+                                   replace( "<a>", a ).
+                                   replace( "<v>", v )
+    e.exec( http( query ).get( query ))
+  }
+  {% else %}
+  val chain = artifacts.foldLeft( exec()){
+    ( e, artifact ) =>
+    val query = "{{ repo }}".replace( "<repo>",     "{{ import_repo }}" ).
+                             replace( "<artifact>", artifact )
+    e.exec( http( query ).get( query ))
   }
   {% endif %}
 

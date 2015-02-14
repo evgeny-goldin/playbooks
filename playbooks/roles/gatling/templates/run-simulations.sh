@@ -9,7 +9,7 @@ echo "-=-= Running simulation {{ simulation }} =-=-"
 JAVA_OPTS="{{ gatling_java_opts | default('') }}" '{{ gatling_sh }}' -m \
     --output-name    '{{ simulation }}' \
     --simulation     '{{ simulation }}' \
-    --results-folder '{{ reports_dir }}' >> '{{ reports_dir }}/{{ simulation }}.log' 2>&1
+    --results-folder '{{ reports_dir }}' 2>&1 | tee -a '{{ reports_dir }}/{{ simulation }}.log'
 
 echo "-=-= Running simulation {{ simulation }} - DONE =-=-"
 sleep 10
@@ -20,6 +20,7 @@ sleep 10
 
 rm -rf '{{ reports_archive }}'
 cd     '{{ reports_dir }}'
+echo "-=-= Packing '{{ reports_dir }}' => '{{ reports_archive }}' =-=-"
 
   {% if reports_archive.endswith( '.tar.gz' ) %}
 tar -czf '{{ reports_archive }}' .
