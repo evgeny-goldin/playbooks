@@ -41,7 +41,7 @@ if [ "$repo_ip" == "" ] || [ "$test_repo_ip" == "" ]; then
   --image-id              "$AWS_AMI" \
   --key-name              "$AWS_KEYPAIR_NAME" \
   --instance-type         "$AWS_INSTANCE_TYPE" \
-  --block-device-mappings "[{ \"DeviceName\" : \"/dev/sda1\", \"Ebs\":{ \"VolumeSize\" : $AWS_EBS_SIZE }}]" \
+  --block-device-mappings "[{ \"DeviceName\" : \"/dev/sda1\", \"Ebs\":{ \"VolumeSize\" : $AWS_EBS_SIZE, \"VolumeType\" : \"gp2\" }}]" \
   --subnet-id             "$AWS_SUBNET_ID" \
   --monitoring            "Enabled=value" \
   --security-group-ids    "$AWS_SECURITY_GROUP_ID" \
