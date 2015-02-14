@@ -18,3 +18,7 @@
   command:     "{{ simulations_script }}"
   environment: "{{ gatling_env | expand_path( ansible_env ) }}"
   when: run_simulations | default( True ) | bool
+  register: simulation_out
+
+- debug: var=simulation_out.stdout_lines
+  when:  run_simulations | default( True ) | bool
