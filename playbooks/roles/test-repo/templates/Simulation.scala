@@ -30,12 +30,9 @@ class {{ repo_name }}{{ item.name }} extends Simulation {
   {% elif ( item.search | default('')) == 'gav' %}
   val chain = artifacts.foldLeft( exec()){
     ( e, artifact ) =>
-    val g     = groupId( artifact )
-    val a     = artifactId( artifact )
-    val v     = version( artifact )
-    val query = "{{ gav_search }}".replace( "<g>", g ).
-                                   replace( "<a>", a ).
-                                   replace( "<v>", v )
+    val query = "{{ gav_search }}".replace( "<g>", groupId( artifact )).
+                                   replace( "<a>", artifactId( artifact )).
+                                   replace( "<v>", version( artifact ))
     e.exec( http( query ).get( query ))
   }
   {% else %}
