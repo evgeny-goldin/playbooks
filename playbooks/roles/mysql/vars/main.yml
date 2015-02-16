@@ -1,4 +1,10 @@
 ---
 mysql: {
-  my_cnf: /etc/mysql/my.cnf
+  my_cnf:        /etc/mysql/my.cnf,
+  access_script: /etc/mysql/root_access.sql,
+  bind_external: false, # Whether MySQL daemon is bound to 0.0.0.0
+  root: {
+    user:     root,
+    password: root_password
+  }
 }

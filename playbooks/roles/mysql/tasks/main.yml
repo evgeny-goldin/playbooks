@@ -16,20 +16,6 @@
     - python-mysqldb
     - mysql-server
 
-# http://stackoverflow.com/a/21151255/472153
-- name: Updating '{{ mysql.my_cnf }}'
-  lineinfile:
-    dest: "{{ mysql.my_cnf }}"
-    line: '# bind-address = {{ common.net.localhost }}'
-    regexp: ^bind-address\s+=
-
-- name: Updating '{{ mysql.my_cnf }}' for Docker
-  lineinfile:
-    dest: "{{ mysql.my_cnf }}"
-    line: 'user            = root'
-    regexp: ^user\s+=\s+mysql$
-  when: is_docker|bool
-
 - name: Starting MySQL service
   service: name=mysql state=started
 
@@ -38,27 +24,34 @@
     title: MySQL check
     command: { run: mysql --version, expect: [ mysql, 5.6 ] }
 
-- set_fact:
-    remote_access_script: /etc/mysql/root_remote_access.sql
+# http://stackoverflow.com/a/21151255/472153
+- name: Updating '{{ mysql.my_cnf }}' - external access
+  lineinfile:
+    dest:   "{{ mysql.my_cnf }}"
+    line:   'bind-address = {{ common.net.any_ip }}'
+    regexp: ^bind-address\s+=
+  when: mysql.bind_external|bool
 
-- copy:
-    src:  root_remote_access.sql
-    dest: "{{ remote_access_script }}"
+- name: Updating '{{ mysql.my_cnf }}' - internal access
+  lineinfile:
+    dest:   "{{ mysql.my_cnf }}"
+    line:   'bind-address = {{ common.net.localhost }}'
+    regexp: ^bind-address\s+=
+  when: not ( mysql.bind_external|bool )
 
-- name:  Allowing MySQL remote access
-  shell: "mysql -u root -h localhost < {{ remote_access_script }}"
+- template:
+    src:  root_access.sql
+    dest: "{{ mysql.access_script }}"
 
-- name:     Verifying MySQL databases
-  mysql_db: name={{ item }} state=present login_host={{ common.net.localhost }} login_user=root login_password=''
-  with_items:
-    - mysql
-    - information_schema
-    - performance_schema
+- name:  Running root access script
+  shell: "mysql -u '{{ mysql.root.user }}' < {{ mysql.access_script }}"
+  ignore_errors: yes
 
 - name: Restarting MySQL service
   service: name=mysql state=restarted
-  when: start_service
 
-- name: Stopping MySQL service
-  service: name=mysql state=stopped
-  when: ( not start_service|bool )
+- name: Verifying MySQL access
+  shell: "mysql -u'{{ mysql.root.user }}' -p'{{ mysql.root.password }}' -e '{{ item }}'"
+  with_items:
+    - show databases
+    - select count(*) from mysql.user
