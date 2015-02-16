@@ -1,8 +1,5 @@
 ---
-
-# http://dev.mysql.com/downloads/repo/apt/
-# http://dev.mysql.com/downloads/file.php?id=452447
-# http://dev.mysql.com/get/mysql-apt-config_0.2.1-1ubuntu14.04_all.deb
+- include_vars: "{{ playbook_dir }}/roles/mysql/vars/main.yml"
 
 - name: Adding MySQL repositories
   apt_repository: repo="{{ item }}" update_cache=yes
@@ -40,17 +37,19 @@
   when: not ( mysql.bind_external|bool )
 
 - template:
-    src:  root_access.sql
+    src:  "{{ playbook_dir }}/roles/mysql/templates/root_access.sql"
     dest: "{{ mysql.access_script }}"
 
 - name:  Running root access script
   shell: "mysql -u '{{ mysql.root.user }}' < {{ mysql.access_script }}"
   ignore_errors: yes
+  register: mysql_access_out
 
 - name: Restarting MySQL service
   service: name=mysql state=restarted
+  when: not ( "Access denied for user 'root'@'localhost'" in mysql_access_out.stderr )
 
-- name: Verifying MySQL access
+- name: Verifying MySQL root access
   shell: "mysql -u'{{ mysql.root.user }}' -p'{{ mysql.root.password }}' -e '{{ item }}'"
   with_items:
     - show databases

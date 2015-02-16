@@ -20,3 +20,6 @@
 
 - include: import.yml
   when:    import is defined
+
+- include: mysql.yml
+  when:    artifactory.mysql.enabled

@@ -35,5 +35,11 @@ artifactory: {
     archive: /opt/repo-import.<ext>,
     home:    /opt/repo-import,
     repo:    libs-release-local
+  },
+  mysql: {
+    enabled:  true,
+    database: artifactory,
+    user:     artifactory,
+    password: artifactory_password
   }
 }

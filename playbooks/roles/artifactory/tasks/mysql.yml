@@ -1,0 +1,33 @@
+---
+# ----------------------------------------------------------
+# https://www.jfrog.com/confluence/display/RTF/MySQL
+# ----------------------------------------------------------
+- include: "{{ playbook_dir }}/roles/mysql/tasks/main.yml"
+
+- name: Creating Artifactory MySQL database
+  mysql_db:
+    name:           "{{ artifactory.mysql.database }}"
+    login_user:     "{{ mysql.root.user }}"
+    login_password: "{{ mysql.root.password }}"
+
+- name: Creating Artifactory MySQL user
+  mysql_user:
+    name:           "{{ artifactory.mysql.user }}"
+    password:       "{{ artifactory.mysql.password }}"
+    priv:           "{{ artifactory.mysql.database }}.*:ALL"
+    login_user:     "{{ mysql.root.user }}"
+    login_password: "{{ mysql.root.password }}"
+
+- name: Copying Artifactory my.cnf
+  copy:
+    src:  my.cnf
+    dest: "{{ mysql.my_cnf }}"
+
+- name: Restarting MySQL service
+  service: name=mysql state=restarted
+
+- name: Verifying MySQL Artifactory access
+  shell: "mysql -u'{{ artifactory.mysql.user }}' -p'{{ artifactory.mysql.password }}' -e '{{ item }}'"
+  with_items:
+    - show databases
+    - "use '{{ artifactory.mysql.database }}'"
