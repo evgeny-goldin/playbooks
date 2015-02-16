@@ -4,9 +4,14 @@
 # ----------------------------------------------------------
 - include: "{{ playbook_dir }}/roles/mysql/tasks/main.yml"
 
+- set_fact:
+    artifactory_mysql: "mysql -u'{{ artifactory.mysql.user }}' -p'{{ artifactory.mysql.password }}'"
+
 - name: Creating Artifactory MySQL database
   mysql_db:
     name:           "{{ artifactory.mysql.database }}"
+    encoding:       utf8
+    collation:      utf8_bin
     login_user:     "{{ mysql.root.user }}"
     login_password: "{{ mysql.root.password }}"
 
@@ -26,8 +31,43 @@
 - name: Restarting MySQL service
   service: name=mysql state=restarted
 
-- name: Verifying MySQL Artifactory access
-  shell: "mysql -u'{{ artifactory.mysql.user }}' -p'{{ artifactory.mysql.password }}' -e '{{ item }}'"
+- name: Verifying Artifactory MySQL access
+  shell: "{{ artifactory_mysql }} -e '{{ item }}'"
   with_items:
     - show databases
-    - "use '{{ artifactory.mysql.database }}'"
+    - use '{{ artifactory.mysql.database }}'
+
+- file: path="{{ artifactory_home }}/etc" state=directory
+- name: Copying storage.properties
+  template:
+    src:  storage.properties
+    dest: "{{ artifactory_home }}/etc/storage.properties"
+
+- include: "{{ common.utils.download }}"
+  vars:
+    title:   MySQL connector archive
+    url:     "{{ artifactory.mysql.connector.url }}"
+    archive: "{{ artifactory.mysql.connector.archive }}"
+    home:    "{{ artifactory.mysql.connector.home }}"
+    cleanup:
+      - cp '{{ artifactory.mysql.connector.home }}'/*/*.jar '{{ artifactory_lib }}'
+
+- name:    Restarting Artifactory service
+  service: name=artifactory state=restarted
+
+- include: "{{ common.utils.verify }}"
+  vars:
+    title:   Artifactory
+    port:    "{{ artifactory_port }}"
+    timeout: "{{ artifactory.timeout }}"
+    wait:    "{{ artifactory.wait }}"
+    verify:  "{{ artifactory.verify }}"
+
+- name: Verifying Artifactory MySQL access
+  shell: "{{ artifactory_mysql }} -e 'select count(*) from {{ artifactory.mysql.database }}.{{ item }}'"
+  with_items:
+    - acls
+    - binaries
+    - builds
+    - nodes
+    - users

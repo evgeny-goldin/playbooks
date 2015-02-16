@@ -18,8 +18,8 @@
 - include: war.yml
   when:    artifactory.run == 'war'
 
+- include: mysql.yml
+  when:    artifactory.mysql.enabled|bool
+
 - include: import.yml
   when:    import is defined
-
-- include: mysql.yml
-  when:    artifactory.mysql.enabled

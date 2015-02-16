@@ -37,9 +37,14 @@ artifactory: {
     repo:    libs-release-local
   },
   mysql: {
-    enabled:  true,
-    database: artifactory,
-    user:     artifactory,
-    password: artifactory_password
+    enabled:   true,
+    database:  artifactory,
+    user:      artifactory,
+    password:  artifactory_password,
+    connector: {
+      url:     'https://cdn.mysql.com/Downloads/Connector-J/mysql-connector-java-5.1.34.zip',
+      archive: /opt/mysql-connector-5.1.34.zip,
+      home:    /opt/mysql-connector
+    }
   }
 }

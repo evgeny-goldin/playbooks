@@ -1,6 +1,8 @@
 ---
 - set_fact:
     artifactory_home: "{{ artifactory.standalone.home }}/artifactory-{{ artifactory_version }}"
+- set_fact:
+    artifactory_lib:  "{{ artifactory_home }}/tomcat/lib"
 
 - include: "{{ common.utils.service }}"
   vars:
@@ -14,6 +16,7 @@
     cleanup:
       - echo "export JAVA_OPTIONS="\""\$JAVA_OPTIONS {{ java_options }}"\""" >> "{{ artifactory_home }}/bin/artifactory.default"
     command: "{{ artifactory_home }}/bin/artifactory.sh"
+    start_service: "{{ not ( artifactory.mysql.enabled | bool ) }}"
     port:    "{{ artifactory_port }}"
     timeout: "{{ artifactory.timeout }}"
     wait:    "{{ artifactory.wait }}"

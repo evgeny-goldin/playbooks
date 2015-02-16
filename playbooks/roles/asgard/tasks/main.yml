@@ -81,4 +81,3 @@
 
 - name:    Restarting Asgard service
   service: name=asgard state=restarted
-  when:    start_service

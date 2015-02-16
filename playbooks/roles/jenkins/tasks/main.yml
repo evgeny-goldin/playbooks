@@ -66,13 +66,8 @@
   with_dict: jenkins.plugins | default({})
   when: item.value.startswith( 'http' )
 
-- name:    Stopping Jenkins service
-  service: name=jenkins state=stopped
-  when:    ( not start_service|bool )
-
 - name:    Restarting Jenkins service
   service: name=jenkins state=restarted
-  when:    start_service
 
 - name: Updating sudoers file (if Docker role was activated)
   lineinfile:

@@ -6,8 +6,11 @@
 - debug: msg="Running Nexus on port {{ nexus_port }}, Java options '{{ java_options }}'"
 
 - name:    Stopping and disabling Artifactory service, if found
-  service: name=artifactory state=stopped enabled=no
+  service: name={{ item }} state=stopped enabled=no
   ignore_errors: yes
+  with_items:
+    - artifactory
+    - mysql
 
 - include: standalone.yml
   when:    nexus.run == 'standalone'

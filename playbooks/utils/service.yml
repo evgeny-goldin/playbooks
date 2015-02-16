@@ -15,13 +15,19 @@
 - debug: msg="command = '{{ command }}'"
 - debug: var=port
 - debug: var=ports
+- debug: var=start_service
 
 - include: "{{ common.utils.download }}"
 
 - set_fact:
-    upstart_script: "{{ ubuntu.init_dir }}/{{ service }}.conf"
+    upstart_script:   "{{ ubuntu.init_dir }}/{{ service }}.conf"
+    is_start_service: "{{ start_service | default( True ) }}"
 
 - debug: msg="Starting {{ title }} service '{{ service }}' with [{{ command }}] in '{{ upstart_script }}'"
+  when:  is_start_service|bool
+
+- debug: msg="Setting up {{ title }} service '{{ service }}' with [{{ command }}] in '{{ upstart_script }}'"
+  when:  not ( is_start_service|bool )
 
 - name: Generating {{ title }} upstart script
   template:
@@ -30,7 +36,10 @@
 
 - name:    Restarting {{ title }} service
   service: name={{ service }} state=restarted enabled=yes
+  when:    is_start_service|bool
+
 - pause:   seconds=3
+  when:    is_start_service|bool
 
 - include: "{{ common.utils.verify }}"
-  when:    ( port is defined ) or ( ports is defined )
+  when:    is_start_service|bool and (( port is defined ) or ( ports is defined ))

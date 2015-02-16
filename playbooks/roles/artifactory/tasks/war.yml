@@ -4,14 +4,20 @@
     tomcat_port:   "{{ artifactory_port }}"
     catalina_opts: "{{ artifactory.war.java_options }} {{ java_options }}"
 
+- set_fact:
+    artifactory_home: "{{ tomcat_webapps }}/artifactory"
+- set_fact:
+    artifactory_lib:  "{{ tomcat_home }}/lib"
+
 - include: "{{ common.utils.service }}"
   vars:
     service: artifactory
     title:   Artifactory
     url:     "{{ artifactory.war.url     | tokens({ 'version': artifactory_version }) }}"
     archive: "{{ artifactory.war.archive | tokens({ 'version': artifactory_version }) }}"
-    home:    "{{ tomcat_webapps }}/artifactory"
+    home:    "{{ artifactory_home }}"
     command: "{{ tomcat_run }}"
+    start_service: "{{ not ( artifactory.mysql.enabled | bool ) }}"
     port:    "{{ artifactory_port }}"
     timeout: "{{ artifactory.timeout }}"
     wait:    "{{ artifactory.wait }}"

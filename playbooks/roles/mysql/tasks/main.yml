@@ -45,10 +45,6 @@
   ignore_errors: yes
   register: mysql_access_out
 
-- name: Restarting MySQL service
-  service: name=mysql state=restarted
-  when: not ( "Access denied for user 'root'@'localhost'" in mysql_access_out.stderr )
-
 - name: Verifying MySQL root access
   shell: "mysql -u'{{ mysql.root.user }}' -p'{{ mysql.root.password }}' -e '{{ item }}'"
   with_items:
