@@ -1,12 +1,14 @@
 ---
+# -----------------------------------------------------------
+# https://www.jfrog.com/confluence/display/RTF20/Dedicated+Tomcat+Instance
+# -----------------------------------------------------------
 - include: "{{ common.roles.tomcat }}"
   vars:
     tomcat_port:   "{{ artifactory_port }}"
     catalina_opts: "{{ artifactory.war.java_options }} {{ java_options }}"
 
 - set_fact:
-    artifactory_home: "{{ tomcat_webapps }}/artifactory"
-- set_fact:
+    artifactory_home: "{{ artifactory.war.home }}"
     artifactory_lib:  "{{ tomcat_home }}/lib"
 
 - include: "{{ common.utils.service }}"
@@ -15,8 +17,10 @@
     title:   Artifactory
     url:     "{{ artifactory.war.url     | tokens({ 'version': artifactory_version }) }}"
     archive: "{{ artifactory.war.archive | tokens({ 'version': artifactory_version }) }}"
-    home:    "{{ artifactory_home }}"
+    home:    "{{ tomcat_webapps }}/artifactory"
     command: "{{ tomcat_run }}"
+    env:
+      ARTIFACTORY_HOME: "{{ artifactory_home }}"
     start_service: "{{ not ( artifactory.mysql.enabled | bool ) }}"
     port:    "{{ artifactory_port }}"
     timeout: "{{ artifactory.timeout }}"
