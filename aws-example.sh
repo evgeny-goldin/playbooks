@@ -22,7 +22,10 @@ export AWS_EBS_SIZE="20"
 export AWS_SSH_USER="ubuntu"
 
 export REPO_PORT="8080"
-export GATLING_JAVA_OPTIONS="-server -Xms512m -Xmx14000m"
+# http://gatling.io/docs/2.1.4/general/configuration.html
+# https://github.com/gatling/gatling/blob/master/gatling-core/src/main/resources/gatling-defaults.conf
+# https://github.com/gatling/gatling/blob/master/gatling-core/src/main/scala/io/gatling/core/ConfigKeys.scala
+export GATLING_JAVA_OPTIONS="-server -Xms512m -Xmx14000m -Dgatling.http.ahc.requestTimeout=600000"
 export ARTIFACTORY_JAVA_OPTIONS="-server -Xms512m -Xmx10000m"
 export NEXUS_JAVA_OPTIONS="-server -Xms512m -Xmx14000m"
 export REPO_IMPORT="https://s3-eu-west-1.amazonaws.com/evgenyg-ansible/repo-import.zip"
