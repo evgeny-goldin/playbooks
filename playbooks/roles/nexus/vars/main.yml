@@ -30,5 +30,23 @@ nexus: {
     archive: /opt/repo-import.<ext>,
     home:    <home>/sonatype-work/nexus/storage,
     repo:    releases
+  },
+  # https://repository.sonatype.org/nexus-indexer-lucene-plugin/default/docs/path__lucene_search.html
+  # https://support.sonatype.com/entries/22189106-How-can-I-programatically-upload-an-artifact-into-Nexus-
+  # http://stackoverflow.com/a/19699401/472153
+  path: {
+    artifact:     /nexus/content/repositories/<repo>/<artifact>,
+    upload: {
+      path:       '/nexus/service/local/artifact/maven/content?r=releases&g=<g>&a=<a>&v=<v>',
+      method:     POST,
+      headers:    []
+    },
+    search: {
+      quick:      '/nexus/service/local/lucene/search?q=<name>&count=10000000',
+      groupId:    '/nexus/service/local/lucene/search?g=<g>&count=10000000',
+      artifactId: '/nexus/service/local/lucene/search?a=<a>&count=10000000',
+      version:    '/nexus/service/local/lucene/search?v=<v>&count=10000000',
+      gav:        '/nexus/service/local/lucene/search?g=<g>&a=<a>&v=<v>&count=10000000'
+    }
   }
 }

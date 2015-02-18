@@ -47,5 +47,22 @@ artifactory: {
       archive: /opt/mysql-connector-5.1.34.zip,
       home:    /opt/mysql-connector
     }
+  },
+  # https://www.jfrog.com/confluence/display/RTF/Artifactory+REST+API#ArtifactoryRESTAPI-ArtifactSearch%28QuickSearch%29
+  # https://www.jfrog.com/confluence/display/RTF/Artifactory+REST+API#ArtifactoryRESTAPI-DeployArtifact
+  path: {
+    artifact:     /artifactory/<repo>/<artifact>,
+    upload: {
+      path:       /artifactory/libs-release-local/<artifact>,
+      method:     PUT,
+      headers:    []
+    },
+    search: {
+      quick:      '/artifactory/api/search/artifact?name=<name>',
+      groupId:    '/artifactory/api/search/gavc?g=<g>',
+      artifactId: '/artifactory/api/search/gavc?a=<a>',
+      version:    '/artifactory/api/search/gavc?v=<v>',
+      gav:        '/artifactory/api/search/gavc?g=<g>&a=<a>&v=<v>'
+    }
   }
 }

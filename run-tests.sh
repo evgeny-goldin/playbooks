@@ -121,18 +121,13 @@ set -ex
 time ansible-playbook 'playbooks/test-repo-ubuntu.yml' $connect \
                  --extra-vars "host=$repo_ip \
                                port=$REPO_PORT \
+                               upload="$REPO_UPLOAD" \
                                clean_reports=true \
                                reports_dir='$reports' \
                                simulations_script='$simulations_script' \
                                gatling_java_opts='$GATLING_JAVA_OPTIONS' \
                                run_simulations=false \
-                               repo_name=Nexus \
-                               repo=/nexus/content/repositories/<repo>/<artifact> \
-                               quick_search=/nexus/service/local/lucene/search?q=<name>&count=10000000 \
-                               groupId_search=/nexus/service/local/lucene/search?g=<g>&count=10000000 \
-                               artifactId_search=/nexus/service/local/lucene/search?a=<a>&count=10000000 \
-                               version_search=/nexus/service/local/lucene/search?v=<v>&count=10000000 \
-                               gav_search=/nexus/service/local/lucene/search?g=<g>&a=<a>&v=<v>&count=10000000"
+                               repo_name=Nexus"
 set +ex
 
 echo "== Running Nexus Gatling simulations"
@@ -153,18 +148,13 @@ set -ex
 time ansible-playbook 'playbooks/test-repo-ubuntu.yml' $connect \
                  --extra-vars "host=$repo_ip \
                                port=$REPO_PORT \
+                               upload="$REPO_UPLOAD" \
                                reports_dir='$reports' \
                                reports_archive='$reports_archive' \
                                simulations_script='$simulations_script' \
                                gatling_java_opts='$GATLING_JAVA_OPTIONS' \
                                run_simulations=false \
-                               repo_name=Artifactory \
-                               repo=/artifactory/<repo>/<artifact> \
-                               quick_search=/artifactory/api/search/artifact?name=<name> \
-                               groupId_search=/artifactory/api/search/gavc?g=<g> \
-                               artifactId_search=/artifactory/api/search/gavc?a=<a> \
-                               version_search=/artifactory/api/search/gavc?v=<v> \
-                               gav_search=/artifactory/api/search/gavc?g=<g>&a=<a>&v=<v>"
+                               repo_name=Artifactory"
 set +ex
 
 # Running Gatling simulations outside Ansible

@@ -8,13 +8,24 @@ class {{ repo_name }}{{ item.name }} extends Simulation {
 
   // Artifacts that are read from file, each one as Array[String], split by "/"
   // Lines with less than 4 elements (groupId, artifactId, version, artifact) are filtered out
-  val artifacts:Iterator[Array[String]] = Source.fromFile( "{{ test_repo.files_dir }}/{{ item.artifacts }}" ).
-                                          getLines().map( _.split( "/" )).filter( _.size > 3 )
+  val artifacts:Iterator[Array[String]] = lines( "{{ test_repo.files_dir }}/{{ item.artifacts }}" ).
+                                          map( _.split( "/" )).filter( _.size > 3 )
+
+  {% if item.upload is defined %}
+  val uploadArtifacts:Array[String] = lines( "{{ test_repo.files_dir }}/{{ item.upload }}" ).
+                                      filter( _.trim.size > 0 ).toArray
+  {% endif %}
 
   // Coordinates extractors, return coordinate given the artifact
   def groupId   ( artifact: Array[String] ) = artifact.take( artifact.size - 3 ).mkString( "." )
   def artifactId( artifact: Array[String] ) = artifact.takeRight( 3 )( 0 )
   def version   ( artifact: Array[String] ) = artifact.takeRight( 2 )( 0 )
+
+
+  /**
+   * Retrieves lines of the file specified, as Iterator[String] (so only one pass is possible)
+   */
+  def lines( path:String ):Iterator[String] = Source.fromFile( path ).getLines()
 
   /**
    * Builds a chain of calls based on query path,
@@ -37,9 +48,33 @@ class {{ repo_name }}{{ item.name }} extends Simulation {
     // queries => sorted and unique queries
     toList.distinct.sorted.
     // sorted and unique queries => chain of exec calls
-    foldLeft( exec()){
-      ( e, query ) => e.exec( http( query ).get( query ))
-    }
+    foldLeft(( 0, 0, exec())){
+      case (( artifactsCounter, uploadCounter, e ), query ) =>
+      {% if item.upload is defined %}
+      if ( artifactsCounter % {{ item.upload_ratio | default( 10 ) }} == 0 ){
+        // http://gatling.io/docs/2.1.4/http/http_request.html
+        val uploadArtifact = uploadArtifacts( uploadCounter % uploadArtifacts.size )
+        val uploadPath     = "{{ upload_path }}".replace( "<artifact>", uploadArtifact )
+        val uploadFile     = s"{{ test_repo.upload.home }}/${ uploadArtifact }"
+
+        (
+          artifactsCounter + 1,
+          uploadCounter    + 1,
+          e.exec( http( s"GET:${query}" ).get( query )).
+            exec( http( s"{{ upload_method }}:${uploadPath}" ).
+                  {{ upload_method|lower }}( uploadPath ).
+                  digestAuth( "{{ user }}", "{{ password }}" ).
+                  body( RawFileBody( uploadFile )))
+        )
+      } else {
+        ( artifactsCounter + 1, uploadCounter, e.exec( http( s"GET:${query}" ).get( query )))
+      }
+      {% else %}
+      ( 0, 0, e.exec( http( s"GET:${query}" ).get( query )))
+      {% endif %}
+    }.
+    // (artifacts counter, upload counter, ChainBuilder) => ChainBuilder
+    _3
 
 
   {% if   ( item.search | default('')) == 'quick' %}

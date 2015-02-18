@@ -29,3 +29,4 @@ export GATLING_JAVA_OPTIONS="-server -Xms512m -Xmx14000m -Dgatling.http.ahc.requ
 export ARTIFACTORY_JAVA_OPTIONS="-server -Xms512m -Xmx10000m"
 export NEXUS_JAVA_OPTIONS="-server -Xms512m -Xmx14000m"
 export REPO_IMPORT="https://s3-eu-west-1.amazonaws.com/evgenyg-ansible/repo-import.zip"
+export REPO_UPLOAD="https://s3-eu-west-1.amazonaws.com/evgenyg-ansible/repo-import.zip"

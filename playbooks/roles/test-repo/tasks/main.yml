@@ -5,26 +5,48 @@
 - debug: msg="Testing {{ repo_name }} repo => '{{ reports_dir }}' => '{{ reports_archive }}'"
   when:  reports_archive is defined
 
-- debug: msg="repo = [{{ repo }}]"
-- debug: msg="quick_search = [{{ quick_search }}]"
+- include_vars: "{{ playbook_dir }}/roles/artifactory/vars/main.yml"
+- include_vars: "{{ playbook_dir }}/roles/nexus/vars/main.yml"
 
 - set_fact:
-    is_artifactory: "{{ '/artifactory/' in repo }}"
-    is_nexus:       "{{ '/nexus/'       in repo }}"
+    import_repo:       "{{ artifactory.import.repo }}"
+    user:              "{{ artifactory.auth.user }}"
+    password:          "{{ artifactory.auth.pass }}"
+    repo:              "{{ artifactory.path.artifact }}"
+    upload_path:       "{{ artifactory.path.upload.path }}"
+    upload_method:     "{{ artifactory.path.upload.method }}"
+    quick_search:      "{{ artifactory.path.search.quick }}"
+    groupId_search:    "{{ artifactory.path.search.groupId }}"
+    artifactId_search: "{{ artifactory.path.search.artifactId }}"
+    version_search:    "{{ artifactory.path.search.version }}"
+    gav_search:        "{{ artifactory.path.search.gav }}"
+  when: "'artifactory' in repo_name|lower"
 
-- include_vars: "{{ playbook_dir }}/roles/artifactory/vars/main.yml"
-  when: is_artifactory
-- set_fact: import_repo="{{ artifactory.import.repo }}"
-  when: is_artifactory
+- set_fact:
+    import_repo:       "{{ nexus.import.repo }}"
+    user:              "{{ nexus.auth.user }}"
+    password:          "{{ nexus.auth.pass }}"
+    repo:              "{{ nexus.path.artifact }}"
+    upload_path:       "{{ nexus.path.upload.path }}"
+    upload_method:     "{{ nexus.path.upload.method }}"
+    quick_search:      "{{ nexus.path.search.quick }}"
+    groupId_search:    "{{ nexus.path.search.groupId }}"
+    artifactId_search: "{{ nexus.path.search.artifactId }}"
+    version_search:    "{{ nexus.path.search.version }}"
+    gav_search:        "{{ nexus.path.search.gav }}"
+  when: "'nexus' in repo_name|lower"
 
-- include_vars: "{{ playbook_dir }}/roles/nexus/vars/main.yml"
-  when: is_nexus
-- set_fact: import_repo="{{ nexus.import.repo }}"
-  when: is_nexus
-
-- debug: var=is_artifactory
-- debug: var=is_nexus
-- debug: var=import_repo
+- debug: msg="import_repo = [{{ import_repo }}]"
+- debug: msg="user = [{{ user }}]"
+- debug: msg="password = [{{ password }}]"
+- debug: msg="repo = [{{ repo }}]"
+- debug: msg="upload_path = [{{ upload_path }}]"
+- debug: msg="upload_method = [{{ upload_method }}]"
+- debug: msg="quick_search = [{{ quick_search }}]"
+- debug: msg="groupId_search = [{{ groupId_search }}]"
+- debug: msg="artifactId_search = [{{ artifactId_search }}]"
+- debug: msg="version_search = [{{ version_search }}]"
+- debug: msg="gav_search = [{{ gav_search }}]"
 
 - file: path={{ reports_dir }} state=absent
   when: clean_reports | default( False )
@@ -41,6 +63,21 @@
     src:  "{{ item.artifacts }}"
     dest: "{{ test_repo.files_dir }}/{{ item.artifacts }}"
   with_items: test_repo.simulations
+
+- name: Copying upload files
+  copy:
+    src:  "{{ item.upload }}"
+    dest: "{{ test_repo.files_dir }}/{{ item.upload }}"
+  when: item.upload is defined
+  with_items: test_repo.simulations
+
+- include: "{{ common.utils.download }}"
+  vars:
+    title:   Gatling upload archive
+    url:     "{{ upload }}"
+    archive: "{{ test_repo.upload.archive | tokens({ 'ext': upload | ext }) }}"
+    home:    "{{ test_repo.upload.home }}"
+  when: upload is defined
 
 - name: Generating Scala simulations
   template:

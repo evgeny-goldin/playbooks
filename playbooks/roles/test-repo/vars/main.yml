@@ -9,6 +9,13 @@ test_repo: {
     { name: GroupIdSearch100,     users: 100, artifacts: all-artifacts-name-sorted.txt, search: groupId },
     { name: ArtifactIdSearch100,  users: 100, artifacts: all-artifacts-name-sorted.txt, search: artifactId },
     { name: VersionSearch100,     users: 100, artifacts: all-artifacts-name-sorted.txt, search: version },
-    { name: GavSearch100,         users: 100, artifacts: all-artifacts-name-sorted.txt, search: gav }
-  ]
+    { name: GavSearch100,         users: 100, artifacts: all-artifacts-name-sorted.txt, search: gav },
+    { name: GetUpload100,         users: 100, artifacts: all-artifacts-name-sorted.txt,
+                                              upload:    all-artifacts-name-sorted.txt,
+                                              upload_ratio: 10 }
+  ],
+  upload: {
+    archive: /opt/upload.<ext>,
+    home:    /opt/upload
+  }
 }
