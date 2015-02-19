@@ -1,9 +1,11 @@
 ---
 nexus: {
   version: '2.11.2-03', # http://www.sonatype.org/nexus/thank-you-for-downloading/?dl=tgz
+                        # http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22org.sonatype.nexus%22%20AND%20a%3A%22nexus-webapp%22
   port:    8080,
   timeout: 120,         # in seconds
   run:     standalone,  # standalone, war
+  storage: sonatype-work/nexus/storage,
   standalone: {
     url:     'https://sonatype-download.global.ssl.fastly.net/nexus/oss/nexus-<version>-bundle.tar.gz',
     archive: /opt/nexus-<version>.tar.gz,
@@ -28,7 +30,6 @@ nexus: {
   },
   import: {
     archive: /opt/repo-import.<ext>,
-    home:    <home>/sonatype-work/nexus/storage,
     repo:    releases
   },
   # https://repository.sonatype.org/nexus-indexer-lucene-plugin/default/docs/path__lucene_search.html
@@ -37,8 +38,8 @@ nexus: {
   path: {
     artifact:     /nexus/content/repositories/<repo>/<artifact>,
     upload: {
-      path:       '/nexus/service/local/artifact/maven/content?r=releases&g=<g>&a=<a>&v=<v>',
-      method:     POST,
+      path:       /nexus/content/repositories/releases/<artifact>,
+      method:     PUT,
       headers:    []
     },
     search: {

@@ -4,6 +4,8 @@
     tomcat_port:   "{{ nexus_port }}"
     catalina_opts: "{{ nexus.war.java_options }} {{ java_options }}"
 
+- set_fact: nexus_storage="/root/{{ nexus.storage }}"
+
 - include: "{{ common.utils.service }}"
   vars:
     service: nexus
@@ -11,6 +13,8 @@
     url:     "{{ nexus.war.url     | tokens( nexus ) }}"
     archive: "{{ nexus.war.archive | tokens( nexus ) }}"
     home:    "{{ tomcat_webapps }}/nexus"
+    configs:
+      - { from: nexus.xml, to: /root/sonatype-work/nexus/conf/nexus.xml }
     command: "{{ tomcat_run  }}"
     port:    "{{ nexus_port }}"
     timeout: "{{ nexus.timeout }}"

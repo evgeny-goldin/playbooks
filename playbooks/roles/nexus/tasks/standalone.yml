@@ -1,8 +1,8 @@
 ---
-- set_fact:
-    nexus_home:   "{{ nexus.standalone.home }}/nexus-{{ nexus.version }}"
-- set_fact:
-    wrapper_conf: "{{ nexus_home }}/bin/jsw/conf/wrapper.conf"
+- set_fact: nexus_base="{{ nexus.standalone.home }}"
+- set_fact: nexus_home="{{ nexus_base }}/nexus-{{ nexus.version }}"
+- set_fact: nexus_storage="{{ nexus_base }}/{{ nexus.storage }}"
+- set_fact: wrapper_conf="{{ nexus_home }}/bin/jsw/conf/wrapper.conf"
 
 - include: "{{ common.utils.service }}"
   vars:
@@ -14,6 +14,7 @@
     env:
       RUN_AS_USER: root
     configs:
+      - { from: nexus.xml,         to: "{{ nexus_base }}/sonatype-work/nexus/conf/nexus.xml" }
       - { from: nexus.properties,  to: "{{ nexus_home }}/conf/nexus.properties" }
       - { from: update-wrapper.sh, to: "{{ nexus_home }}/update-wrapper.sh", mode: '0744' }
     cleanup:
