@@ -1,6 +1,6 @@
 ---
 nexus: {
-  version: '2.11.1-01', # http://www.sonatype.org/nexus/thank-you-for-downloading/?dl=tgz
+  version: '2.11.2-03', # http://www.sonatype.org/nexus/thank-you-for-downloading/?dl=tgz
   port:    8080,
   timeout: 120,         # in seconds
   run:     standalone,  # standalone, war
