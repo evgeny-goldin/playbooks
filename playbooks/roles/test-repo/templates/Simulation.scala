@@ -50,27 +50,37 @@ class {{ repo_name }}{{ item.name }} extends Simulation {
     // sorted and unique queries => chain of exec calls
     foldLeft(( 0, 0, exec())){
       case (( artifactsCounter, uploadCounter, e ), query ) =>
+      {% if test_repo.detailed_reports %}
+        val downloadRequestName = s"GET:${query}"
+      {% else %}
+        val downloadRequestName = "GET"
+      {% endif %}
+
       {% if item.upload is defined %}
       if ( artifactsCounter % {{ item.upload_ratio | default( 10 ) }} == 0 ){
         // http://gatling.io/docs/2.1.4/http/http_request.html
         val uploadArtifact = uploadArtifacts( uploadCounter % uploadArtifacts.size )
         val uploadPath     = "{{ upload_path }}".replace( "<artifact>", uploadArtifact )
         val uploadFile     = s"{{ test_repo.upload.home }}/${ uploadArtifact }"
+        {% if test_repo.detailed_reports %}
+          val uploadRequestName = s"{{ upload_method }}:${uploadPath}"
+        {% else %}
+          val uploadRequestName = "{{ upload_method }}"
+        {% endif %}
 
         (
           artifactsCounter + 1,
           uploadCounter    + 1,
-          e.exec( http( s"GET:${query}" ).get( query )).
-            exec( http( s"{{ upload_method }}:${uploadPath}" ).
-                  {{ upload_method|lower }}( uploadPath ).
+          e.exec( http( downloadRequestName ).get( query )).
+            exec( http( uploadRequestName   ).{{ upload_method|lower }}( uploadPath ).
                   digestAuth( "{{ user }}", "{{ password }}" ).
                   body( RawFileBody( uploadFile )))
         )
       } else {
-        ( artifactsCounter + 1, uploadCounter, e.exec( http( s"GET:${query}" ).get( query )))
+        ( artifactsCounter + 1, uploadCounter, e.exec( http( downloadRequestName ).get( query )))
       }
       {% else %}
-      ( 0, 0, e.exec( http( s"GET:${query}" ).get( query )))
+      ( 0, 0, e.exec( http( downloadRequestName ).get( query )))
       {% endif %}
     }.
     // (artifacts counter, upload counter, ChainBuilder) => ChainBuilder

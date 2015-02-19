@@ -4,7 +4,7 @@
     run_simulations:    "{{ run_simulations    | default( True ) | bool }}"
     action_name:        Running
 
-- set_fact: action_name=Setting up
+- set_fact: action_name='Setting up'
   when: not ( run_simulations|bool )
 
 - debug: msg="{{ action_name }} Gatling simulations {{ simulations | join( ', ' ) }} => '{{ simulations_script }}' => '{{ reports_dir }}'"
