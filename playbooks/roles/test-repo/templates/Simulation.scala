@@ -73,7 +73,7 @@ class {{ repo_name }}{{ item.name }} extends Simulation {
           uploadCounter    + 1,
           e.exec( http( downloadRequestName ).get( query )).
             exec( http( uploadRequestName   ).{{ upload_method|lower }}( uploadPath ).
-                  digestAuth( "{{ user }}", "{{ password }}" ).
+                  basicAuth( "{{ user }}", "{{ password }}" ).
                   body( RawFileBody( uploadFile )))
         )
       } else {
