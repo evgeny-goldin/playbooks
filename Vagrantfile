@@ -34,7 +34,7 @@ VB_BOXES = {
   helios:             HELIOS_PROPERTIES.merge( HELIOS_PORTS ).merge( helios_master: "helios.#{ VAGRANT_DOMAIN }" ),
   repo:          { memory:          2048, # For Artifactory MySQL
                    port:            WEB_PORT,
-                  #  import:          REPO_IMPORT,
+                   import:          REPO_IMPORT,
                    vagrant_ports:   [ WEB_PORT ],
                    playbook:        'artifactory' },
                   #  playbook:        'nexus' },

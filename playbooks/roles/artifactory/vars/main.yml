@@ -50,12 +50,16 @@ artifactory: {
   },
   # https://www.jfrog.com/confluence/display/RTF/Artifactory+REST+API#ArtifactoryRESTAPI-ArtifactSearch%28QuickSearch%29
   # https://www.jfrog.com/confluence/display/RTF/Artifactory+REST+API#ArtifactoryRESTAPI-DeployArtifact
+  # https://www.jfrog.com/confluence/display/RTF/Artifactory+REST+API#ArtifactoryRESTAPI-DeployArtifactbyChecksum
   path: {
     artifact:     /artifactory/<repo>/<artifact>,
     upload: {
       path:       /artifactory/libs-release-local/<artifact>,
       method:     PUT,
-      headers:    []
+      headers:    {
+        'X-Checksum-Deploy': 'true',
+        'X-Checksum-Sha1':   '<sha1>'
+      }
     },
     search: {
       quick:      '/artifactory/api/search/artifact?name=<name>',

@@ -40,7 +40,7 @@ nexus: {
     upload: {
       path:       /nexus/content/repositories/releases/<artifact>,
       method:     PUT,
-      headers:    []
+      headers:    {}
     },
     search: {
       quick:      '/nexus/service/local/lucene/search?q=<name>&count=10000000',

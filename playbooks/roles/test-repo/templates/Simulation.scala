@@ -3,6 +3,9 @@ import io.gatling.core.structure.ChainBuilder
 import io.gatling.core.structure.ScenarioBuilder
 import scala.io.Source
 import io.gatling.http.Predef._
+import java.nio.file.{Files, Paths}
+import java.security.MessageDigest
+
 
 class {{ repo_name }}{{ item.name }} extends Simulation {
 
@@ -16,6 +19,8 @@ class {{ repo_name }}{{ item.name }} extends Simulation {
                                       filter( _.trim.size > 0 ).toArray
   {% endif %}
 
+  val SHA1 = MessageDigest.getInstance( "SHA-1" )
+
   // Coordinates extractors, return coordinate given the artifact
   def groupId   ( artifact: Array[String] ) = artifact.take( artifact.size - 3 ).mkString( "." )
   def artifactId( artifact: Array[String] ) = artifact.takeRight( 3 )( 0 )
@@ -26,6 +31,15 @@ class {{ repo_name }}{{ item.name }} extends Simulation {
    * Retrieves lines of the file specified, as Iterator[String] (so only one pass is possible)
    */
   def lines( path:String ):Iterator[String] = Source.fromFile( path ).getLines()
+
+
+  /**
+   * Calculates SHA-1 of the file specified
+   * https://gist.github.com/mayoYamasaki/4085712
+   */
+  def sha1FromFile( path:String ):String =
+    SHA1.digest( Files.readAllBytes( Paths.get( path ))).
+         map( "%02x".format( _ )).mkString
 
   /**
    * Builds a chain of calls based on query path,
@@ -56,31 +70,35 @@ class {{ repo_name }}{{ item.name }} extends Simulation {
         val downloadRequestName = "GET"
       {% endif %}
 
+      val downloadRequest = http( downloadRequestName ).get( query )
+
       {% if item.upload is defined %}
       if ( artifactsCounter % {{ item.upload_ratio | default( 10 ) }} == 0 ){
         // http://gatling.io/docs/2.1.4/http/http_request.html
         val uploadArtifact = uploadArtifacts( uploadCounter % uploadArtifacts.size )
         val uploadPath     = "{{ upload_path }}".replace( "<artifact>", uploadArtifact )
         val uploadFile     = s"{{ test_repo.upload.home }}/${ uploadArtifact }"
+        val sha1           = sha1FromFile( uploadFile )
+
         {% if test_repo.detailed_reports %}
           val uploadRequestName = s"{{ upload_method }}:${uploadPath}"
         {% else %}
           val uploadRequestName = "{{ upload_method }}"
         {% endif %}
 
-        (
-          artifactsCounter + 1,
-          uploadCounter    + 1,
-          e.exec( http( downloadRequestName ).get( query )).
-            exec( http( uploadRequestName   ).{{ upload_method|lower }}( uploadPath ).
-                  basicAuth( "{{ user }}", "{{ password }}" ).
-                  body( RawFileBody( uploadFile )))
-        )
+        val uploadRequest = http( uploadRequestName ).{{ upload_method|lower }}( uploadPath ).
+                            basicAuth( "{{ user }}", "{{ password }}" ).
+                            {% for name, value in upload_headers.iteritems() %}
+                            header( "{{ name }}", "{{ value }}".replace( "<sha1>", sha1 )).
+                            {% endfor %}
+                            body( RawFileBody( uploadFile ))
+
+        ( artifactsCounter + 1, uploadCounter + 1, e.exec( downloadRequest ).exec( uploadRequest ))
       } else {
-        ( artifactsCounter + 1, uploadCounter, e.exec( http( downloadRequestName ).get( query )))
+        ( artifactsCounter + 1, uploadCounter, e.exec( downloadRequest ))
       }
       {% else %}
-      ( 0, 0, e.exec( http( downloadRequestName ).get( query )))
+      ( 0, 0, e.exec( downloadRequest ))
       {% endif %}
     }.
     // (artifacts counter, upload counter, ChainBuilder) => ChainBuilder
