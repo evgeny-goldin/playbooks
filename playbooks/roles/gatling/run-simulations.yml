@@ -1,24 +1,29 @@
 ---
-- set_fact: simulations_script=/opt/gatling-simulations.sh
-  when:     simulations_script is not defined
+- set_fact:
+    simulations_script: "{{ simulations_script | default( gatling.simulations_script ) }}"
+    run_simulations:    "{{ run_simulations    | default( True ) | bool }}"
+    action_name:        Running
 
-- debug: msg="Running Gatling simulations {{ simulations | join( ', ' ) }} => '{{ simulations_script }}' => '{{ reports_dir }}'"
+- set_fact: action_name=Setting up
+  when: not ( run_simulations|bool )
+
+- debug: msg="{{ action_name }} Gatling simulations {{ simulations | join( ', ' ) }} => '{{ simulations_script }}' => '{{ reports_dir }}'"
   when:  reports_archive is not defined
 
-- debug: msg="Running Gatling simulations {{ simulations | join( ', ' ) }} => '{{ simulations_script }}' => '{{ reports_dir }}' => '{{ reports_archive }}'"
+- debug: msg="{{ action_name }} Gatling simulations {{ simulations | join( ', ' ) }} => '{{ simulations_script }}' => '{{ reports_dir }}' => '{{ reports_archive }}'"
   when:  reports_archive is defined
 
 - name: Creating simulations script
   template:
     src:  "{{ playbook_dir }}/roles/gatling/templates/run-simulations.sh"
     dest: "{{ simulations_script }}"
-- shell:  chmod +x '{{ simulations_script }}'
+    mode: 0744
 
 - name: Running simulations script
   command:     "{{ simulations_script }}"
   environment: "{{ gatling_env | expand_path( ansible_env ) }}"
-  when: run_simulations | default( True ) | bool
+  when: run_simulations|bool
   register: simulation_out
 
 - debug: var=simulation_out.stdout_lines
-  when:  run_simulations | default( True ) | bool
+  when:  run_simulations|bool

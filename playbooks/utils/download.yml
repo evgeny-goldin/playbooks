@@ -76,6 +76,7 @@
   template:
     src:  "{{ playbook_dir }}/roles/{{ item.role | default( service ) }}/templates/{{ item.from  }}"
     dest: "{{ item.to }}"
+    mode: "{{ item.mode | default( '0644' ) }}"
   with_items:
     - "{{ configs }}"
   when: configs is defined

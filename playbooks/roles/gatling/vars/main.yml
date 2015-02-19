@@ -8,7 +8,8 @@ gatling: {
   url:     '{{ common.urls.jcenter }}/io/gatling/highcharts/gatling-charts-highcharts-bundle/<version>/gatling-charts-highcharts-bundle-<version>-bundle.zip',
   archive: /opt/gatling-<version>.zip,
   home:    /opt/gatling,
-  console: false # true, false, light
+  console: false, # true, false, light
+  simulations_script: /opt/gatling-simulations.sh
 }
 
 gatling_env: {

@@ -15,9 +15,8 @@
       RUN_AS_USER: root
     configs:
       - { from: nexus.properties,  to: "{{ nexus_home }}/conf/nexus.properties" }
-      - { from: update-wrapper.sh, to: "{{ nexus_home }}/update-wrapper.sh" }
+      - { from: update-wrapper.sh, to: "{{ nexus_home }}/update-wrapper.sh", mode: '0744' }
     cleanup:
-      - "chmod +x '{{ nexus_home }}/update-wrapper.sh'"
       - "{{ nexus_home }}/update-wrapper.sh"
     command: "{{ nexus_home }}/bin/nexus console"
     port:    "{{ nexus_port }}"
