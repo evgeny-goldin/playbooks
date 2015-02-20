@@ -37,9 +37,8 @@ class {{ repo_name }}{{ item.name }} extends Simulation {
    * Calculates SHA-1 of the file specified
    * https://gist.github.com/mayoYamasaki/4085712
    */
-  def sha1FromFile( path:String ):String =
-    SHA1.digest( Files.readAllBytes( Paths.get( path ))).
-         map( "%02x".format( _ )).mkString
+  def sha1FromFile( path:String ):String = SHA1.digest( Files.readAllBytes( Paths.get( path ))).
+                                                map( "%02x".format( _ )).mkString
 
   /**
    * Builds a chain of calls based on query path,
