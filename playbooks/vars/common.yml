@@ -12,7 +12,7 @@ common: {
       dns:    53,
       docker: 2375
     },
-    localhost: 127.0.0.1,
+    localhost: localhost,
     any_ip:    0.0.0.0,
     # https://developers.google.com/speed/public-dns/
     public_dns: "8.8.8.8:53,8.8.4.4:53",
