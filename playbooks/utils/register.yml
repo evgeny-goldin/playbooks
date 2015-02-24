@@ -6,27 +6,18 @@
 - debug: msg="etcd_port = '{{ etcd_port }}'"
 - debug: msg="skydns_host = '{{ skydns_host }}'"
 
-- set_fact:
-    registration_url: "http://{{ etcd_host }}:{{ etcd_port }}/v2/keys/skydns/{{ '/'.join( host.split( '.' )[::-1] ) }}"
-- set_fact:
-    registration_command: "curl -XPUT '{{ registration_url }}' -d value='{ \"host\" : \"{{ ip }}\" }'"
-    dig_command:          "dig @{{ skydns_host }} '{{ host }}'"
+- set_fact: registration_url="http://{{ etcd_host }}:{{ etcd_port }}/v2/keys/skydns/{{ '/'.join( host.split( '.' )[::-1] ) }}"
 
 # https://github.com/ansible/ansible-modules-core/issues/265
 # uri:
-#   method:  POST
+#   method:  PUT
 #   url:     "{{ registration_url }}"
 #   body:    "{ 'host' : '{{ ip }}' }"
 #   timeout: 3
 
-- debug:    msg="Running [{{ registration_command }}] and [{{ dig_command }}]"
-
-- command: "{{ registration_command }}"
-- command: "{{ dig_command }}"
-  register: dig_out
-
-- name: Verifying dig
-  assert:
-    that:
-      - "'{{ host }}' in dig_out.stdout"
-      - "'{{ ip }}'   in dig_out.stdout"
+- include: "{{ common.utils.run }}"
+  vars:
+    title: Registration checks
+    commands:
+      - { run: "curl -XPUT '{{ registration_url }}' -d value='{\"host\":\"{{ ip }}\"}'" }
+      - { run: "dig @{{ skydns_host }} '{{ host }}'", expect: '{{ host }}.	3600	IN	A	{{ ip }}' }

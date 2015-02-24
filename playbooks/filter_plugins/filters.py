@@ -11,6 +11,11 @@ import os.path
 from   ansible import errors
 from   timeit  import default_timer as timer
 
+
+def escape_quotes( s ):
+  '''Escapes all signle quotes with "'\''" (bash escape)'''
+  return s.replace( "'", r"'\''" )
+
 def contains( llist, element ):
   '''Finds if any list element contains the element or all elements specified'''
   # print "[[" + str(llist) + "//" + str(element) + "]]"
@@ -113,6 +118,7 @@ class FilterModule( object ):
 
   def filters( self ):
     return {
+      'escape_quotes' : escape_quotes,
       'contains'      : contains,
       're_escape'     : re_escape,
       'ext'           : ext,

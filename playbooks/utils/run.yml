@@ -10,8 +10,8 @@
 - set_fact:
     use_shell: "{{ commands | default([ command ]) | contains( '|' ) }}"
 
-- name: Running commands without shell
-  command:     "{{ ubuntu.bash }} -c '{{ item.run }} 2>&1'"
+- name: Running commands with bash
+  command:     "{{ ubuntu.bash }} -c '{{ item.run | escape_quotes }} 2>&1'"
   environment: "{{ env | default({}) }}"
   register:    command_out
   failed_when: not ( command_out.stdout_lines | default(['']) | contains( item.expect | default('') ))
