@@ -1,5 +1,6 @@
 ---
 skydns: {
+  # https://github.com/skynetservices/skydns/releases
   url:     '{{ common.urls.bintray }}/evgenyg/dependencies/skydns-ubuntu-2.0.1d.tar.gz',
   archive: /opt/skydns-ubuntu-2.0.1d.tar.gz,
   home:    /opt/skydns

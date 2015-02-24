@@ -14,7 +14,7 @@
     home:    "{{ etcd.home }}"
     env:
       # https://github.com/coreos/etcd/blob/master/Documentation/configuration.md
-      ETCD_ADDR:      "{{ common.net.localhost }}:{{ etcd_port }}"
+      ETCD_ADDR:      "{{ common.net.local_ip }}:{{ etcd_port }}"
       ETCD_BIND_ADDR: "{{ common.net.any_ip }}:{{ etcd_port }}"
     tests:
       - { run: "{{ etcd_bin }} --version", expect: "{{ etcd.version }}" }
