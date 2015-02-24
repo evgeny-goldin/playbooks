@@ -15,7 +15,7 @@
       PATH:               "$PATH:{{ skydns.home }}"
       SKYDNS_DOMAIN:      "{{ domain }}"
       SKYDNS_ADDR:        "{{ common.net.any_ip }}:{{ common.net.ports.dns }}"
-      ETCD_MACHINES:      "{{ common.net.localhost }}:{{ etcd_port }}"
+      ETCD_MACHINES:      "{{ common.net.local_ip }}:{{ etcd_port }}"
       SKYDNS_NAMESERVERS: "{{ common.net.public_dns }}"
     tests:
       - { run: "'{{ skydns_bin }}' --help", expect: 'Usage of {{ skydns_bin }}:' }
@@ -33,5 +33,6 @@
 - include: "{{ common.utils.run }}"
   vars:
     title: local dig
-    command: { run:    "dig @{{ common.net.localhost }}",
-               expect: [ Got answer, QUESTION SECTION, 'SERVER: {{ common.net.localhost }}#{{ common.net.ports.dns }}({{ common.net.localhost }})' ]}
+    commands:
+      - { run: "dig @{{ common.net.localhost }}", expect: [ Got answer, QUESTION SECTION, 'SERVER: {{ common.net.local_ip }}#{{ common.net.ports.dns }}({{ common.net.local_ip }})' ]}
+      - { run: "dig @{{ common.net.local_ip }}",  expect: [ Got answer, QUESTION SECTION, 'SERVER: {{ common.net.local_ip }}#{{ common.net.ports.dns }}({{ common.net.local_ip }})' ]}

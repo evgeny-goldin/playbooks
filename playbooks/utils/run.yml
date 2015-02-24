@@ -7,18 +7,23 @@
 - fail: msg="One of commands/command need to be specified"
   when: not (( commands is defined ) or ( command is defined ))
 
-- command:     "{{ ubuntu.bash }} -c '{{ item.run }} 2>&1'"
+- set_fact:
+    use_shell: "{{ commands | default([ command ]) | contains( '|' ) }}"
+
+- name: Running commands without shell
+  command:     "{{ ubuntu.bash }} -c '{{ item.run }} 2>&1'"
   environment: "{{ env | default({}) }}"
   register:    command_out
   failed_when: not ( command_out.stdout_lines | default(['']) | contains( item.expect | default('') ))
   with_items:
     - "{{ commands | default([ command ]) }}"
-  when: not ( commands | default([ command ]) | contains( '|' ))
+  when: not use_shell|bool
 
-- shell:       "{{ item.run }} 2>&1"
+- name: Running commands with shell
+  shell:       "{{ item.run }} 2>&1"
   environment: "{{ env | default({}) }}"
   register:    shell_out
   failed_when: not ( shell_out.stdout_lines | default(['']) | contains( item.expect | default('') ))
   with_items:
     - "{{ commands | default([ command ]) }}"
-  when: commands | default([ command ]) | contains( '|' )
+  when: use_shell|bool

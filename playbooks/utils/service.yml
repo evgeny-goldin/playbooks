@@ -21,6 +21,7 @@
 
 - set_fact:
     upstart_script:   "{{ ubuntu.init_dir }}/{{ service }}.conf"
+    service_log:      "{{ ubuntu.log_dir  }}/{{ service }}.log"
     is_start_service: "{{ start_service | default( True ) }}"
 
 - debug: msg="Starting {{ title }} service '{{ service }}' with [{{ command }}] in '{{ upstart_script }}'"

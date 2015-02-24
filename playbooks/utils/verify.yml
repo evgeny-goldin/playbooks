@@ -46,8 +46,7 @@
     return_content: yes
   register: http_wait_out
   until: "{{ ( http_wait_out.content is defined ) and ( item.content|default('') in http_wait_out.content ) }}"
-  # https://github.com/ansible/ansible/issues/5865
-  retries: 40 # "{{ timeout | default( 10 ) | int // 3 }}"
+  retries: "{{ timeout|default(60)|int // 3 }}"
   delay:   3
   with_items: wait
   when: wait is defined

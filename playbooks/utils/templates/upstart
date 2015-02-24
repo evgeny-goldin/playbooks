@@ -22,8 +22,17 @@ respawn limit unlimited
 script
     {% if env_file is defined %}
     [ -r '{{ env_file }}' ] && . '{{ env_file }}'
+    echo "Starting with env variables defined in '{{ env_file }}':" >> '{{ service_log }}'
+    echo "--------------------------------------------------------" >> '{{ service_log }}'
+    cat '{{ env_file }}'                                            >> '{{ service_log }}'
+    echo "--------------------------------------------------------" >> '{{ service_log }}'
     {% endif %}
-    exec {{ ubuntu.bash }} -c "{{ command }} >> '{{ ubuntu.log_dir }}/{{ service }}.log' 2>&1"
+    echo "Current environment:"                                     >> '{{ service_log }}'
+    echo "--------------------------------------------------------" >> '{{ service_log }}'
+    env | sort                                                      >> '{{ service_log }}'
+    echo "--------------------------------------------------------" >> '{{ service_log }}'
+    echo "Running [exec {{ ubuntu.bash }} -c '{{ command }}']"      >> '{{ service_log }}'
+    exec {{ ubuntu.bash }} -c "{{ command }}                        >> '{{ service_log }}' 2>&1"
 end script
 
 # prevent respawning more than once every second
