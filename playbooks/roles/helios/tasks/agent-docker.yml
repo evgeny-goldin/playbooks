@@ -15,7 +15,7 @@
   when: not ( helios_master | match( common.net.ip_regex ))
 
 - debug:   msg="Helios master IP is [{{ helios_master_ip }}]"
-- include: verify-master.yml master={{ helios_master_ip }} host="{{ agent_name }}"
+- include: verify-master.yml master={{ helios_master_ip }} register_host="{{ agent_name }}"
 
 - name: Updating Docker config
   template:

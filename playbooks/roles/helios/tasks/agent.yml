@@ -3,7 +3,7 @@
     registrar_plugin: "{{ helios.agent.registrar_plugin.archive | tokens( helios.agent.registrar_plugin ) }}"
     agent_name:       "{{ ansible_hostname }}.{{ domain }}"
 
-- include: verify-master.yml master={{ helios_master }} host="{{ agent_name }}"
+- include: verify-master.yml master={{ helios_master }} register_host="{{ agent_name }}"
 - include: verify-helios.yml
 
 - debug: msg="De-registering Helios agent '{{ agent_name }}'"

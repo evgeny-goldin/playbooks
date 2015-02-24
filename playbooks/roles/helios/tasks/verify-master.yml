@@ -2,7 +2,7 @@
 # ---------------------------------------------------------------
 #    Verifies connectivity with Helios master and its services
 # ---------------------------------------------------------------
-- debug: msg="Verifying Helios master '{{ master }}' endpoints"
+- debug: msg="Verifying Helios master '{{ master }}' endpoints (will register '{{ register_host }}')"
 
 - include: "{{ common.utils.verify }}"
   vars:
@@ -41,6 +41,6 @@
 
 - include: "{{ common.utils.register }}"
   vars:
-    etcd_host:   "{{ master }}"
-    skydns_host: "{{ master }}"
-    ip:          "{{ my_ip }}"
+    etcd_host: "{{ master }}"
+    src:       "{{ register_host }}"
+    dest:      "{{ my_ip }}"

@@ -18,11 +18,18 @@ def escape_quotes( s ):
 
 def contains( llist, element ):
   '''Finds if any list element contains the element or all elements specified'''
-  # print "[[" + str(llist) + "//" + str(element) + "]]"
+  # print("contains({}, {})".format(str(llist), str(element)))
+
+  # A special case of an emply llist and no elements to check
+  if ( len(llist) == 0 ) and (( element == '' ) or ( element == [] )):
+    return True
+
   if type( element ) is list:
+    # element is a list = checking (recursively) if all its elements appear in llist
     return all( contains( llist, e ) for e in element )
   else:
-    return any( str(element) in str(l) for l in llist )
+    # element is not a list = checking if it appears (as substring or regex search) in any l, element of llist
+    return any((( str(element) in str(l)) or re.search(str(element), str(l))) for l in llist )
 
 def re_escape( pattern ):
   '''Returns \Qpattern\E, regex-escaped'''
@@ -49,7 +56,7 @@ def absolute_path( path ):
 def tokens( s, vars_tree ):
   '''Replaces all <token> sections in a string with corresponding Ansible variables'''
   new_str = re.sub( '<([^>]+)>', lambda m: str( vars_tree[ m.group(1) ]), s )
-  # print "[{0}] => [{1}]".format( s, new_str )
+  # print( "[{}] => [{}]".format( s, new_str ))
   return new_str
 
 def bare( hostname ):
@@ -86,7 +93,7 @@ def calculate( version, vars_tree ):
       command = command.replace( 'sed -r', 'sed -E' )
     start   = timer()
     version = subprocess.check_output( command, shell=True ).strip()
-    print "[{0}] => [{1}] ({2} sec)".format( command, version, int( timer() - start ))
+    print( "[{}] => [{}] ({} sec)".format( command, version, int( timer() - start )))
 
   if not re.match( pattern, version ):
     raise errors.AnsibleFilterError( "Version '{0}' doesn't match pattern '{1}'".format( version, pattern ))
