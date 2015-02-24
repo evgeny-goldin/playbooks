@@ -12,5 +12,5 @@
 
   roles:
     - { role: run-before, period: daily }
-    - { role: docker, start: evgenyg/echo, ports: [ 8080 ], wait: [{ path: / }]}
+    - { role: docker, start: 'evgenyg/echo:latest', ports: [ 8080 ], wait: [{ path: / }]}
     - run-after
