@@ -20,7 +20,7 @@ def contains( llist, element ):
   '''Finds if any list element contains the element or all elements specified'''
   # print("contains({}, {})".format(str(llist), str(element)))
 
-  # A special case of an emply llist and no elements to check
+  # Empty llist and no elements to check
   if ( len(llist) == 0 ) and (( element == '' ) or ( element == [] )):
     return True
 
