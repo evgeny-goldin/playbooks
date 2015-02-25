@@ -18,7 +18,7 @@ def escape_quotes( s ):
 
 def contains( llist, element ):
   '''Finds if any llist element contains the element or all elements specified'''
-  # print("contains({}, {})".format(llist, element))
+  # print("contains({}, {})".format(repr(llist), repr(element)))
   assert type(llist) is list, \
          "contains(): llist is not a list: {} ({})".format(llist, type(llist))
   assert type(element) in [list, str, unicode, int, bool], \
