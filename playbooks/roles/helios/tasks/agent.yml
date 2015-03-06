@@ -37,4 +37,4 @@
   service: name=helios-agent state=started enabled=yes
 
 - pause:   seconds=5
-- include: verify-helios.yml agent={{ agent_name }}
+- include: verify-helios.yml master={{ helios_master }} agent={{ agent_name }}
