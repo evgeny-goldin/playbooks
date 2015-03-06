@@ -22,7 +22,7 @@
       - { run:    '{{ helios_command }} {{ create_nginx_job }}',
           expect: [ 'Creating job:', '"id":"{{ helios.docker.nginx.job }}:', 'Done.' ]}
       - { run:    '{{ helios_command }} inspect "{{ helios.docker.nginx.job }}"',
-          expect: 'Ports: http=80:{{ helios.docker.nginx.port }}/tcp' }
+          expect: 'Image: nginx' }
       - { run:    '{{ helios_command }} jobs',
           expect: '{{ helios.docker.nginx.job }}:' }
 
@@ -36,7 +36,7 @@
           expect: [ 'Undeploying {{ helios.docker.nginx.job }}:', '{{ agent }}: done' ]}
       - { run:    '{{ helios_command }} deploy "{{ helios.docker.nginx.job }}" "{{ agent }}"',
           expect: [ 'Deploying Deployment{jobId={{ helios.docker.nginx.job }}:', 'on [{{ agent }}]', '{{ agent }}: done' ]}
-      - { run:    'sleep 15' }
+      - { run:    sleep 15 }
       - { run:    '{{ helios_command }} status --job "{{ helios.docker.nginx.job }}"',
           expect: [ '{{ helios.docker.nginx.job }}', '{{ agent }}.    START    RUNNING' ]}
       - { run:    '{{ helios_command }} status --host "{{ agent }}"',
