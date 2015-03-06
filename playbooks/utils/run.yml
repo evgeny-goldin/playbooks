@@ -2,15 +2,13 @@
 # ===================================================================================================
 # Runs commands and verifies their output. Required variables: title, commands or command.
 # ===================================================================================================
-- debug: msg="Running {{ title }}"
-
 - fail: msg="One of commands/command need to be specified"
   when: not (( commands is defined ) or ( command is defined ))
 
 - set_fact:
     use_shell: "{{ commands | default([ command ]) | map( attribute = 'run' ) | list | contains( '|' ) }}"
 
-- name: Running commands with bash
+- name: Running {{ title }} commands with bash
   command:     "{{ ubuntu.bash }} -c '{{ item.run | escape_quotes }} 2>&1'"
   environment: "{{ env | default({}) }}"
   register:    command_out
@@ -19,7 +17,7 @@
     - "{{ commands | default([ command ]) }}"
   when: not use_shell|bool
 
-- name: Running commands with shell
+- name: Running {{ title }} commands with shell
   shell:       "{{ item.run }} 2>&1"
   environment: "{{ env | default({}) }}"
   register:    shell_out

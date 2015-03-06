@@ -1,9 +1,10 @@
 ---
 helios: {
-  version: latest, # 0.8.138, latest - https://github.com/spotify/helios/releases
-  url:     '{{ common.urls.github }}/spotify/helios/releases/download/<version>/helios-debs.tar.gz',
-  archive: /opt/helios-<version>.tar.gz,
-  home:    /opt/helios,
+  version:    latest, # 0.8.213, latest - https://github.com/spotify/helios/releases
+  url:        '{{ common.urls.github }}/spotify/helios/releases/download/<version>/helios-debs.tar.gz',
+  archive:    /opt/helios-<version>.tar.gz,
+  home:       /opt/helios,
+  srv_prefix: _helios._http,
   docker: {
     nginx: {
       image: 'nginx:1.7.9',

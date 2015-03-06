@@ -21,4 +21,6 @@
     commands:
       - { run:    "{{ registration_command }}" }
       - { run:    "dig '@{{ etcd_host }}' '{{ src }}'",
-          expect: '^{{ src }}.\s+3600\s+IN\s+\w+\s+{{ dest }}\.?$' }
+          expect: '^{{ src }}\.\s+3600\s+IN\s+(A|CNAME)\s+{{ dest }}\.?$' }
+      - { run:    "host {{ src }} {{ etcd_host }}",
+          expect: '^{{ src }} (has address|is an alias for) {{ dest }}\.?$' }

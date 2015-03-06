@@ -34,5 +34,7 @@
   vars:
     title: local dig
     commands:
-      - { run: "dig @{{ common.net.localhost }}", expect: [ Got answer, QUESTION SECTION, 'SERVER: {{ common.net.local_ip }}#{{ common.net.ports.dns }}({{ common.net.local_ip }})' ]}
-      - { run: "dig @{{ common.net.local_ip }}",  expect: [ Got answer, QUESTION SECTION, 'SERVER: {{ common.net.local_ip }}#{{ common.net.ports.dns }}({{ common.net.local_ip }})' ]}
+      - { run: "dig '@{{ common.net.localhost }}'", expect: [ Got answer, QUESTION SECTION, 'SERVER: {{ common.net.local_ip }}#{{ common.net.ports.dns }}({{ common.net.local_ip }})' ]}
+      - { run: "dig '@{{ common.net.local_ip }}'",  expect: [ Got answer, QUESTION SECTION, 'SERVER: {{ common.net.local_ip }}#{{ common.net.ports.dns }}({{ common.net.local_ip }})' ]}
+      - { run: "host aaaa '{{ common.net.localhost }}'", expect: [ "Name: {{ common.net.localhost }}", "Address: {{ common.net.local_ip }}#{{ common.net.ports.dns }}", Host aaaa not found ]}
+      - { run: "host aaaa '{{ common.net.local_ip  }}'", expect: [ "Name: {{ common.net.local_ip }}",  "Address: {{ common.net.local_ip }}#{{ common.net.ports.dns }}", Host aaaa not found ]}

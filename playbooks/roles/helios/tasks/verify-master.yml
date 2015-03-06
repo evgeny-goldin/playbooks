@@ -12,6 +12,15 @@
       - "{{ common.net.ports.dns }}"
       - "{{ zookeeper_port }}"
 
+- include: "{{ common.utils.run }}"
+  vars:
+    title: "'_helios._http.{{ domain }}' SRV test"
+    commands:
+      - { run:    "dig '@{{ master }}' '{{ helios.srv_prefix }}.{{ domain }}' SRV",
+          expect: '^{{ helios.srv_prefix }}\.{{ domain }}\.\s+3600\s+IN\s+SRV\s+10\s+100\s+{{ helios_master_port }}\s+{{ helios_master }}\.$' }
+      - { run:    "host -t SRV '{{ helios.srv_prefix }}.{{ domain }}' '{{ master }}'",
+          expect: '^{{ helios.srv_prefix }}.{{ domain }} has SRV record 10 100 {{ helios_master_port }} {{ helios_master }}.$' }
+
 - include: "{{ common.utils.verify }}"
   vars:
     title: Helios master service

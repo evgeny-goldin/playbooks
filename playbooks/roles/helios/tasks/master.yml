@@ -20,14 +20,14 @@
 - name: Starting Helios master service
   service: name=helios-master state=started enabled=yes
 
-- include: verify-master.yml master={{ common.net.localhost }} register_host={{ master_name }}
-- include: verify-master.yml master={{ helios_master }}        register_host={{ master_name }}
-- include: verify-helios.yml
-
 # https://github.com/spotify/helios/blob/master/docs/automatic_master_lookup.md
 - include: "{{ common.utils.register }}"
   vars:
     etcd_host: "{{ common.net.localhost }}"
-    src:       "_helios._http.{{ domain }}"
+    src:       "{{ helios.srv_prefix }}.{{ domain }}"
     dest:      "{{ master_name }}"
     port:      "{{ helios_master_port }}"
+
+- include: verify-master.yml master={{ common.net.localhost }} register_host={{ master_name }}
+- include: verify-master.yml master={{ helios_master }}        register_host={{ master_name }}
+- include: verify-helios.yml
