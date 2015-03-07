@@ -2,8 +2,12 @@
 # -----------------------------------------------------------------
 #   Called by other roles to register a host with SkyDNS via etcd
 # -----------------------------------------------------------------
+- set_fact: registration_type=A
+- set_fact: registration_type=CNAME
+  when:     dest | search('[a-zA-Z]')
+
 - debug:
-    msg: "Sending registration request to '{{ etcd_host }}:{{ etcd_port }}': '{{ src }}' => '{{ dest }}'"
+    msg: "Sending registration request of type '{{ registration_type }}' to '{{ etcd_host }}:{{ etcd_port }}': '{{ src }}' => '{{ dest }}'"
 
 - fail: "Registration src '{{ src }}' should end with '.{{ domain }}'"
   when: not src.endswith( ".{{ domain }}" )
@@ -20,7 +24,7 @@
     title: registration '{{ src }}' => '{{ dest }}'
     commands:
       - { run:    "{{ registration_command }}" }
-      - { run:    "dig '@{{ etcd_host }}' '{{ src }}'",
-          expect: '^{{ src }}\.\s+\d+\s+IN\s+(A|CNAME)\s+{{ dest }}\.?$' }
-      - { run:    "host {{ src }} {{ etcd_host }}",
+      - { run:    "dig '@{{ etcd_host }}' '{{ src }}' {{ registration_type }}",
+          expect: '^{{ src }}\.\s+\d+\s+IN\s+{{ registration_type }}\s+{{ dest }}\.?$' }
+      - { run:    "host -t {{ registration_type }} {{ src }} {{ etcd_host }}",
           expect: '^{{ src }} (has address|is an alias for) {{ dest }}\.?$' }

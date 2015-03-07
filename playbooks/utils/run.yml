@@ -2,6 +2,8 @@
 # ===================================================================================================
 # Runs commands and verifies their output. Required variables: title, commands or command.
 # ===================================================================================================
+- debug: msg="Running {{ title }} commands"
+
 - fail: msg="One of commands/command need to be specified"
   when: not (( commands is defined ) or ( command is defined ))
 
