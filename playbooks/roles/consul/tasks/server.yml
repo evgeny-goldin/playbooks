@@ -11,7 +11,10 @@
 
 - include: "{{ common.utils.run }}"
   vars:
-    title: Consul DNS endpoint check
+    title: Consul CLI check
+    env:   "{{ consul_env }}"
     commands:
       - { run:    'dig @{{ common.net.localhost }} -p {{ consul.server.ports.dns }}',
           expect: ';; SERVER: {{ common.net.local_ip }}#{{ consul.server.ports.dns }}({{ common.net.local_ip }})' }
+      - { run:    consul members,
+          expect: [ Node, Address, Status, Type, Build, Protocol, alive, server, "{{ consul_version }}" ] }

@@ -23,7 +23,6 @@
 - set_fact:
     env_file: "{{ ubuntu.envs_dir }}/{{ title.lower() }}.sh"
     run_env:  "{{ env | default({}) | expand_path( ansible_env ) }}"
-  when: env is defined
 
 - debug: var=url
 - debug: var=archive
@@ -97,12 +96,12 @@
 - include: "{{ common.utils.run }}"
   vars:
     commands: "{{ tests }}"
-    env:      "{{ run_env | default({}) }}"
+    env:      "{{ run_env }}"
   when: tests is defined
 
 - name:        Running {{ title }} cleanup commands
   command:     "{{ ubuntu.bash }} -c '{{ item }} 2>&1'"
-  environment: "{{ run_env | default({}) }}"
+  environment: "{{ run_env }}"
   with_items:
     - "{{ cleanup }}"
   when: cleanup is defined

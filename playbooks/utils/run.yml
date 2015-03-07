@@ -2,28 +2,19 @@
 # ===================================================================================================
 # Runs commands and verifies their output. Required variables: title, commands or command.
 # ===================================================================================================
-- debug: msg="Running {{ title }} commands"
+- set_fact:
+    run_env: "{{ env | default({}) | expand_path( ansible_env ) }}"
+
+- debug: msg="Running {{ title }} commands with env {{ run_env }}"
+- debug: var=commands
+- debug: var=command
 
 - fail: msg="One of commands/command need to be specified"
   when: not (( commands is defined ) or ( command is defined ))
 
-- set_fact:
-    use_shell: "{{ commands | default([ command ]) | map( attribute = 'run' ) | list | contains( '|', False ) }}"
-
-- name: Running {{ title }} commands with bash
-  command:     "{{ ubuntu.bash }} -c '{{ item.run | escape_quotes }} 2>&1'"
-  environment: "{{ env | default({}) }}"
-  register:    command_out
-  failed_when: not ( command_out.stdout_lines | default(['']) | contains( item.expect | default('') ))
-  with_items:
-    - "{{ commands | default([ command ]) }}"
-  when: not use_shell|bool
-
-- name: Running {{ title }} commands with shell
-  shell:       "{{ item.run }} 2>&1"
-  environment: "{{ env | default({}) }}"
+- shell:       "{{ item.run }} 2>&1"
+  environment: "{{ run_env }}"
   register:    shell_out
   failed_when: not ( shell_out.stdout_lines | default(['']) | contains( item.expect | default('') ))
   with_items:
     - "{{ commands | default([ command ]) }}"
-  when: use_shell|bool
