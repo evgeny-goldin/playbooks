@@ -1,0 +1,16 @@
+---
+# Consul Server playbook for Ubuntu
+# https://www.consul.io/
+
+- name:  Consul Server
+  hosts: consul-server
+  sudo:  yes
+
+  vars_files:
+    - vars/common.yml
+    - vars/{{ ansible_distribution }}.yml
+
+  roles:
+    - { role: run-before, period: daily }
+    - { role: consul,     consul_role: server }
+    - run-after

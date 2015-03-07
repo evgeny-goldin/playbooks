@@ -12,4 +12,5 @@
   environment: "{{ run_env }}"
   register:    shell_out
   failed_when: not ( shell_out.stdout_lines | default(['']) | contains( item.expect | default('') ))
+  when:        item.run is defined
   with_items:  commands
