@@ -5,6 +5,7 @@ This repo contains **Ansible** [Playbooks](https://github.com/evgeny-goldin/play
 * [Ansible](http://www.ansible.com/)
 * [Artifactory](http://www.jfrog.com/artifactory/) _(standalone or Tomcat)_
 * [Asgard](https://github.com/Netflix/asgard)
+* [Consul](https://www.consul.io/)
 * [Docker](https://www.docker.com/)
 * [Exhibitor](https://github.com/Netflix/exhibitor)
 * [etcd](https://github.com/coreos/etcd)
