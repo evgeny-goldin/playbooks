@@ -19,19 +19,20 @@ HELIOS_PROPERTIES  = { helios_master:      "helios-master.#{ VAGRANT_DOMAIN }",
                        zookeeper_port:     ZOOKEEPER_PORT,
                        etcd_port:          ETCD_PORT,
                        domain:             VAGRANT_DOMAIN }
-HELIOS_PORTS       = { vagrant_ports: [ DNS_PORT, ZOOKEEPER_PORT, ETCD_PORT, HELIOS_MASTER_PORT ]}
+HELIOS_PORTS       = [ DNS_PORT, ZOOKEEPER_PORT, ETCD_PORT, HELIOS_MASTER_PORT ]
 
 VB_BOXES = {
   jvm:     {},
   packer:  {},
   mysql:   { vagrant_ports: [ MYSQL_PORT ]},
   jenkins: { vagrant_ports: [ WEB_PORT ]},
-  'helios-master'  => HELIOS_PROPERTIES.merge( HELIOS_PORTS ),
+  'helios-master'  => HELIOS_PROPERTIES.merge( vagrant_ports: HELIOS_PORTS ),
   'helios-agent1'  => HELIOS_PROPERTIES.merge( playbook:      'helios-agent',
                                                vagrant_ports: [ WEB_PORT ] ),
   'helios-agent2'  => HELIOS_PROPERTIES.merge( playbook:      'helios-agent',
                                                vagrant_ports: [ WEB_PORT ] ),
-  helios:             HELIOS_PROPERTIES.merge( HELIOS_PORTS ).merge( helios_master: "helios.#{ VAGRANT_DOMAIN }" ),
+  helios:             HELIOS_PROPERTIES.merge( vagrant_ports: HELIOS_PORTS,
+                                               helios_master: "helios.#{ VAGRANT_DOMAIN }" ),
   repo:          { memory:          2048, # For Artifactory MySQL
                    port:            WEB_PORT,
                    import:          REPO_IMPORT,
@@ -71,7 +72,13 @@ Vagrant.configure( VAGRANTFILE_API_VERSION ) do | config |
       b.vm.synced_folder 'playbooks', '/playbooks'
 
       ( variables[ :vagrant_ports ] || [] ).each { | port |
-        b.vm.network 'forwarded_port', guest: port, host: port, auto_correct: true
+        # https://docs.vagrantup.com/v2/networking/forwarded_ports.html
+        b.vm.network 'forwarded_port', guest: port, host: port, auto_correct: true, protocol: 'tcp'
+      }
+
+      ( variables[ :vagrant_ports_udp ] || [] ).each { | port |
+        # https://docs.vagrantup.com/v2/networking/forwarded_ports.html
+        b.vm.network 'forwarded_port', guest: port, host: port, auto_correct: true, protocol: 'udp'
       }
 
       b.vm.provider :virtualbox do | vb |

@@ -42,8 +42,17 @@
 
 - include: "{{ common.utils.run }}"
   vars:
-    title: Consul Server CLI
+    title: Consul server
     commands:
       - { run:    'dig @{{ common.net.localhost }} -p {{ consul.ports.dns }}',
           expect: ';; SERVER: {{ common.net.local_ip }}#{{ consul.ports.dns }}({{ common.net.local_ip }})' }
   when: consul_server|bool
+
+- include: "{{ common.utils.run }}"
+  vars:
+    title: Consul client
+    env:   "{{ consul_env }}"
+    commands:
+      # - { run: "consul join '{{ consul_server }}'", expect: Successfully joined cluster }
+      # - { run: "consul members", expect: Successfully joined cluster }
+  when: consul_client|bool
