@@ -2,5 +2,6 @@
 
 FROM evgenyg/ansible
 ADD  playbooks /playbooks
-RUN  ansible-playbook /playbooks/java-ubuntu.yml -c local
+# java_distribution = oracle_jre, oracle_jdk, open_jdk
+RUN  ansible-playbook /playbooks/java-ubuntu.yml -c local -e "java_distribution=open_jdk"
 CMD  [ "/bin/bash" ]
