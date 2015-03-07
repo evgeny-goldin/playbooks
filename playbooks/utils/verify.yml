@@ -45,7 +45,7 @@
     timeout:        "{{ v_timeout }}"
     return_content: yes
   register: http_wait_out
-  until: "{{ ( http_wait_out.content is defined ) and ( item.content|default('') in http_wait_out.content ) }}"
+  until: "{{ ( http_wait_out.content is defined ) and ( http_wait_out.content | contains( item.content | default('')) ) }}"
   retries: "{{ timeout|default(60)|int // 3 }}"
   delay:   3
   with_items: wait
@@ -58,6 +58,5 @@
     return_content: yes
   register: http_verify_out
   with_items: verify
-  # https://github.com/ansible/ansible/issues/10017
-  failed_when: ( '{{ item.content | default('') }}' not in http_verify_out.content ) or ( {{ item.status | default( 200 ) }} != http_verify_out.status )
+  failed_when: ( not ( http_verify_out.content | contains( item.content | default('')))) or ( {{ item.status | default( 200 ) }} != http_verify_out.status )
   when: verify is defined

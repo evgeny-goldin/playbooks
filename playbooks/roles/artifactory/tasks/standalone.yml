@@ -6,8 +6,8 @@
 
 - include: "{{ common.utils.service }}"
   vars:
-    service: artifactory
     title:   Artifactory
+    service: artifactory
     url:     "{{ artifactory.standalone.url     | tokens({ 'version': artifactory_version }) }}"
     archive: "{{ artifactory.standalone.archive | tokens({ 'version': artifactory_version }) }}"
     home:    "{{ artifactory.standalone.home }}"

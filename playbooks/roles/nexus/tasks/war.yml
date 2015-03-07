@@ -8,8 +8,8 @@
 
 - include: "{{ common.utils.service }}"
   vars:
-    service: nexus
     title:   Nexus
+    service: nexus
     url:     "{{ nexus.war.url     | tokens( nexus ) }}"
     archive: "{{ nexus.war.archive | tokens( nexus ) }}"
     home:    "{{ tomcat_webapps }}/nexus"

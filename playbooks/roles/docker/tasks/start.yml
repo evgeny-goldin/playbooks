@@ -30,6 +30,6 @@
 
 - include: "{{ common.utils.service }}"
   vars:
-    service: docker-{{ name }}
     title:   Docker app '{{ name }}'
+    service: docker-{{ name }}
     command: "docker kill '{{ name }}'; docker rm '{{ name }}'; docker pull '{{ start }}'; docker run {{ docker_ports | default('') }} {{ docker_env | default ('') }} --name '{{ name }}' '{{ start }}'"

@@ -22,6 +22,9 @@ respawn limit unlimited
 script
     {% if env_file is defined %}
     [ -r '{{ env_file }}' ] && . '{{ env_file }}'
+    echo "++++++++++++++++++++++++++++++++++++++++++++++++++++++++" >> '{{ service_log }}'
+    date                                                            >> '{{ service_log }}'
+    echo "++++++++++++++++++++++++++++++++++++++++++++++++++++++++" >> '{{ service_log }}'
     echo "Starting with env variables defined in '{{ env_file }}':" >> '{{ service_log }}'
     echo "--------------------------------------------------------" >> '{{ service_log }}'
     cat '{{ env_file }}'                                            >> '{{ service_log }}'

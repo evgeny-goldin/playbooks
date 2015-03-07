@@ -13,8 +13,8 @@
 
 - include: "{{ common.utils.service }}"
   vars:
-    service: artifactory
     title:   Artifactory
+    service: artifactory
     url:     "{{ artifactory.war.url     | tokens({ 'version': artifactory_version }) }}"
     archive: "{{ artifactory.war.archive | tokens({ 'version': artifactory_version }) }}"
     home:    "{{ tomcat_webapps }}/artifactory"

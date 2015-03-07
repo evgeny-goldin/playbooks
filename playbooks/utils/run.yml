@@ -8,7 +8,7 @@
   when: not (( commands is defined ) or ( command is defined ))
 
 - set_fact:
-    use_shell: "{{ commands | default([ command ]) | map( attribute = 'run' ) | list | contains( '|' ) }}"
+    use_shell: "{{ commands | default([ command ]) | map( attribute = 'run' ) | list | contains( '|', False ) }}"
 
 - name: Running {{ title }} commands with bash
   command:     "{{ ubuntu.bash }} -c '{{ item.run | escape_quotes }} 2>&1'"

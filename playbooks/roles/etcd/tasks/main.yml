@@ -7,8 +7,8 @@
 
 - include: "{{ common.utils.service }}"
   vars:
+    title:   Etcd
     service: etcd
-    title:   etcd
     url:     "{{ etcd.url     | tokens({ 'dir_name': etcd_dir, 'version': etcd.version }) }}"
     archive: "{{ etcd.archive | tokens( etcd ) }}"
     home:    "{{ etcd.home }}"

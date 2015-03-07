@@ -6,8 +6,8 @@
 
 - include: "{{ common.utils.service }}"
   vars:
-    service: nexus
     title:   Nexus
+    service: nexus
     url:     "{{ nexus.standalone.url     | tokens( nexus ) }}"
     archive: "{{ nexus.standalone.archive | tokens( nexus ) }}"
     home:    "{{ nexus.standalone.home }}"

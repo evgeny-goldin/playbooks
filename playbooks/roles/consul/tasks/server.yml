@@ -1,0 +1,17 @@
+---
+# https://www.consul.io/intro/getting-started/agent.html
+- include: "{{ common.utils.service }}"
+  vars:
+    title:   Consul
+    service: consul
+    env:     "{{ consul_env }}"
+    command: consul agent -server -bootstrap-expect 1 -data-dir /tmp/consul
+    port:    "{{ consul.server.ports.http }}"
+    verify:  "{{ consul.server.verify }}"
+
+- include: "{{ common.utils.run }}"
+  vars:
+    title: Consul DNS endpoint check
+    commands:
+      - { run:    'dig @{{ common.net.localhost }} -p {{ consul.server.ports.dns }}',
+          expect: ';; SERVER: {{ common.net.local_ip }}#{{ consul.server.ports.dns }}({{ common.net.local_ip }})' }

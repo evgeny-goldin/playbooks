@@ -1,6 +1,16 @@
 ---
 consul: {
   version: latest, # 0.5.0, latest - https://www.consul.io/downloads.html
+  server: {
+    ports: {
+      http: 8500,
+      dns:  8600
+    },
+    verify: [
+      { path: /,                 content: Consul Agent },
+      { path: /v1/catalog/nodes, content: [ "Node", "Address" ]},
+    ]
+  },
   latest: {
     command: "curl -Ls 'https://www.consul.io/downloads.html' | grep '{{ common.urls.bintray }}/mitchellh/consul/' | grep 'linux_amd64' | cut -d'/' -f6 | cut -d'_' -f1",
     pattern: '^\d+\.\d+\.\d+$'

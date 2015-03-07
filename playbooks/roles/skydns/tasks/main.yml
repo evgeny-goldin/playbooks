@@ -5,8 +5,8 @@
 
 - include: "{{ common.utils.service }}"
   vars:
-    service: skydns
     title:   SkyDNS
+    service: skydns
     url:     "{{ skydns.url }}"
     archive: "{{ skydns.archive }}"
     home:    "{{ skydns.home }}"

@@ -16,9 +16,12 @@ def escape_quotes( s ):
   '''Escapes all signle quotes with "'\''" (bash escape)'''
   return s.replace( "'", r"'\''" )
 
-def contains( llist, element ):
+def contains( llist, element, check_regex = True ):
   '''Finds if any llist element contains the element or all elements specified'''
   # print("contains({}, {})".format(repr(llist), repr(element)))
+  if type(llist) is not list:
+    llist = str(llist).splitlines()
+
   assert type(llist) is list, \
          "contains(): llist is not a list: {} ({})".format(llist, type(llist))
   assert type(element) in [list, str, unicode, int, bool], \
@@ -33,7 +36,7 @@ def contains( llist, element ):
     return all( contains( llist, e ) for e in element )
   else:
     # element is not a list = checking if it appears (as substring or regex search) in any l, element of llist
-    return any((( str(element) in str(l)) or re.search(str(element), str(l))) for l in llist )
+    return any(( str(element) in str(l) or (check_regex and re.search(str(element), str(l)))) for l in llist )
 
 def re_escape( pattern ):
   '''Returns \Qpattern\E, regex-escaped'''

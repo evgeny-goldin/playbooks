@@ -12,4 +12,11 @@
     env:     "{{ consul_env }}"
     tests:
       - { run: consul --version, expect: 'Consul v{{ consul_version }}' }
+      - { run: consul,           expect: [ Available commands are, agent, keygen ]}
       - { run: consul --help,    expect: [ Available commands are, agent, keygen ]}
+
+- include: server.yml
+  when:    ( consul_role is undefined ) or ( consul_role == 'server' )
+
+- include: client.yml
+  when:    ( consul_role is undefined ) or ( consul_role == 'client' )
