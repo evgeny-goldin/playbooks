@@ -13,12 +13,18 @@ consul: {
   archive:  /opt/consul-<version>.zip,
   home:     /opt/consul,
   data_dir: /opt/consul/data,
-  verify: [
-    { path: /,                       content: Consul Agent },
-    { path: /v1/catalog/nodes,       content: [ "Node", "Address" ]},
-    { path: /v1/catalog/service,     content: Missing service name, status: 400 },
-    { path: /v1/catalog/service/aaa, content: '[]' },
-  ]
+  verify: {
+    server: [
+      { path: /,                   content: Consul Agent },
+      { path: /v1/catalog/nodes,   content: [ "Node", "Address" ]},
+      { path: /v1/catalog/service, content: Missing service name, status: 400 }
+    ],
+    client: [
+      { path: /,                   content: Consul Agent },
+      { path: /v1/catalog/nodes,   content: No known Consul servers, status: 500 },
+      { path: /v1/catalog/service, content: Missing service name, status: 400 }
+    ]
+  },
 }
 
 consul_env: {

@@ -5,11 +5,15 @@
     consul_server:  "{{ consul_role == 'server' }}"
     consul_client:  "{{ consul_role == 'client' }}"
 
-- set_fact: consul_command="consul agent -server -bind=0.0.0.0 -bootstrap-expect 1 -data-dir '{{ consul.data_dir }}'"
-  when:     consul_server|bool
+- set_fact:
+    consul_command: "consul agent -server -bind=0.0.0.0 -bootstrap-expect 1 -data-dir '{{ consul.data_dir }}'"
+    consul_verify:  "{{ consul.verify.server }}"
+  when: consul_server|bool
 
-- set_fact: consul_command="consul agent -bind=0.0.0.0 -data-dir '{{ consul.data_dir }}'"
-  when:     consul_client|bool
+- set_fact:
+    consul_command: "consul agent -bind=0.0.0.0 -data-dir '{{ consul.data_dir }}'"
+    consul_verify:  "{{ consul.verify.client }}"
+  when: consul_client|bool
 
 # https://www.consul.io/intro/getting-started/agent.html
 # https://www.consul.io/intro/getting-started/join.html
@@ -28,13 +32,13 @@
       - { run: consul,           expect: [ Available commands are, agent, keygen ]}
       - { run: consul --help,    expect: [ Available commands are, agent, keygen ]}
     command: "{{ consul_command }}"
+    verify:  "{{ consul_verify }}"
     port:    "{{ consul.ports.http }}"
-    verify:  "{{ consul.verify }}"
     tests_after:
       - { run:    consul members,
-          expect: [ Node, Address, Status, Type, Build, Protocol, alive, server, "{{ consul_version }}" ] }
+          expect: [ Node, Address, Status, Type, Build, Protocol, alive, server|client, "{{ consul_version }}" ] }
       - { run:    consul info,
-          expect: [ 'agent:', 'build:', 'consul:', 'raft:', 'runtime:', 'serf_lan:', 'serf_wan:' ] }
+          expect: [ 'agent:', 'build:', 'consul:', 'runtime:', 'serf_lan:' ] }
 
 - include: "{{ common.utils.run }}"
   vars:
