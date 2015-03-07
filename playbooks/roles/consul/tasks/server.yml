@@ -6,15 +6,17 @@
     service: consul
     env:     "{{ consul_env }}"
     command: consul agent -server -bootstrap-expect 1 -data-dir /tmp/consul
-    port:    "{{ consul.server.ports.http }}"
-    verify:  "{{ consul.server.verify }}"
+    port:    "{{ consul.ports.http }}"
+    verify:  "{{ consul.verify }}"
 
 - include: "{{ common.utils.run }}"
   vars:
-    title: Consul CLI check
+    title: Consul CLI
     env:   "{{ consul_env }}"
     commands:
-      - { run:    'dig @{{ common.net.localhost }} -p {{ consul.server.ports.dns }}',
-          expect: ';; SERVER: {{ common.net.local_ip }}#{{ consul.server.ports.dns }}({{ common.net.local_ip }})' }
+      - { run:    'dig @{{ common.net.localhost }} -p {{ consul.ports.dns }}',
+          expect: ';; SERVER: {{ common.net.local_ip }}#{{ consul.ports.dns }}({{ common.net.local_ip }})' }
       - { run:    consul members,
           expect: [ Node, Address, Status, Type, Build, Protocol, alive, server, "{{ consul_version }}" ] }
+      - { run:    consul info,
+          expect: [ 'agent:', 'build:', 'consul:', 'raft:', 'runtime:', 'serf_lan:', 'serf_wan:' ] }

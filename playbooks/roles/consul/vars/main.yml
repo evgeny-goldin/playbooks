@@ -1,15 +1,9 @@
 ---
 consul: {
   version: latest, # 0.5.0, latest - https://www.consul.io/downloads.html
-  server: {
-    ports: {
-      http: 8500,
-      dns:  8600
-    },
-    verify: [
-      { path: /,                 content: Consul Agent },
-      { path: /v1/catalog/nodes, content: [ "Node", "Address" ]},
-    ]
+  ports: {
+    http: 8500,
+    dns:  8600
   },
   latest: {
     command: "curl -Ls 'https://www.consul.io/downloads.html' | grep '{{ common.urls.bintray }}/mitchellh/consul/' | grep 'linux_amd64' | cut -d'/' -f6 | cut -d'_' -f1",
@@ -17,7 +11,13 @@ consul: {
   },
   url:     '{{ common.urls.bintray }}/mitchellh/consul/<version>_linux_amd64.zip',
   archive: /opt/consul-<version>.zip,
-  home:    /opt/consul
+  home:    /opt/consul,
+  verify: [
+    { path: /,                       content: Consul Agent },
+    { path: /v1/catalog/nodes,       content: [ "Node", "Address" ]},
+    { path: /v1/catalog/service,     content: Missing service name, status: 400 },
+    { path: /v1/catalog/service/aaa, content: '[]' },
+  ]
 }
 
 consul_env: {
