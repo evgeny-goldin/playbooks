@@ -78,9 +78,11 @@ def strftime( epoch_time ):
   '''time.strftime wrapper'''
   return time.strftime( '%b %d, %Y at %H:%M:%S (GMT)', time.gmtime( epoch_time ))
 
-def transform( values, format ):
-    '''Transforms array of values using format specified (map-like)'''
-    return [ format.format( v ) for v in values ]
+def transform( values, mapper_string ):
+    '''Transforms array of values using mapper function specified as a string'''
+    # http://stackoverflow.com/a/26599198/472153
+    # print( "eval({})".format( repr( mapper_string )))
+    return [ eval( mapper_string )( v ) for v in values ]
 
 def explain( seconds ):
   '''Converts seconds to hh:mm:ss format'''

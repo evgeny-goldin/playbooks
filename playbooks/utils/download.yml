@@ -19,10 +19,9 @@
     clean_home: "{{ ( unpack | bool and ( clean | default( True ))) | bool }}"
 
 # {{ env_file }} is a file containing service env variables, loaded by upstart script
-# {{ run_env }}  is an environment (dictionary) used when running {{ tests }} and {{ cleanup }} commands
 - set_fact:
     env_file: "{{ ubuntu.envs_dir }}/{{ title.lower() }}.sh"
-    run_env:  "{{ env | default({}) | expand_path( ansible_env ) }}"
+  when: env is defined
 
 - debug: var=url
 - debug: var=archive
@@ -32,7 +31,6 @@
 - debug: var=clean_home
 - debug: var=env
 - debug: var=env_file
-- debug: var=run_env
 - debug: var=tests
 - debug: var=cleanup
 
@@ -83,7 +81,7 @@
   when: configs is defined
 
 - file: path="{{ env_file }}" state=absent
-  when: env is defined
+  when: env_file is defined
 
 - name: Generating {{ title }} environment variables file
   lineinfile:
@@ -91,17 +89,14 @@
     create:  yes
     line:    'export {{ item.key }}="{{ item.value }}"'
   with_dict: env | default({})
-  when: env is defined
+  when: env_file is defined
 
 - include: "{{ common.utils.run }}"
   vars:
     commands: "{{ tests }}"
-    env:      "{{ run_env }}"
   when: tests is defined
 
-- name:        Running {{ title }} cleanup commands
-  command:     "{{ ubuntu.bash }} -c '{{ item }} 2>&1'"
-  environment: "{{ run_env }}"
-  with_items:
-    - "{{ cleanup }}"
+- include: "{{ common.utils.run }}"
+  vars:
+    commands: "{{ cleanup | transform( 'lambda cleanup_command: { \"run\": cleanup_command }' ) }}"
   when: cleanup is defined

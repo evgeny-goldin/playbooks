@@ -2,10 +2,22 @@
 - name: Calculating Consul version
   set_fact:
     consul_version: "{{ consul.version | calculate( consul.latest ) }}"
+    consul_server:  "{{ consul_role == 'server' }}"
+    consul_client:  "{{ consul_role == 'client' }}"
 
-- include: "{{ common.utils.download }}"
+- set_fact: consul_command="consul agent -server -bind=0.0.0.0 -bootstrap-expect 1 -data-dir '{{ consul.data_dir }}'"
+  when:     consul_server|bool
+
+- set_fact: consul_command="consul agent -bind=0.0.0.0 -data-dir '{{ consul.data_dir }}'"
+  when:     consul_client|bool
+
+# https://www.consul.io/intro/getting-started/agent.html
+# https://www.consul.io/intro/getting-started/join.html
+
+- include: "{{ common.utils.service }}"
   vars:
     title:   Consul
+    service: consul
     url:     "{{ consul.url     | tokens({ 'version': consul_version }) }}"
     archive: "{{ consul.archive | tokens({ 'version': consul_version }) }}"
     home:    "{{ consul.home }}"
@@ -15,9 +27,19 @@
       - { run: consul version,   expect: 'Consul v{{ consul_version }}' }
       - { run: consul,           expect: [ Available commands are, agent, keygen ]}
       - { run: consul --help,    expect: [ Available commands are, agent, keygen ]}
+    command: "{{ consul_command }}"
+    port:    "{{ consul.ports.http }}"
+    verify:  "{{ consul.verify }}"
+    tests_after:
+      - { run:    consul members,
+          expect: [ Node, Address, Status, Type, Build, Protocol, alive, server, "{{ consul_version }}" ] }
+      - { run:    consul info,
+          expect: [ 'agent:', 'build:', 'consul:', 'raft:', 'runtime:', 'serf_lan:', 'serf_wan:' ] }
 
-- include: server.yml
-  when:    consul_role == 'server'
-
-- include: client.yml
-  when:    consul_role == 'client'
+- include: "{{ common.utils.run }}"
+  vars:
+    title: Consul Server CLI
+    commands:
+      - { run:    'dig @{{ common.net.localhost }} -p {{ consul.ports.dns }}',
+          expect: ';; SERVER: {{ common.net.local_ip }}#{{ consul.ports.dns }}({{ common.net.local_ip }})' }
+  when: consul_server|bool

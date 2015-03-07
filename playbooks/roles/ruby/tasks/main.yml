@@ -15,4 +15,5 @@
 - include: "{{ common.utils.run }}"
   vars:
     title: Ruby checks
-    command: { run: "{{ ruby_bin }}/ruby --version", expect: "ruby {{ ruby_version }}" }
+    commands:
+      - { run: "{{ ruby_bin }}/ruby --version", expect: "ruby {{ ruby_version }}" }

@@ -20,5 +20,6 @@
 - include: "{{ common.utils.run }}"
   vars:
     title: zkCli check
-    command: { run:    "echo 'ls /' | '{{ zookeeper_home }}/bin/zkCli.sh' -server '{{ common.net.localhost }}:{{ zookeeper_port }}'",
-               expect: '{{ common.net.localhost }}:{{ zookeeper_port }}(CONNECTED)' }
+    commands:
+      - { run:    "echo 'ls /' | '{{ zookeeper_home }}/bin/zkCli.sh' -server '{{ common.net.localhost }}:{{ zookeeper_port }}'",
+          expect: '{{ common.net.localhost }}:{{ zookeeper_port }}(CONNECTED)' }

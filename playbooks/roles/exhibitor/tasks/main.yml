@@ -33,8 +33,9 @@
 - include: "{{ common.utils.run }}"
   vars:
     title: Exhibitor standalone checks
-    command: { run:    'java -jar "{{ exhibitor_jar }}" --help',
-               expect: [ 'Exhibitor v{{ exhibitor_version }}', 'Print this help', 'Default Property Names' ]}
+    commands:
+      - { run:    'java -jar "{{ exhibitor_jar }}" --help',
+          expect: [ 'Exhibitor v{{ exhibitor_version }}', 'Print this help', 'Default Property Names' ]}
 
 - include: "{{ common.utils.service }}"
   vars:

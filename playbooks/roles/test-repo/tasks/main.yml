@@ -76,4 +76,4 @@
 - include: "{{ common.roles.gatling }}"
   vars:
     # Sending a list of simulation names: ArtifactoryWarmup, ArtifactoryGet50, etc
-    simulations: "{{ test_repo.simulations | map( attribute = 'name' ) | transform( repo_name + '{0}' ) }}"
+    simulations: "{{ test_repo.simulations | map( attribute = 'name' ) | transform( 'lambda simulation: repo_name + simulation' ) }}"

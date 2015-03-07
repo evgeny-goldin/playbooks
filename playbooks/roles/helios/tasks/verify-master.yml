@@ -41,8 +41,9 @@
 - include: "{{ common.utils.run }}"
   vars:
     title: ZooKeeper check
-    command: { run:    "echo 'ls /' | zk-shell '{{ master }}:{{ zookeeper_port }}' --run-from-stdin",
-               expect: zookeeper  }
+    commands:
+      - { run:    "echo 'ls /' | zk-shell '{{ master }}:{{ zookeeper_port }}' --run-from-stdin",
+          expect: zookeeper  }
 
 #                         VirtualBox                              AWS
 - set_fact: my_ip="{{ facter_ipaddress_eth1 | default( ansible_default_ipv4.address )}}"

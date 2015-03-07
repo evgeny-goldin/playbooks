@@ -37,8 +37,9 @@
 - include: "{{ common.utils.run }}"
   vars:
     title: Docker images check
-    command: { run:    "docker images | grep -v 'IMAGE ID' | awk '{print $1\":\"$2}' | sort -u",
-               expect: "{{ docker_pull }}" }
+    commands:
+      - { run:    "docker images | grep -v 'IMAGE ID' | awk '{print $1\":\"$2}' | sort -u",
+          expect: "{{ docker_pull }}" }
 
 - include: start.yml
   when: start is defined

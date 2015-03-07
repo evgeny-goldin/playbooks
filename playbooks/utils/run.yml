@@ -7,14 +7,9 @@
 
 - debug: msg="Running {{ title }} commands with env {{ run_env }}"
 - debug: var=commands
-- debug: var=command
-
-- fail: msg="One of commands/command need to be specified"
-  when: not (( commands is defined ) or ( command is defined ))
 
 - shell:       "{{ item.run }} 2>&1"
   environment: "{{ run_env }}"
   register:    shell_out
   failed_when: not ( shell_out.stdout_lines | default(['']) | contains( item.expect | default('') ))
-  with_items:
-    - "{{ commands | default([ command ]) }}"
+  with_items:  commands

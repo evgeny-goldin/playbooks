@@ -19,7 +19,8 @@
 - include: "{{ common.utils.run }}"
   vars:
     title: MySQL check
-    command: { run: mysql --version, expect: [ mysql, 5.6 ] }
+    commands:
+      - { run: mysql --version, expect: [ mysql, 5.6 ] }
 
 # http://stackoverflow.com/a/21151255/472153
 - name: Updating '{{ mysql.my_cnf }}' - external access

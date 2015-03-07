@@ -9,9 +9,10 @@ consul: {
     command: "curl -Ls 'https://www.consul.io/downloads.html' | grep '{{ common.urls.bintray }}/mitchellh/consul/' | grep 'linux_amd64' | cut -d'/' -f6 | cut -d'_' -f1",
     pattern: '^\d+\.\d+\.\d+$'
   },
-  url:     '{{ common.urls.bintray }}/mitchellh/consul/<version>_linux_amd64.zip',
-  archive: /opt/consul-<version>.zip,
-  home:    /opt/consul,
+  url:      '{{ common.urls.bintray }}/mitchellh/consul/<version>_linux_amd64.zip',
+  archive:  /opt/consul-<version>.zip,
+  home:     /opt/consul,
+  data_dir: /opt/consul/data,
   verify: [
     { path: /,                       content: Consul Agent },
     { path: /v1/catalog/nodes,       content: [ "Node", "Address" ]},

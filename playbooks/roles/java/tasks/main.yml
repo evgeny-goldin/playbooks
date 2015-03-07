@@ -25,13 +25,15 @@
 - include: "{{ common.utils.run }}"
   vars:
     title:   Oracle java checks
-    command: { run: '"{{ java_home }}/bin/java" -version', expect: [ '1.{{ java.version }}', 'Java(TM) SE Runtime Environment' ]}
+    commands:
+      - { run: '"{{ java_home }}/bin/java" -version', expect: [ '1.{{ java.version }}', 'Java(TM) SE Runtime Environment' ]}
   when: java_distribution in [ 'oracle_jre', 'oracle_jdk' ]
 
 - include: "{{ common.utils.run }}"
   vars:
     title:   Oracle javac checks
-    command: { run: '"{{ java_home }}/bin/javac" -version', expect: 'javac 1.{{ java.version }}' }
+    commands:
+      - { run: '"{{ java_home }}/bin/javac" -version', expect: 'javac 1.{{ java.version }}' }
   when: java_distribution == 'oracle_jdk'
 
 - name: Generating Java environment variables file

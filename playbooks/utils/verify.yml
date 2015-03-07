@@ -60,3 +60,8 @@
   with_items: verify
   failed_when: ( not ( http_verify_out.content | contains( item.content | default('')))) or ( {{ item.status | default( 200 ) }} != http_verify_out.status )
   when: verify is defined
+
+- include: "{{ common.utils.run }}"
+  vars:
+    commands: "{{ tests_after }}"
+  when: tests_after is defined

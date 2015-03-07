@@ -31,7 +31,8 @@
 - include: "{{ common.utils.run }}"
   vars:
     title:   Helios checks
-    command: { run: helios --version, expect: 'Spotify Helios CLI {{ helios_version }}'  }
+    commands:
+      - { run: helios --version, expect: 'Spotify Helios CLI {{ helios_version }}'  }
 
 - name: Installing Python pip
   apt:  name=python-pip state=latest force=yes
