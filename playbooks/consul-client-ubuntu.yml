@@ -1,5 +1,5 @@
 ---
-# Consul Server playbook for Ubuntu
+# Consul Client playbook for Ubuntu
 # https://www.consul.io/
 
 - name:  Consul Client
