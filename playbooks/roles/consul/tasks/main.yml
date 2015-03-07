@@ -1,0 +1,15 @@
+---
+- name: Calculating Consul version
+  set_fact:
+    consul_version: "{{ consul.version | calculate( consul.latest ) }}"
+
+- include: "{{ common.utils.download }}"
+  vars:
+    title:   Consul
+    url:     "{{ consul.url     | tokens({ 'version': consul_version }) }}"
+    archive: "{{ consul.archive | tokens({ 'version': consul_version }) }}"
+    home:    "{{ consul.home }}"
+    env:     "{{ consul_env }}"
+    tests:
+      - { run: consul --version, expect: 'Consul v{{ consul_version }}' }
+      - { run: consul --help,    expect: [ Available commands are, agent, keygen ]}

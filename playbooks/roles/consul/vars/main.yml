@@ -1,0 +1,15 @@
+---
+consul: {
+  version: latest, # 0.5.0, latest - https://www.consul.io/downloads.html
+  latest: {
+    command: "curl -Ls 'https://www.consul.io/downloads.html' | grep '{{ common.urls.bintray }}/mitchellh/consul/' | grep 'linux_amd64' | cut -d'/' -f6 | cut -d'_' -f1",
+    pattern: '^\d+\.\d+\.\d+$'
+  },
+  url:     '{{ common.urls.bintray }}/mitchellh/consul/<version>_linux_amd64.zip',
+  archive: /opt/consul-<version>.zip,
+  home:    /opt/consul
+}
+
+consul_env: {
+  PATH: "$PATH:{{ consul.home }}"
+}

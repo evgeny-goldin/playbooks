@@ -78,7 +78,9 @@ Vagrant.configure( VAGRANTFILE_API_VERSION ) do | config |
         vb.gui  = false
         vb.name = box_name
         # https://www.virtualbox.org/manual/ch08.html
+        # http://superuser.com/a/883328/239763
         vb.customize [ 'modifyvm', :id,
+                       '--natdnshostresolver1', 'on',
                        '--memory', variables[ :memory ] || MEMORY,
                        '--cpus',   variables[ :cpus ]   || CPUS ]
       end
