@@ -20,13 +20,15 @@
 - name: Starting Helios master service
   service: name=helios-master state=started enabled=yes
 
+# Registering "_helios._http.domain" record (SkyDNS only)
 # https://github.com/spotify/helios/blob/master/docs/automatic_master_lookup.md
 - include: "{{ common.utils.register }}"
   vars:
-    etcd_host: "{{ common.net.localhost }}"
-    src:       "{{ helios.srv_prefix }}.{{ domain }}"
-    dest:      "{{ master_name }}"
-    port:      "{{ helios_master_port }}"
+    host: "{{ common.net.localhost }}"
+    src:  "{{ helios.srv_prefix }}.{{ domain }}"
+    dest: "{{ master_name }}"
+    port: "{{ helios_master_port }}"
+  when: not ( use_consul|bool )
 
 - include: verify-master.yml master={{ common.net.localhost }} register_host={{ master_name }}
 - include: verify-master.yml master={{ helios_master }}        register_host={{ master_name }}

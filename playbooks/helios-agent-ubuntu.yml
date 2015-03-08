@@ -14,6 +14,5 @@
     - { role: run-before, period: daily }
     # nginx image should be identical to that in roles/helios/vars/main.yml => helios.docker.nginx.image
     - { role: docker, when: periodic, pull: [ 'evgenyg/echo:latest', 'nginx:1.7.9' ]}
-    - { role: consul, consul_role: client }
-    - { role: helios, helios_role: agent  }
+    - { role: helios, helios_role: agent, use_consul: true }
     - run-after

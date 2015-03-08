@@ -2,4 +2,7 @@
 dependencies:
   - { role: java }
   - { role: zookeeper, when: periodic|bool and (( helios_role is undefined ) or ( helios_role == 'master' )) }
-  - { role: skydns,    when: periodic|bool and (( helios_role is undefined ) or ( helios_role == 'master' )) }
+  - { role: skydns,    when: periodic|bool and ( not use_consul|bool ) and (( helios_role is undefined ) or ( helios_role == 'master' )) }
+  - { role: consul,    when: periodic|bool and use_consul|bool,
+                       consul_role:   "{{ 'server' if helios_role == 'master' else 'client' }}",
+                       consul_server: "{{ helios_master }}" }

@@ -1,30 +1,45 @@
 ---
 # -----------------------------------------------------------------
-#   Called by other roles to register a host with SkyDNS via etcd
+#   Called by other roles to register a host with SkyDNS or Consul
 # -----------------------------------------------------------------
+# Registration type is CNAME if {{ dest }} contains letters, A otherwise (IP address)
 - set_fact: registration_type=A
 - set_fact: registration_type=CNAME
   when:     dest | search('[a-zA-Z]')
 
 - debug:
-    msg: "Sending registration request of type '{{ registration_type }}' to '{{ etcd_host }}:{{ etcd_port }}': '{{ src }}' => '{{ dest }}'"
+    msg: "Sending registration request of type '{{ registration_type }}' to '{{ host }}': '{{ src }}' => '{{ dest }}'"
+- fail:  msg="Registration src '{{ src }}' should end with '.{{ domain }}'"
+  when:  not src.endswith( ".{{ domain }}" )
 
-- fail: "Registration src '{{ src }}' should end with '.{{ domain }}'"
-  when: not src.endswith( ".{{ domain }}" )
+- fail:  msg="Consul DNS registration with ports isn't implemented yet"
+  when:  use_consul|bool and ( port is defined )
 
-# https://github.com/skynetservices/skydns
+- set_fact: node_name="{{ src | regex_replace( '\.' + domain + '$', '' ) }}"
+  when:     use_consul|bool
+
+- set_fact:
+    # https://www.consul.io/docs/agent/http/catalog.html#catalog_register
+    registration_command: "curl -XPUT 'http://{{ host }}:{{ consul.ports.http }}/v1/catalog/register' \
+                           -d '{\"Node\":\"{{ node_name }}\",\"Address\":\"{{ dest }}\"}'"
+    # https://www.consul.io/docs/agent/dns.html => "Node Lookups"
+    query: "{{ node_name }}.node.{{ domain }}"
+  when: use_consul|bool
+
+- set_fact:
+    # https://github.com/skynetservices/skydns#service-announcements
+    registration_command: "curl -XPUT 'http://{{ host }}:{{ etcd_port }}/v2/keys/skydns/{{ '/'.join( src.split('.')[::-1] ) }}' \
+                           -d value='{\"host\":\"{{ dest }}\",\"port\":{{ port | default(0) }}}'"
+    query: "{{ src }}"
+  when: not ( use_consul|bool )
+
 # https://github.com/ansible/ansible-modules-core/issues/265
-- set_fact:
-    registration_url: "http://{{ etcd_host }}:{{ etcd_port }}/v2/keys/skydns/{{ '/'.join( src.split('.')[::-1] ) }}"
-- set_fact:
-    registration_command: "curl -XPUT '{{ registration_url }}' -d value='{\"host\":\"{{ dest }}\",\"port\":{{ port | default(0) }}}'"
-
 - include: "{{ common.utils.run }}"
   vars:
     title: registration '{{ src }}' => '{{ dest }}'
     commands:
       - { run:    "{{ registration_command }}" }
-      - { run:    "dig '@{{ etcd_host }}' '{{ src }}' {{ registration_type }}",
-          expect: '^{{ src }}\.\s+\d+\s+IN\s+{{ registration_type }}\s+{{ dest }}\.?$' }
-      - { run:    "host -t {{ registration_type }} {{ src }} {{ etcd_host }}",
-          expect: '^{{ src }} (has address|is an alias for) {{ dest }}\.?$' }
+      - { run:    "dig '@{{ host }}' '{{ query }}' {{ registration_type }}",
+          expect: '^{{ query }}\.\s+\d+\s+IN\s+{{ registration_type }}\s+{{ dest }}\.?$' }
+      - { run:    "host -t {{ registration_type }} '{{ query }}' '{{ host }}'",
+          expect: '^{{ query }} (has address|is an alias for) {{ dest }}\.?$' }

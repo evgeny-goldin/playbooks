@@ -12,6 +12,5 @@
 
   roles:
     - { role: run-before, period: daily }
-    - { role: consul,     consul_role: server }
-    - { role: helios,     helios_role: master }
+    - { role: helios,     helios_role: master, use_consul: true }
     - run-after
