@@ -9,20 +9,26 @@
 - include: "{{ common.utils.include }}"
   vars:
     roles: [ zookeeper, etcd ]
+  when: helios_master is defined # When helios_role is "cli" - 'helios_master' is undefined
 
 - name: Calculating Helios version
   set_fact:
     helios_version:     "{{ helios.version     | calculate( helios.latest ) }}"
+
+- set_fact:
     helios_master_port: "{{ helios_master_port | default( helios.master.port ) }}"
     zookeeper_port:     "{{ zookeeper_port     | default( zookeeper.port ) }}"
     etcd_port:          "{{ etcd_port          | default( etcd.port ) }}"
+  when: helios_master is defined
+
 - set_fact:
     helios_command:     "helios -z 'http://{{ helios_master }}:{{ helios_master_port }}'"
+  when: helios_master is defined
 
-- debug: msg="ansible_hostname = '{{ ansible_hostname }}'"
-- debug: msg="helios_master = '{{ helios_master }}'"
-- debug: msg="domain = '{{ domain }}'"
-- debug: msg="helios_command = '{{ helios_command }}'"
+- debug: var=ansible_hostname
+- debug: var=helios_master
+- debug: var=domain
+- debug: var=helios_command
 
 - include: "{{ common.utils.download }}"
   vars:

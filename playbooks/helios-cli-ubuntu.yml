@@ -12,5 +12,5 @@
 
   roles:
     - { role: run-before, period: daily }
-    - { role: helios, helios_role: cli  }
+    - { role: helios, helios_role: cli, use_consul: false  }
     - run-after

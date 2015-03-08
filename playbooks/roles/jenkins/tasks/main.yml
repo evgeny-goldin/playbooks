@@ -29,7 +29,7 @@
 - name: Generating Jenkins global configs
   template:
     src:   "{{ item }}"
-    dest:  "{{ jenkins.home }}"
+    dest:  "{{ jenkins.home }}/{{ item }}"
     owner: "{{ jenkins.user }}"
     group: "{{ jenkins.user }}"
     mode:  "{{ common.mode.file }}"
