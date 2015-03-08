@@ -42,7 +42,7 @@
       - { run:    '{{ helios_command }} status --host "{{ agent }}"',
           expect: [ '{{ helios.docker.nginx.job }}', '{{ agent }}.    START    RUNNING' ]}
       - { run:    docker ps,
-          expect: [ 'nginx', 'seconds ago', ' Up ', '443/tcp, 0.0.0.0:{{ helios.docker.nginx.port }}->80/tcp' ]}
+          expect: [ 'nginx', 'seconds ago', ' Up ', '443/tcp, {{ common.net.any_ip }}:{{ helios.docker.nginx.port }}->80/tcp' ]}
       - { run:    "dig '@{{ master }}' 'nginx.http.{{ domain }}' SRV",
           expect: '^nginx.http.{{ domain }}\.\s+\d+\s+IN\s+SRV\s+\d+\s+\d+\s+{{ helios.docker.nginx.port }}\s+{{ agent }}.$' }
       - { run:    "host -t SRV 'nginx.http.{{ domain }}' '{{ master }}'",

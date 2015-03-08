@@ -6,12 +6,12 @@
     is_consul_client: "{{ consul_role == 'client' }}"
 
 - set_fact:
-    consul_command: "consul agent -server -bind=0.0.0.0 -bootstrap-expect 1 -data-dir '{{ consul.data_dir }}'"
+    consul_command: "consul agent -server -bind={{ common.net.any_ip }} -client={{ common.net.any_ip }} -bootstrap-expect 1 -data-dir '{{ consul.data_dir }}'"
     consul_verify:  "{{ consul.verify.server }}"
   when: is_consul_server|bool
 
 - set_fact:
-    consul_command: "consul agent -bind=0.0.0.0 -data-dir '{{ consul.data_dir }}'"
+    consul_command: "consul agent -bind={{ common.net.any_ip }} -data-dir '{{ consul.data_dir }}'"
     consul_verify:  "{{ consul.verify.client }}"
   when: is_consul_client|bool
 
@@ -36,7 +36,7 @@
     port:    "{{ consul.ports.http }}"
     tests_after:
       - { run:    consul members,
-          expect: [ Node, Address, Status, Type, Build, Protocol, alive, server|client, "{{ consul_version }}" ] }
+          expect: [ Node, Address, Status, Type, Build, Protocol, 'alive\s+(server|client)\s+{{ consul_version }}' ] }
       - { run:    consul info,
           expect: [ 'agent:', 'build:', 'consul:', 'runtime:', 'serf_lan:' ] }
 

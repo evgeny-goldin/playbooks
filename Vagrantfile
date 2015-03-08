@@ -14,11 +14,9 @@ HELIOS_MASTER_PORT = 5801
 WEB_PORT           = 8080
 VERBOSE            = '' # Ansible verbosity level: '', 'v', 'vv', 'vvv', 'vvvv'
 REPO_IMPORT        = 'https://s3-eu-west-1.amazonaws.com/evgenyg-ansible/repo-import.zip'
-HELIOS_PROPERTIES  = { helios_master:      "helios-master.#{ VAGRANT_DOMAIN }",
-                       helios_master_port: HELIOS_MASTER_PORT,
-                       zookeeper_port:     ZOOKEEPER_PORT,
-                       etcd_port:          ETCD_PORT,
-                       domain:             VAGRANT_DOMAIN }
+HELIOS_PROPERTIES  = { helios_master: "helios-master.#{ VAGRANT_DOMAIN }",
+                       domain:        VAGRANT_DOMAIN,
+                       use_consul:    false }
 HELIOS_PORTS       = [ DNS_PORT, ZOOKEEPER_PORT, ETCD_PORT, HELIOS_MASTER_PORT ]
 
 VB_BOXES = {
