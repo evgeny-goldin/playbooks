@@ -1,19 +1,19 @@
 ---
 - name: Calculating Consul version
   set_fact:
-    consul_version: "{{ consul.version | calculate( consul.latest ) }}"
-    consul_server:  "{{ consul_role == 'server' }}"
-    consul_client:  "{{ consul_role == 'client' }}"
+    consul_version:   "{{ consul.version | calculate( consul.latest ) }}"
+    is_consul_server: "{{ consul_role == 'server' }}"
+    is_consul_client: "{{ consul_role == 'client' }}"
 
 - set_fact:
     consul_command: "consul agent -server -bind=0.0.0.0 -bootstrap-expect 1 -data-dir '{{ consul.data_dir }}'"
     consul_verify:  "{{ consul.verify.server }}"
-  when: consul_server|bool
+  when: is_consul_server|bool
 
 - set_fact:
     consul_command: "consul agent -bind=0.0.0.0 -data-dir '{{ consul.data_dir }}'"
     consul_verify:  "{{ consul.verify.client }}"
-  when: consul_client|bool
+  when: is_consul_client|bool
 
 # https://www.consul.io/intro/getting-started/agent.html
 # https://www.consul.io/intro/getting-started/join.html
@@ -46,13 +46,16 @@
     commands:
       - { run:    'dig @{{ common.net.localhost }} -p {{ consul.ports.dns }}',
           expect: ';; SERVER: {{ common.net.local_ip }}#{{ consul.ports.dns }}({{ common.net.local_ip }})' }
-  when: consul_server|bool
+  when: is_consul_server|bool
 
 - include: "{{ common.utils.run }}"
   vars:
     title: Consul client
     env:   "{{ consul_env }}"
     commands:
-      # - { run: "consul join '{{ consul_server }}'", expect: Successfully joined cluster }
-      # - { run: "consul members", expect: Successfully joined cluster }
-  when: consul_client|bool
+      - { run:    "consul join '{{ consul_server | default( helios_master ) }}'",
+          expect: Successfully joined cluster by contacting 1 nodes. }
+      - { run:    "consul members",
+          expect: [ '{{ ansible_hostname }}\s+.+alive\s+client\s+{{ consul_version }}',
+                    'alive\s+server\s+{{ consul_version }}' ] }
+  when: is_consul_client|bool
