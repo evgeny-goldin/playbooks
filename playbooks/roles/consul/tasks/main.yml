@@ -1,19 +1,22 @@
 ---
+- debug: msg="consul_role = '{{ consul_role }}'"
+
 - name: Calculating Consul version
   set_fact:
     consul_version:   "{{ consul.version | calculate( consul.latest ) }}"
     is_consul_server: "{{ consul_role == 'server' }}"
     is_consul_client: "{{ consul_role == 'client' }}"
 
-- set_fact:
-    consul_command: "consul agent -server -bind={{ common.net.any_ip }} -client={{ common.net.any_ip }} -bootstrap-expect 1 -data-dir '{{ consul.data_dir }}'"
-    consul_verify:  "{{ consul.verify.server }}"
-  when: is_consul_server|bool
+- set_fact: consul_command="consul agent -server -bind={{ common.net.any_ip }} -client={{ common.net.any_ip }} -bootstrap-expect 1 -data-dir '{{ consul.data_dir }}'"
+  when:     is_consul_server|bool
 
-- set_fact:
-    consul_command: "consul agent -bind={{ common.net.any_ip }} -data-dir '{{ consul.data_dir }}'"
-    consul_verify:  "{{ consul.verify.client }}"
-  when: is_consul_client|bool
+- set_fact: consul_command="consul agent -bind={{ common.net.any_ip }} -data-dir '{{ consul.data_dir }}'"
+  when:     is_consul_client|bool
+
+- debug: var=is_consul_server
+- debug: var=is_consul_client
+- debug: msg="consul_server = {{ consul_server }}"
+- debug: msg="consul_command = {{ consul_command }}"
 
 # https://www.consul.io/intro/getting-started/agent.html
 # https://www.consul.io/intro/getting-started/join.html
@@ -32,7 +35,7 @@
       - { run: consul,           expect: [ Available commands are, agent, keygen ]}
       - { run: consul --help,    expect: [ Available commands are, agent, keygen ]}
     command: "{{ consul_command }}"
-    verify:  "{{ consul_verify }}"
+    verify:  "{{ consul.verify }}"
     port:    "{{ consul.ports.http }}"
     tests_after:
       - { run:    consul members,
@@ -53,9 +56,11 @@
     title: Consul client
     env:   "{{ consul_env }}"
     commands:
-      - { run:    "consul join '{{ consul_server | default( helios_master ) }}'",
+      - { run:    'dig @{{ consul_server }} -p {{ consul.ports.dns }}',
+          expect: ';; SERVER: {{ consul_server }}#{{ consul.ports.dns }}({{ consul_server }})' }
+      - { run:    "consul join '{{ consul_server }}'",
           expect: Successfully joined cluster by contacting 1 nodes. }
       - { run:    "consul members",
-          expect: [ '{{ ansible_hostname }}\s+.+alive\s+client\s+{{ consul_version }}',
-                    'alive\s+server\s+{{ consul_version }}' ] }
+          expect: [ '^{{ ansible_hostname }}\s+.+:{{ consul.ports.gossip }}\s+alive\s+client\s+{{ consul_version }}\s+\d+$',
+                    '{{ consul_server }}:{{ consul.ports.gossip }}\s+alive\s+server\s+{{ consul_version }}' ] }
   when: is_consul_client|bool

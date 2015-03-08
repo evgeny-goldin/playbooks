@@ -2,8 +2,9 @@
 consul: {
   version: latest, # 0.5.0, latest - https://www.consul.io/downloads.html
   ports: {
-    http: 8500,
-    dns:  8600
+    http:   8500,
+    dns:    8600,
+    gossip: 8301
   },
   latest: {
     command: "curl -Ls 'https://www.consul.io/downloads.html' | grep '{{ common.urls.bintray }}/mitchellh/consul/' | grep 'linux_amd64' | cut -d'/' -f6 | cut -d'_' -f1",
@@ -13,18 +14,11 @@ consul: {
   archive:  /opt/consul-<version>.zip,
   home:     /opt/consul,
   data_dir: /opt/consul/data,
-  verify: {
-    server: [
-      { path: /,                   content: Consul Agent },
-      { path: /v1/catalog/nodes,   content: [ "Node", "Address" ]},
-      { path: /v1/catalog/service, content: Missing service name, status: 400 }
-    ],
-    client: [
-      { path: /,                   content: Consul Agent },
-      { path: /v1/catalog/nodes,   content: No known Consul servers, status: 500 },
-      { path: /v1/catalog/service, content: Missing service name, status: 400 }
-    ]
-  },
+  verify: [
+    { path: /,                          content: Consul Agent },
+    { path: /v1/agent/service/register, content: Request decode failed, status: 400 },
+    { path: /v1/catalog/service,        content: Missing service name,  status: 400 }
+  ]
 }
 
 consul_env: {
