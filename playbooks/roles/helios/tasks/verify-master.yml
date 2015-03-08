@@ -17,9 +17,9 @@
     title: "'_helios._http.{{ domain }}' SRV test"
     commands:
       - { run:    "dig '@{{ master }}' '{{ helios.srv_prefix }}.{{ domain }}' SRV",
-          expect: '^{{ helios.srv_prefix }}\.{{ domain }}\.\s+\d+\s+IN\s+SRV\s+\d+\s+\d+\s+{{ helios_master_port }}\s+{{ helios_master }}\.$' }
+          expect: '^{{ helios.srv_prefix }}\.{{ domain }}\.\s+\d+\s+IN\s+SRV\s+\d+\s+\d+\s+{{ helios_master_port }}\s+.+\.{{ domain }}\.$' }
       - { run:    "host -t SRV '{{ helios.srv_prefix }}.{{ domain }}' '{{ master }}'",
-          expect: '^{{ helios.srv_prefix }}.{{ domain }} has SRV record \d+ \d+ {{ helios_master_port }} {{ helios_master }}.$' }
+          expect: '^{{ helios.srv_prefix }}.{{ domain }} has SRV record \d+ \d+ {{ helios_master_port }} .+\.{{ domain }}.$' }
 
 - include: "{{ common.utils.verify }}"
   vars:
