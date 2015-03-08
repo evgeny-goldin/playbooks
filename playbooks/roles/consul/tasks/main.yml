@@ -1,5 +1,7 @@
 ---
 - debug: msg="consul_role = '{{ consul_role }}'"
+- debug: msg="domain = '{{ domain }}'"
+- debug: msg="consul_server = {{ consul_server }}"
 
 - name: Calculating Consul version
   set_fact:
@@ -7,15 +9,14 @@
     is_consul_server: "{{ consul_role == 'server' }}"
     is_consul_client: "{{ consul_role == 'client' }}"
 
-- set_fact: consul_command="consul agent -server -bind={{ common.net.any_ip }} -client={{ common.net.any_ip }} -bootstrap-expect 1 -data-dir '{{ consul.data_dir }}'"
+- set_fact: consul_command="consul agent -server -config-file='{{ consul.config }}' -bootstrap-expect 1"
   when:     is_consul_server|bool
 
-- set_fact: consul_command="consul agent -bind={{ common.net.any_ip }} -data-dir '{{ consul.data_dir }}'"
+- set_fact: consul_command="consul agent -config-file='{{ consul.config }}'"
   when:     is_consul_client|bool
 
 - debug: var=is_consul_server
 - debug: var=is_consul_client
-- debug: msg="consul_server = {{ consul_server }}"
 - debug: msg="consul_command = {{ consul_command }}"
 
 # https://www.consul.io/intro/getting-started/agent.html
@@ -29,6 +30,8 @@
     archive: "{{ consul.archive | tokens({ 'version': consul_version }) }}"
     home:    "{{ consul.home }}"
     env:     "{{ consul_env }}"
+    configs:
+      - { from: config.json, to: "{{ consul.config }}" }
     tests:
       - { run: consul --version, expect: 'Consul v{{ consul_version }}' }
       - { run: consul version,   expect: 'Consul v{{ consul_version }}' }
@@ -47,8 +50,10 @@
   vars:
     title: Consul server
     commands:
-      - { run:    'dig @{{ common.net.localhost }} -p {{ consul.ports.dns }}',
-          expect: ';; SERVER: {{ common.net.local_ip }}#{{ consul.ports.dns }}({{ common.net.local_ip }})' }
+      - { run:    'dig @{{ common.net.localhost }}',
+          expect: ';; SERVER: {{ common.net.local_ip }}#{{ common.net.ports.dns }}({{ common.net.local_ip }})' }
+      - { run:    'dig @{{ consul_server }}',
+          expect: ';; SERVER: {{ consul_server }}#{{ common.net.ports.dns }}({{ consul_server }})' }
   when: is_consul_server|bool
 
 - include: "{{ common.utils.run }}"
@@ -56,8 +61,8 @@
     title: Consul client
     env:   "{{ consul_env }}"
     commands:
-      - { run:    'dig @{{ consul_server }} -p {{ consul.ports.dns }}',
-          expect: ';; SERVER: {{ consul_server }}#{{ consul.ports.dns }}({{ consul_server }})' }
+      - { run:    'dig @{{ consul_server }}',
+          expect: ';; SERVER: {{ consul_server }}#{{ common.net.ports.dns }}({{ consul_server }})' }
       - { run:    "consul join '{{ consul_server }}'",
           expect: Successfully joined cluster by contacting 1 nodes. }
       - { run:    "consul members",

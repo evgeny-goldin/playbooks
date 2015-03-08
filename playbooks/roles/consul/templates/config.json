@@ -1,0 +1,14 @@
+{
+  "data_dir":  "{{ consul.data_dir }}",
+  "log_level": "{{ consul.log_level }}",
+  "domain":    "{{ domain }}",
+  "ports": {
+    "dns": {{ common.net.ports.dns }}
+  },
+  "recursors": [ "{{ '","'.join( common.net.public_dns.split( ',' )) }}" ],
+  "addresses": {
+    "dns":  "{{ common.net.any_ip }}",
+    "http": "{{ common.net.any_ip }}",
+    "rpc":  "{{ common.net.any_ip }}"
+  }
+}

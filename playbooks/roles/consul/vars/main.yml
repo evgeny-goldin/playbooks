@@ -3,7 +3,6 @@ consul: {
   version: latest, # 0.5.0, latest - https://www.consul.io/downloads.html
   ports: {
     http:   8500,
-    dns:    8600,
     gossip: 8301
   },
   latest: {
@@ -14,6 +13,8 @@ consul: {
   archive:  /opt/consul-<version>.zip,
   home:     /opt/consul,
   data_dir: /opt/consul/data,
+  config:   /opt/consul/config.json,
+  log_level: INFO,
   verify: [
     { path: /,                          content: Consul Agent },
     { path: /v1/agent/service/register, content: Request decode failed, status: 400 },
