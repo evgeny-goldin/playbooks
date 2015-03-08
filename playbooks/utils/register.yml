@@ -1,7 +1,8 @@
 ---
-# -----------------------------------------------------------------
-#   Called by other roles to register a host with SkyDNS or Consul
-# -----------------------------------------------------------------
+# ---------------------------------------------------------------
+#   DNS-registers {{ src }} as {{ dest }} with SkyDNS or Consul
+# ---------------------------------------------------------------
+
 # Registration type is CNAME if {{ dest }} contains letters, A otherwise (IP address)
 - set_fact: registration_type=A
 - set_fact: registration_type=CNAME
@@ -19,19 +20,19 @@
   when:     use_consul|bool
 
 - set_fact:
+    # https://github.com/skynetservices/skydns#service-announcements
+    registration_command: "curl -XPUT 'http://{{ host }}:{{ etcd_port }}/v2/keys/skydns/{{ '/'.join( src.split('.')[::-1] ) }}' \
+                           -d value='{\"host\":\"{{ dest }}\",\"port\":{{ port | default(0) }}}'"
+    query: "{{ src }}"
+  when: not ( use_consul|bool )
+
+- set_fact:
     # https://www.consul.io/docs/agent/http/catalog.html#catalog_register
     registration_command: "curl -XPUT 'http://{{ host }}:{{ consul.ports.http }}/v1/catalog/register' \
                            -d '{\"Node\":\"{{ node_name }}\",\"Address\":\"{{ dest }}\"}'"
     # https://www.consul.io/docs/agent/dns.html => "Node Lookups"
     query: "{{ node_name }}.node.{{ domain }}"
   when: use_consul|bool
-
-- set_fact:
-    # https://github.com/skynetservices/skydns#service-announcements
-    registration_command: "curl -XPUT 'http://{{ host }}:{{ etcd_port }}/v2/keys/skydns/{{ '/'.join( src.split('.')[::-1] ) }}' \
-                           -d value='{\"host\":\"{{ dest }}\",\"port\":{{ port | default(0) }}}'"
-    query: "{{ src }}"
-  when: not ( use_consul|bool )
 
 # https://github.com/ansible/ansible-modules-core/issues/265
 - include: "{{ common.utils.run }}"

@@ -27,7 +27,7 @@ script
     echo "++++++++++++++++++++++++++++++++++++++++++++++++++++++++" >> '{{ service_log }}'
     echo "Starting with env variables defined in '{{ env_file }}':" >> '{{ service_log }}'
     echo "--------------------------------------------------------" >> '{{ service_log }}'
-    cat '{{ env_file }}'                                            >> '{{ service_log }}'
+    [ -r '{{ env_file }}' ] && cat '{{ env_file }}'                 >> '{{ service_log }}'
     echo "--------------------------------------------------------" >> '{{ service_log }}'
     {% endif %}
     echo "Current environment:"                                     >> '{{ service_log }}'
@@ -38,5 +38,5 @@ script
     exec {{ ubuntu.bash }} -c "{{ command }}                        >> '{{ service_log }}' 2>&1"
 end script
 
-# prevent respawning more than once every second
-post-stop exec sleep 1
+# prevent respawning more than once every 3 seconds
+post-stop exec sleep 3

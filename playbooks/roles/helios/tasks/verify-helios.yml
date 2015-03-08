@@ -28,7 +28,7 @@
 
 - include: "{{ common.utils.run }}"
   vars:
-    title: Helios agent '{{ agent }}' checks
+    title: Helios agent '{{ agent }}' - Docker
     commands:
       - { run:    '{{ helios_command }} hosts',
           expect: '{{ agent }}.    Up ' }
@@ -43,10 +43,26 @@
           expect: [ '{{ helios.docker.nginx.job }}', '{{ agent }}.    START    RUNNING' ]}
       - { run:    docker ps,
           expect: [ 'nginx', 'seconds ago', ' Up ', '443/tcp, {{ common.net.any_ip }}:{{ helios.docker.nginx.port }}->80/tcp' ]}
-      - { run:    "dig '@{{ master }}' 'nginx.http.{{ domain }}' SRV",
-          expect: '^nginx.http.{{ domain }}\.\s+\d+\s+IN\s+SRV\s+\d+\s+\d+\s+{{ helios.docker.nginx.port }}\s+{{ agent }}.$' }
-      - { run:    "host -t SRV 'nginx.http.{{ domain }}' '{{ master }}'",
-          expect: '^nginx.http.{{ domain }} has SRV record \d+ \d+ {{ helios.docker.nginx.port }} {{ agent }}.$' }
       - { run:    'curl -s http://localhost:{{ helios.docker.nginx.port }}',
           expect: [ 'Welcome to nginx!', 'Thank you for using nginx.' ]}
+  when: agent is defined
+
+- set_fact:
+    nginx_srv_service: "nginx.http.{{ domain }}"
+    nginx_srv_host:    "{{ agent }}"
+  when: agent is defined and ( not ( use_consul|bool ))
+
+- set_fact:
+    nginx_srv_service: "nginx.service.{{ domain }}"
+    nginx_srv_host:    "{{ ansible_hostname }}.node.dc1.{{ domain }}"
+  when: agent is defined and use_consul|bool
+
+- include: "{{ common.utils.run }}"
+  vars:
+    title: Helios agent '{{ agent }}' - SRV
+    commands:
+      - { run:    "dig '@{{ master }}' '{{ nginx_srv_service }}' SRV",
+          expect: '^{{ nginx_srv_service }}\.\s+\d+\s+IN\s+SRV\s+\d+\s+\d+\s+{{ helios.docker.nginx.port }}\s+{{ nginx_srv_host }}.$' }
+      - { run:    "host -t SRV '{{ nginx_srv_service }}' '{{ master }}'",
+          expect: '^{{ nginx_srv_service }} has SRV record \d+ \d+ {{ helios.docker.nginx.port }} {{ nginx_srv_host }}.$' }
   when: agent is defined

@@ -3,7 +3,9 @@
   "log_level": "{{ consul.log_level }}",
   "domain":    "{{ domain }}",
   "ports": {
-    "dns": {{ common.net.ports.dns }}
+    "dns":      {{ common.net.ports.dns }},
+    "http":     {{ consul.ports.http }},
+    "serf_lan": {{ consul.ports.gossip }}
   },
   "recursors": [ "{{ '","'.join( common.net.public_dns.split( ',' )) }}" ],
   "addresses": {

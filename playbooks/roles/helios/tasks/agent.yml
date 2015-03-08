@@ -1,7 +1,21 @@
 ---
+- set_fact: agent_name="{{ ansible_hostname }}.{{ domain }}"
+
 - set_fact:
-    registrar_plugin: "{{ helios.agent.registrar_plugin.archive | tokens( helios.agent.registrar_plugin ) }}"
-    agent_name:       "{{ ansible_hostname }}.{{ domain }}"
+    registrar_plugin_url:      "{{ helios.agent.registrar_plugin.skydns.url     | tokens( helios.agent.registrar_plugin.skydns ) }}"
+    registrar_plugin_archive:  "{{ helios.agent.registrar_plugin.skydns.archive | tokens( helios.agent.registrar_plugin.skydns ) }}"
+    registrar_plugin_endpoint: "http://{{ helios_master }}:{{ etcd_port }}"
+  when: not ( use_consul|bool )
+
+- set_fact:
+    registrar_plugin_url:      "{{ helios.agent.registrar_plugin.consul.url     | tokens( helios.agent.registrar_plugin.consul ) }}"
+    registrar_plugin_archive:  "{{ helios.agent.registrar_plugin.consul.archive | tokens( helios.agent.registrar_plugin.consul ) }}"
+    registrar_plugin_endpoint: "http://{{ common.net.localhost }}:{{ consul.ports.http }}"
+  when: use_consul|bool
+
+- debug: var=registrar_plugin_url
+- debug: var=registrar_plugin_archive
+- debug: var=registrar_plugin_endpoint
 
 - include: verify-master.yml master={{ helios_master }} register_host="{{ agent_name }}"
 - include: verify-helios.yml
@@ -19,8 +33,8 @@
 - include: "{{ common.utils.download }}"
   vars:
     title:   Helios registrar plugin
-    url:     "{{ helios.agent.registrar_plugin.url     | tokens( helios.agent.registrar_plugin ) }}"
-    archive: "{{ registrar_plugin }}"
+    url:     "{{ registrar_plugin_url }}"
+    archive: "{{ registrar_plugin_archive }}"
     configs:
       - { role: helios, from: agent-config,           to: "{{ helios.agent.config }}" }
       - { role: helios, from: agent-config-endpoints, to: "{{ helios.agent.config_endpoints }}" }

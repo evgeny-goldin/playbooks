@@ -81,7 +81,7 @@
   when: configs is defined
 
 - file: path="{{ env_file }}" state=absent
-  when: env_file is defined
+  when: env is defined # DO NOT use 'when: env_file is defined' - it can be defined from previous runs
 
 - name: Generating {{ title }} environment variables file
   lineinfile:
@@ -89,7 +89,7 @@
     create:  yes
     line:    'export {{ item.key }}="{{ item.value }}"'
   with_dict: env | default({})
-  when: env_file is defined
+  when: env is defined # DO NOT use 'when: env_file is defined' - it can be defined from previous runs
 
 - include: "{{ common.utils.run }}"
   vars:
