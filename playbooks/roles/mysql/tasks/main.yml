@@ -1,5 +1,7 @@
 ---
-- include_vars: "{{ playbook_dir }}/roles/mysql/vars/main.yml"
+- include: "{{ common.utils.include }}"
+  vars:
+    role: mysql
 
 - name: Adding MySQL repositories
   apt_repository: repo="{{ item }}" update_cache=yes

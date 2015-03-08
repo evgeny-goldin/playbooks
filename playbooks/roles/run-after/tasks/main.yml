@@ -1,5 +1,7 @@
 ---
-- include_vars: roles/run-before/vars/main.yml
+- include: "{{ common.utils.include }}"
+  vars:
+    role: run-before
 
 - file:
     path:  "{{ periodic_touch_file }}"

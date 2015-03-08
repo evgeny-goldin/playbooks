@@ -1,6 +1,8 @@
 ---
 # When this role is imported - we need to explicitly include our own vars
-- include_vars: "{{ common.vars.tomcat }}"
+- include: "{{ common.utils.include }}"
+  vars:
+    role: tomcat
 
 - name: Calculating Tomcat version
   set_fact:

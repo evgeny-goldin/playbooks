@@ -5,8 +5,9 @@
 - debug: msg="Testing {{ repo_name }} repo => '{{ reports_dir }}' => '{{ reports_archive }}'"
   when:  reports_archive is defined
 
-- include_vars: "{{ playbook_dir }}/roles/artifactory/vars/main.yml"
-- include_vars: "{{ playbook_dir }}/roles/nexus/vars/main.yml"
+- include: "{{ common.utils.include }}"
+  vars:
+    roles: [ artifactory, nexus ]
 
 # http://docs.ansible.com/faq.html#how-do-i-access-a-variable-name-programmatically
 - set_fact:

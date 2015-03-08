@@ -1,0 +1,8 @@
+---
+# ===================================================================================================
+# Includes variables of another role
+# ===================================================================================================
+- include_vars: "{{ playbook_dir }}/roles/{{ item }}/vars/main.yml"
+  with_items:   "{{ roles | default([ role ]) }}"
+
+- debug: msg="Vars of roles {{ roles | default([ role ]) }} included"

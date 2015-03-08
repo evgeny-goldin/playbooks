@@ -36,16 +36,12 @@ common: {
 
   utils: {
     download: "{{ playbook_dir }}/utils/download.yml",
-    service:  "{{ playbook_dir }}/utils/service.yml",
-    verify:   "{{ playbook_dir }}/utils/verify.yml",
     fake:     "{{ playbook_dir }}/utils/fake.yml",
+    include:  "{{ playbook_dir }}/utils/include.yml",
     register: "{{ playbook_dir }}/utils/register.yml",
-    run:      "{{ playbook_dir }}/utils/run.yml"
-  },
-
-  vars: {
-    tomcat:    "{{ playbook_dir }}/roles/tomcat/vars/main.yml",
-    exhibitor: "{{ playbook_dir }}/roles/exhibitor/vars/main.yml"
+    run:      "{{ playbook_dir }}/utils/run.yml",
+    service:  "{{ playbook_dir }}/utils/service.yml",
+    verify:   "{{ playbook_dir }}/utils/verify.yml"
   },
 
   roles: {
