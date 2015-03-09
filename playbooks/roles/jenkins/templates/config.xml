@@ -37,7 +37,6 @@
     <clientID>{{ jenkins_auth.clientID }}</clientID>
     <clientSecret>{{ jenkins_auth.clientSecret }}</clientSecret>
   </securityRealm>
-
   {% endif %}
   <disableRememberMe>false</disableRememberMe>
   <projectNamingStrategy class="jenkins.model.ProjectNamingStrategy$DefaultProjectNamingStrategy"/>
