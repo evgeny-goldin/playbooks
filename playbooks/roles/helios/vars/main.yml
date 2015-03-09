@@ -18,6 +18,10 @@ helios: {
   },
   master: {
     port:   5801,
+    healthcheck: {
+      url:      'http://{{ common.net.localhost }}:5802/healthcheck',
+      response: '{"deadlocks":{"healthy":true},"zookeeper":{"healthy":true}}'
+    },
     config: "{{ ubuntu.etc_default }}/helios-master",
     script: /usr/bin/helios-master
   },
@@ -25,6 +29,10 @@ helios: {
     config:           "{{ ubuntu.etc_default }}/helios-agent",
     config_endpoints: ~/.helios/config,
     state_dir:        /var/lib/helios-agent,
+    healthcheck: {
+      url:      'http://{{ common.net.localhost }}:5804/healthcheck',
+      response: '{"deadlocks":{"healthy":true},"docker":{"healthy":true},"zookeeper":{"healthy":true}}'
+    },
     registrar_plugin: {
       skydns: {
         version: 0.1, # https://github.com/spotify/helios-skydns/releases

@@ -49,6 +49,15 @@
 
 - name:    Starting Helios agent service
   service: name=helios-agent state=started enabled=yes
-
 - pause:   seconds=5
+
+- name: Running Helios agent healthcheck
+  uri:
+    url:            "{{ helios.agent.healthcheck.url }}"
+    return_content: yes
+  register: healthcheck_out
+- debug: var=healthcheck_out.content
+- fail:  msg="Helios agent healthcheck failed [{{ healthcheck_out.content }}] != [{{ helios.agent.healthcheck.response }}]"
+  when:  healthcheck_out.content != helios.agent.healthcheck.response
+
 - include: verify-helios.yml master={{ helios_master }} agent={{ agent_name }}

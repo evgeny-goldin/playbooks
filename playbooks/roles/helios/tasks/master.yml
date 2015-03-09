@@ -17,8 +17,18 @@
 - name:  Updating Helios master script
   shell: sed -i "s|exec java|exec '{{ java_home }}/bin/java'|" '{{ helios.master.script }}'
 
-- name: Starting Helios master service
+- name:    Starting Helios master service
   service: name=helios-master state=started enabled=yes
+- pause:   seconds=5
+
+- name: Running Helios master healthcheck
+  uri:
+    url:            "{{ helios.master.healthcheck.url }}"
+    return_content: yes
+  register: healthcheck_out
+- debug: var=healthcheck_out.content
+- fail:  msg="Helios master healthcheck failed [{{ healthcheck_out.content }}] != [{{ helios.master.healthcheck.response }}]"
+  when:  healthcheck_out.content != helios.master.healthcheck.response
 
 # Registering "_helios._http.domain" record (SkyDNS only)
 # https://github.com/spotify/helios/blob/master/docs/automatic_master_lookup.md
