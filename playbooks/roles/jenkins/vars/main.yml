@@ -10,30 +10,32 @@ jenkins: {
     #   Plugin name: plugin version, * (for latest), version number or plugin's *.hpi URL
     # -------------------------------------------------------------------------------------
     # https://wiki.jenkins-ci.org/display/JENKINS/EnvInject+Plugin
-    envinject:           '*',
-    ivy:                 '*',
+    envinject:            '*',
+    ivy:                  '*',
     # https://wiki.jenkins-ci.org/display/JENKINS/Credentials+Binding+Plugin
-    credentials-binding: '*',
-    plain-credentials:   '*',
-    workflow-step-api:   '*',
-    credentials:         '*',
+    credentials-binding:  '*',
+    plain-credentials:    '*',
+    workflow-step-api:    '*',
+    credentials:          '*',
+    config-file-provider: '*',
+    token-macro:          '*',
     # https://wiki.jenkins-ci.org/display/JENKINS/Rebuild+Plugin
-    rebuild:             '*',
+    rebuild:              '*',
     # https://wiki.jenkins-ci.org/display/JENKINS/S3+Plugin
-    s3:                  '*',
-    copyartifact:        '*',
+    s3:                   '*',
+    copyartifact:         '*',
     # https://wiki.jenkins-ci.org/display/JENKINS/GitHub+Plugin
-    github:              '*',
-    git:                 '*',
-    github-api:          '*',
-    git-client:          '*',
-    multiple-scms:       '*',
-    scm-api:             '*',
-    ssh-agent:           '*',
+    github:               '*',
+    git:                  '*',
+    github-api:           '*',
+    git-client:           '*',
+    multiple-scms:        '*',
+    scm-api:              '*',
+    ssh-agent:            '*',
     # https://wiki.jenkins-ci.org/display/JENKINS/Github+OAuth+Plugin
-    github-oauth:        '*',
+    github-oauth:         '*',
     # https://wiki.jenkins-ci.org/display/JENKINS/Notification+Plugin
-    notification:        '*'
+    notification:         '*'
   }
 }
 
