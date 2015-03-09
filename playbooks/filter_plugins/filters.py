@@ -24,7 +24,7 @@ def contains( llist, element, check_regex = True ):
 
   assert type(llist) is list, \
          "contains(): llist is not a list: {} ({})".format(llist, type(llist))
-  assert type(element) in [list, str, unicode, int, bool], \
+  assert type(element) in [list, str, unicode, int, float, bool], \
          "contains(): element is not a list, str, unicode, int, or bool: {} ({})".format(element, type(element))
 
   # Empty llist and no elements to check

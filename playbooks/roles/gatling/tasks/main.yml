@@ -7,7 +7,7 @@
 - set_fact:
     gatling_simulations: "{{ gatling_home }}/user-files/simulations"
     gatling_config:      "{{ gatling_home }}/conf/gatling.conf"
-    gatling_sh:          "{{ gatling_home }}/bin/gatling.sh" 
+    gatling_sh:          "{{ gatling_home }}/bin/gatling.sh"
 
 - include: "{{ common.utils.download }}"
   vars:
