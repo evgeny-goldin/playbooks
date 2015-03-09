@@ -72,8 +72,11 @@
 - name: Updating sudoers file (if Docker role was activated)
   lineinfile:
     dest:     "{{ ubuntu.sudoers }}"
-    line:     "%{{ jenkins.user }} ALL=(ALL)NOPASSWD:{{ docker.bin }}"
+    line:     "%{{ jenkins.user }} ALL=(ALL)NOPASSWD:{{ item }}"
     validate: 'visudo -cf %s'
     backup:   yes
     insertbefore: '# See sudoers'
+  with_items:
+    - "{{ docker.bin }}"
+    - /usr/sbin/service
   when: ( docker is defined ) and ( docker.bin is defined )
