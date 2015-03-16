@@ -12,6 +12,13 @@ from   ansible import errors
 from   timeit  import default_timer as timer
 
 
+def index( array, elements ):
+  '''Retrieves an array index of one of the elements specified'''
+  for e in elements:
+    if e in array:
+      return array.index(e)
+  raise Exception( "Unable to find any of {} elements in {}".format( elements, array ))
+
 def escape_quotes( s ):
   '''Escapes all signle quotes with "'\''" (bash escape)'''
   return s.replace( "'", r"'\''" )
@@ -134,6 +141,7 @@ class FilterModule( object ):
 
   def filters( self ):
     return {
+      'index'         : index,
       'escape_quotes' : escape_quotes,
       'contains'      : contains,
       're_escape'     : re_escape,

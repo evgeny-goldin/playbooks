@@ -1,0 +1,7 @@
+---
+- name: Setting my ZK ID
+  set_fact:
+    my_id: "{{ zk_instances | index([ ansible_fqdn, facter_ipaddress, ansible_default_ipv4.address ]) }}"
+
+- debug:
+    msg: "ZK ID is {{ my_id }}, Setting up a cluster of {{ zk_instances|length }} ZK instances: {{ zk_instances }}"

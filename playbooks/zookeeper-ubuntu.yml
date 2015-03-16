@@ -1,0 +1,16 @@
+---
+# ZooKeeper playbook for Ubuntu
+# http://zookeeper.apache.org/
+
+- name:  ZooKeeper
+  hosts: all
+  sudo:  yes
+
+  vars_files:
+    - vars/common.yml
+    - vars/{{ ansible_distribution }}.yml
+
+  roles:
+    - { role: run-before, period: daily }
+    - zookeeper
+    - run-after

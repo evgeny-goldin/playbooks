@@ -3,6 +3,17 @@
 
 VAGRANTFILE_API_VERSION = '2'
 
+# Adds N boxes using the base name specified
+def add_boxes( name, number, properties = {} )
+  raise "Number of boxes #{number} is not positive" if number < 1
+  if number == 1
+    VB_BOXES[ name ] = properties
+  else
+    ( 1 .. number ).each{ |j| VB_BOXES[ "#{ name }#{ j }" ] = properties }
+  end
+end
+
+
 CPUS               = 2
 MEMORY             = 1024
 VAGRANT_DOMAIN     = 'vm'
@@ -24,13 +35,8 @@ VB_BOXES = {
   packer:  {},
   mysql:   { vagrant_ports: [ MYSQL_PORT ]},
   jenkins: { vagrant_ports: [ WEB_PORT ]},
-  'helios-master'  => HELIOS_PROPERTIES.merge( vagrant_ports: HELIOS_PORTS ),
-  'helios-agent1'  => HELIOS_PROPERTIES.merge( playbook:      'helios-agent',
-                                               vagrant_ports: [ WEB_PORT ] ),
-  'helios-agent2'  => HELIOS_PROPERTIES.merge( playbook:      'helios-agent',
-                                               vagrant_ports: [ WEB_PORT ] ),
-  helios:             HELIOS_PROPERTIES.merge( vagrant_ports: HELIOS_PORTS,
-                                               helios_master: "helios.#{ VAGRANT_DOMAIN }" ),
+  helios:  HELIOS_PROPERTIES.merge( vagrant_ports: HELIOS_PORTS,
+                                    helios_master: "helios.#{ VAGRANT_DOMAIN }" ),
   repo:          { memory:          2048, # For Artifactory MySQL
                    port:            WEB_PORT,
                    import:          REPO_IMPORT,
@@ -47,6 +53,10 @@ VB_BOXES = {
                    repo_name:       'Artifactory' }
                   #  repo_name:       'Nexus' }
 }
+
+add_boxes( 'zookeeper',     3, zk_instances: (1..3).map{ |j| "zookeeper#{ j }.#{ VAGRANT_DOMAIN }" } )
+add_boxes( 'helios-master', 2, HELIOS_PROPERTIES.merge( vagrant_ports: HELIOS_PORTS ))
+add_boxes( 'helios-agent',  2, HELIOS_PROPERTIES.merge( vagrant_ports: [ WEB_PORT ] ))
 
 Vagrant.require_version '>= 1.7.0'
 Vagrant.configure( VAGRANTFILE_API_VERSION ) do | config |
@@ -92,7 +102,7 @@ Vagrant.configure( VAGRANTFILE_API_VERSION ) do | config |
 
       b.vm.provision :ansible do | ansible |
         ansible.verbose    = VERBOSE if VERBOSE != ''
-        ansible.playbook   = "playbooks/#{ variables[ :playbook ] || "#{ box }" }-ubuntu.yml"
+        ansible.playbook   = "playbooks/#{ variables[ :playbook ] || "#{ box.to_s.gsub( /\d+$/, '' ) }" }-ubuntu.yml"
         ansible.extra_vars = variables.merge({
           # Uncomment and set to true to forcefully update all packages
           # Uncomment and set to false to disable periodic run

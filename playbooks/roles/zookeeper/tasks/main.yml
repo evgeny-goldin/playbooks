@@ -17,9 +17,22 @@
     command: "{{ zookeeper_home }}/bin/zkServer.sh start-foreground"
     port:    "{{ zookeeper_port }}"
 
+- name: Installing Python pip
+  apt:  name=python-pip state=latest force=yes
+
+- name: Installing zk-shell
+  pip:  name=zk-shell state=latest
+
 - include: "{{ common.utils.run }}"
   vars:
-    title: zkCli check
+    title: ZK CLI check
     commands:
       - { run:    "echo 'ls /' | '{{ zookeeper_home }}/bin/zkCli.sh' -server '{{ common.net.localhost }}:{{ zookeeper_port }}'",
           expect: '{{ common.net.localhost }}:{{ zookeeper_port }}(CONNECTED)' }
+      - { run:    "echo 'ls /' | zk-shell '{{ common.net.localhost }}:{{ zookeeper_port }}' --run-from-stdin",
+          expect: zookeeper  }
+      - { run:    "echo 'ls /' | zk-shell '{{ common.net.local_ip }}:{{ zookeeper_port }}' --run-from-stdin",
+          expect: zookeeper  }
+
+- include: cluster.yml
+  when:    zk_instances is defined and zk_instances|length > 1
