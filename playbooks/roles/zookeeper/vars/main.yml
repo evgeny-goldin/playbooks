@@ -1,9 +1,10 @@
 ---
 zookeeper: {
-  version:  3.4.6, # http://apache.mirrors.spacedump.net/zookeeper/
-  port:     2181,
-  url:      'http://apache.mirrors.spacedump.net/zookeeper/zookeeper-<version>/zookeeper-<version>.tar.gz',
-  archive:  /opt/zookeeper-<version>.tar.gz,
-  home:     /opt/zookeeper,
-  data_dir: /var/lib/zookeeper
+  version:    3.4.6, # http://apache.mirrors.spacedump.net/zookeeper/
+  port:       2181,
+  url:        'http://apache.mirrors.spacedump.net/zookeeper/zookeeper-<version>/zookeeper-<version>.tar.gz',
+  archive:    /opt/zookeeper-<version>.tar.gz,
+  home:       /opt/zookeeper,
+  data_dir:   /var/lib/zookeeper,
+  my_id_file: /var/lib/zookeeper/myid
 }

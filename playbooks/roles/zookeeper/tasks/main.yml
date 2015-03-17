@@ -1,7 +1,11 @@
 ---
 - set_fact:
-    zookeeper_home: "{{ zookeeper.home }}/zookeeper-{{ zookeeper.version }}"
-    zookeeper_port: "{{ zookeeper_port | default( zookeeper.port ) }}"
+    zookeeper_home:   "{{ zookeeper.home }}/zookeeper-{{ zookeeper.version }}"
+- set_fact:
+    zookeeper_port:   "{{ zookeeper_port | default( zookeeper.port ) }}"
+    zookeeper_config: "{{ zookeeper_home }}/conf/zoo.cfg"
+
+- file: path="{{ zookeeper.data_dir }}" state=directory
 
 - include: "{{ common.utils.service }}"
   vars:
@@ -11,7 +15,7 @@
     archive: "{{ zookeeper.archive | tokens( zookeeper ) }}"
     home:    "{{ zookeeper.home }}"
     configs:
-      - { from: zoo.cfg, to: "{{ zookeeper_home }}/conf/zoo.cfg" }
+      - { from: zoo.cfg, to: "{{ zookeeper_config }}" }
     env:
       PATH:  "$PATH:{{ zookeeper_home }}/bin"
     command: "{{ zookeeper_home }}/bin/zkServer.sh start-foreground"
