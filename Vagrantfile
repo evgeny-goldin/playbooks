@@ -3,14 +3,22 @@
 
 VAGRANTFILE_API_VERSION = '2'
 
+def add_ip_boxes( name, number, base_ip, ips_property = nil, properties = {} )
+  number > 1 or raise "Number of #{name} boxes #{number} is not positive"
+  # List of IP numbers for all boxes: 192.168.50.40, 192.168.50.41, 192.168.50.42, etc.
+  ips = ( 0 ... number ).map{ |j| base_ip.gsub( /(\d+)$/ ){ | match | ( match.to_i + j ).to_s }}
+
+  ( 0 ... number ).each{ |j|
+    box_properties = properties.merge( static_ip: ips[ j ] )
+    box_properties.merge!( ips_property => ips ) if ips_property
+    VB_BOXES[ "#{ name }#{ j + 1 }" ] = box_properties
+  }
+end
+
 # Adds N boxes using the base name specified
 def add_boxes( name, number, properties = {} )
-  raise "Number of boxes #{number} is not positive" if number < 1
-  if number == 1
-    VB_BOXES[ name ] = properties
-  else
-    ( 1 .. number ).each{ |j| VB_BOXES[ "#{ name }#{ j }" ] = properties }
-  end
+  number > 1 or raise "Number of #{name} boxes #{number} is not positive"
+  ( 1 .. number ).each{ |j| VB_BOXES[ "#{ name }#{ j }" ] = properties }
 end
 
 
@@ -54,7 +62,7 @@ VB_BOXES = {
                   #  repo_name:       'Nexus' }
 }
 
-add_boxes( 'zookeeper',     3, zk_instances: (1..3).map{ |j| "zookeeper#{ j }.#{ VAGRANT_DOMAIN }" } )
+add_ip_boxes( 'zookeeper',  3, '192.168.50.40', 'zk_instances' )
 add_boxes( 'helios-master', 2, HELIOS_PROPERTIES.merge( vagrant_ports: HELIOS_PORTS ))
 add_boxes( 'helios-agent',  2, HELIOS_PROPERTIES.merge( vagrant_ports: [ WEB_PORT ] ))
 
@@ -79,6 +87,8 @@ Vagrant.configure( VAGRANTFILE_API_VERSION ) do | config |
                                        # 2) Landrush needs a proper hostname ending with config.landrush.tld
       b.vm.synced_folder 'playbooks', '/playbooks'
 
+      b.vm.network 'private_network', ip: variables[ :static_ip ] if variables[ :static_ip ]
+
       ( variables[ :vagrant_ports ] || [] ).each { | port |
         # https://docs.vagrantup.com/v2/networking/forwarded_ports.html
         b.vm.network 'forwarded_port', guest: port, host: port, auto_correct: true, protocol: 'tcp'
@@ -101,9 +111,12 @@ Vagrant.configure( VAGRANTFILE_API_VERSION ) do | config |
       end
 
       b.vm.provision :ansible do | ansible |
-        ansible.verbose    = VERBOSE if VERBOSE != ''
-        ansible.playbook   = "playbooks/#{ variables[ :playbook ] || "#{ box.to_s.gsub( /\d+$/, '' ) }" }-ubuntu.yml"
-        ansible.extra_vars = variables.merge({
+        ansible.verbose  = VERBOSE if VERBOSE != ''
+        ansible.playbook = "playbooks/#{ variables[ :playbook ] || "#{ box.to_s.gsub( /\d+$/, '' ) }" }-ubuntu.yml"
+
+        box_variables = Hash[ variables ]
+        [ :vagrant_ports, :vagrant_ports_udp, :static_ip, :memory, :cpus, :playbook ].each{ |v| box_variables.delete(v) }
+        ansible.extra_vars = box_variables.merge({
           # Uncomment and set to true to forcefully update all packages
           # Uncomment and set to false to disable periodic run
           # Otherwise (when commented out) packages are updated automatically once a day
