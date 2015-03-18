@@ -19,11 +19,15 @@
     env:
       PATH:  "$PATH:{{ zookeeper_home }}/bin"
     command: "{{ zookeeper_home }}/bin/zkServer.sh start-foreground"
-    start_service: "{{ zk_instances is undefined }}"
+    start_service: false
     port:    "{{ zookeeper_port }}"
 
 - include: cluster.yml
   when:    zk_instances is defined
+
+- name:    Restarting ZooKeeper service
+  service: name=zookeeper state=restarted enabled=yes
+- pause:   seconds=3
 
 - name: Installing Python pip
   apt:  name=python-pip state=latest force=yes
@@ -33,7 +37,7 @@
 
 - include: "{{ common.utils.run }}"
   vars:
-    title: ZK CLI check
+    title: ZK CLI check (single)
     commands:
       - { run:    "echo 'ls /' | '{{ zookeeper_home }}/bin/zkCli.sh' -server '{{ common.net.localhost }}:{{ zookeeper_port }}'",
           expect: '{{ common.net.localhost }}:{{ zookeeper_port }}(CONNECTED)' }
@@ -42,3 +46,11 @@
       - { run:    "echo 'ls /' | zk-shell '{{ common.net.local_ip }}:{{ zookeeper_port }}' --run-from-stdin",
           expect: zookeeper  }
   when: zk_instances is undefined
+
+# - include: "{{ common.utils.run }}"
+#   vars:
+#     title: ZK CLI check (cluster)
+#     commands:
+#       - { run:    "echo 'ls /' | zk-shell {{ zk_instances | transform( 'lambda host: host + \":{{ zookeeper_port }}\"' ) | join( ',' ) }} --run-from-stdin",
+#           expect: zookeeper  }
+#   when: zk_instances is defined
