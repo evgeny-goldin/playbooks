@@ -4,7 +4,7 @@
 
 - name: Setting my ZK ID
   set_fact:
-    my_id: "{{ zk_instances | index([ ansible_fqdn, facter_ipaddress, ansible_default_ipv4.address ]) }}"
+    my_id: "{{ zk_instances | index( [ ansible_fqdn, ansible_hostname ] + ansible_all_ipv4_addresses + ansible_all_ipv6_addresses ) + 1 }}"
 
 - debug:
     msg: "ZK ID is {{ my_id }}, Setting up a cluster of {{ zk_instances|length }} ZK instances: {{ zk_instances }}"
@@ -15,5 +15,9 @@
 - name: Updating ZK config
   lineinfile:
     dest: "{{ zookeeper_config }}"
-    line: "server.{{ item.0 }}={{ item.1 }}:2888:3888"
+    line: "server.{{ item.0|int + 1 }}={{ item.1 }}:2888:3888"
   with_indexed_items: zk_instances
+
+- name:    Restarting ZooKeeper service
+  service: name=zookeeper state=restarted enabled=yes
+- pause:   seconds=3

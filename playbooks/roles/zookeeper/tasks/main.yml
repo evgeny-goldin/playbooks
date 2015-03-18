@@ -19,7 +19,11 @@
     env:
       PATH:  "$PATH:{{ zookeeper_home }}/bin"
     command: "{{ zookeeper_home }}/bin/zkServer.sh start-foreground"
+    start_service: "{{ zk_instances is undefined }}"
     port:    "{{ zookeeper_port }}"
+
+- include: cluster.yml
+  when:    zk_instances is defined
 
 - name: Installing Python pip
   apt:  name=python-pip state=latest force=yes
@@ -37,6 +41,4 @@
           expect: zookeeper  }
       - { run:    "echo 'ls /' | zk-shell '{{ common.net.local_ip }}:{{ zookeeper_port }}' --run-from-stdin",
           expect: zookeeper  }
-
-- include: cluster.yml
-  when:    zk_instances is defined and zk_instances|length > 1
+  when: zk_instances is undefined
