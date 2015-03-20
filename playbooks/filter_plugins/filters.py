@@ -91,6 +91,10 @@ def transform( values, mapper_string ):
     # print( "eval({})".format( repr( mapper_string )))
     return [ eval( mapper_string )( v ) for v in values ]
 
+def transform2( values, mapper_string, arg ):
+    '''Transforms array of values using mapper function specified as a string'''
+    return [ eval( mapper_string )( v, arg ) for v in values ]
+
 def explain( seconds ):
   '''Converts seconds to hh:mm:ss format'''
   seconds = int( seconds )
@@ -153,6 +157,7 @@ class FilterModule( object ):
       'merge'         : merge,
       'strftime'      : strftime,
       'transform'     : transform,
+      'transform2'    : transform2,
       'explain'       : explain,
       'calculate'     : calculate,
     }

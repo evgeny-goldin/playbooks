@@ -12,6 +12,7 @@ def add_ip_boxes( name, number, base_ip, ips_property = nil, properties = {} )
     box_properties = properties.merge( static_ip: ips[ j ] )
     box_properties.merge!( ips_property => ips ) if ips_property
     VB_BOXES[ "#{ name }#{ j + 1 }" ] = box_properties
+    # puts "'#{ name }#{ j + 1 }' IP = #{ ips[ j ] }"
   }
 end
 
@@ -62,7 +63,7 @@ VB_BOXES = {
                   #  repo_name:       'Nexus' }
 }
 
-add_ip_boxes( 'zookeeper',  3, '192.168.50.40', 'zk_instances' )
+add_ip_boxes( 'zookeeper',  3, '192.168.50.40', 'zk_instances', { zk_test_connect: false })
 add_boxes( 'helios-master', 2, HELIOS_PROPERTIES.merge( vagrant_ports: HELIOS_PORTS ))
 add_boxes( 'helios-agent',  2, HELIOS_PROPERTIES.merge( vagrant_ports: [ WEB_PORT ] ))
 

@@ -47,10 +47,11 @@
           expect: zookeeper  }
   when: zk_instances is undefined
 
-# - include: "{{ common.utils.run }}"
-#   vars:
-#     title: ZK CLI check (cluster)
-#     commands:
-#       - { run:    "echo 'ls /' | zk-shell {{ zk_instances | transform( 'lambda host: host + \":{{ zookeeper_port }}\"' ) | join( ',' ) }} --run-from-stdin",
-#           expect: zookeeper  }
-#   when: zk_instances is defined
+- include: "{{ common.utils.run }}"
+  vars:
+    title: ZK CLI check (cluster)
+    commands:
+      - { run:     "echo 'ls /' | zk-shell {{ zk_instances | transform2( 'lambda host, port: host + \":\" + port', zookeeper_port ) | join( ',' ) }} --run-from-stdin",
+          expect:  zookeeper,
+          retries: 30 }
+  when: ( zk_instances is defined ) and ( zk_test_connect | default(True) | bool )
