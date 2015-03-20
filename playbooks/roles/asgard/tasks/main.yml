@@ -69,7 +69,7 @@
   get_url:
     url:  "{{ asgard.jar_url }}"
     dest: "{{ asgard.jar }}"
-  when: ( not ( build is defined ))
+  when: build is undefined
 
 - name: Checking Asgard java
   command: "{{ asgard.java }} -version"
