@@ -3,12 +3,15 @@
 # https://zookeeper.apache.org/doc/r3.4.6/zookeeperAdmin.html#sc_configuration
 
 - set_fact:
-    my_id:            "{{ zk_instances | index( [ ansible_fqdn, ansible_hostname ] + ansible_all_ipv4_addresses + ansible_all_ipv6_addresses ) + 1 }}"
-    zk_all_instances: "{{ zk_instances | transform2( 'lambda host, port: host + \":\" + port', zookeeper_port ) | join( ',' ) }}"
-    all_ids:          "{{ range( 1, zk_instances|length + 1 ) | join(' ') }}" # '1 2 3' for 3 ZK instances
+    # Each instance gets its own id: "1", "2", "3", etc.
+    my_id:      "{{ zk_instances | index( [ ansible_fqdn, ansible_hostname ] + ansible_all_ipv4_addresses + ansible_all_ipv6_addresses ) + 1 }}"
+    # A string of all ids, used when testing cluster connectivity: "1 2 3 .."
+    all_ids:    "{{ range( 1, zk_instances|length + 1 ) | join(' ') }}"
+    #  A string of all instances for ZK client to connect to "192.168.50.40:2181,192.168.50.41:2181,192.168.50.42:2181, .."
+    zk_connect: "{{ zk_instances | transform2( 'lambda host, port: host + \":\" + port', zookeeper_port ) | join( ',' ) }}"
 
 - debug:
-    msg: "My ZK id is '{{ my_id }}' (of '{{ all_ids }}'), configuring cluster of {{ zk_instances|length }} ZK instances: {{ zk_all_instances }}"
+    msg: "ZK id is '{{ my_id }}' (of '{{ all_ids }}'), configuring cluster of {{ zk_instances|length }} ZK instances: {{ zk_connect }}"
 
 - file:       dest="{{ zookeeper.my_id_file }}" state=absent
 - lineinfile: dest="{{ zookeeper.my_id_file }}" line="{{ my_id }}" create=yes
@@ -16,5 +19,8 @@
 - name: Updating ZK config
   lineinfile:
     dest: "{{ zookeeper_config }}"
+    # server.1=192.168.50.40:2888:3888
+    # server.2=192.168.50.41:2888:3888
+    # ..
     line: "server.{{ item.0|int + 1 }}={{ item.1 }}:2888:3888"
   with_indexed_items: zk_instances
