@@ -1,2 +1,2 @@
 export ENABLED=true
-export HELIOS_MASTER_OPTS="--http http://{{ common.net.any_ip }}:{{ helios_master_port }} --zk {{ common.net.localhost }}:{{ zookeeper_port }}"
+export HELIOS_MASTER_OPTS="--http http://{{ common.net.any_ip }}:{{ helios.master.port }} --zk {{ helios_zk_connect }}"

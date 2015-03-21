@@ -37,7 +37,7 @@
     host: "{{ common.net.localhost }}"
     src:  "{{ helios.srv_prefix }}.{{ domain }}"
     dest: "{{ master_name }}"
-    port: "{{ helios_master_port }}"
+    port: "{{ helios.master.port }}"
   when: not ( use_consul|bool )
 
 - include: verify-master.yml master={{ common.net.localhost }} register_host={{ master_name }}

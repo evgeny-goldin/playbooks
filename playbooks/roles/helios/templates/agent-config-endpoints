@@ -1,1 +1,7 @@
-{ "masterEndpoints" : [ "http://{{ helios_master }}:{{ helios_master_port }}" ]}
+{
+  "masterEndpoints" : [
+  {% for host in helios_masters %}
+    "http://{{ host }}:{{ helios.master.port }}"
+  {% endfor %}
+  ]
+}

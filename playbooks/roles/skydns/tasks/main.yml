@@ -15,7 +15,7 @@
       PATH:               "$PATH:{{ skydns.home }}"
       SKYDNS_DOMAIN:      "{{ domain }}"
       SKYDNS_ADDR:        "{{ common.net.any_ip }}:{{ common.net.ports.dns }}"
-      ETCD_MACHINES:      "{{ common.net.local_ip }}:{{ etcd_port }}"
+      ETCD_MACHINES:      "{{ common.net.local_ip }}:{{ etcd.port }}"
       SKYDNS_NAMESERVERS: "{{ common.net.public_dns }}"
     tests:
       - { run: "'{{ skydns_bin }}' --help", expect: 'Usage of {{ skydns_bin }}:' }
@@ -24,7 +24,7 @@
     depends: etcd
     command: "sleep 5 && '{{ skydns_bin }}' $SKYDNS_OPTS"
     ports:
-      - "{{ etcd_port }}"
+      - "{{ etcd.port }}"
       - "{{ common.net.ports.dns }}"
     verify:
       - { path: /version,         content: '"releaseVersion":"{{ etcd.version }}"' }

@@ -1,8 +1,8 @@
 ---
 dependencies:
   - { role: java }
-  - { role: zookeeper, when: periodic|bool and ( helios_role == 'master' ) }
+  - { role: zookeeper, when: periodic|bool and ( helios_role == 'master' ), zk_instances: "{{ helios_masters }}" }
   - { role: skydns,    when: periodic|bool and ( helios_role == 'master' ) and ( not ( use_consul|bool ))  }
   - { role: consul,    when: periodic|bool and ( use_consul|bool ),
-                       consul_role:   "{{ 'server' if helios_role == 'master' else 'client' }}",
-                       consul_server: "{{ helios_master }}" }
+                       consul_role:    "{{ 'server' if helios_role == 'master' else 'client' }}",
+                       consul_servers: "{{ helios_masters }}" }

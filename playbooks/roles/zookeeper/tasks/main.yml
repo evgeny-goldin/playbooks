@@ -2,7 +2,6 @@
 - set_fact:
     zookeeper_home:   "{{ zookeeper.home }}/zookeeper-{{ zookeeper.version }}"
 - set_fact:
-    zookeeper_port:   "{{ zookeeper_port | default( zookeeper.port ) }}"
     zookeeper_config: "{{ zookeeper_home }}/conf/zoo.cfg"
 
 - file: path="{{ zookeeper.data_dir }}" state=directory
@@ -20,7 +19,7 @@
       PATH:  "$PATH:{{ zookeeper_home }}/bin"
     command: "{{ zookeeper_home }}/bin/zkServer.sh start-foreground"
     start_service: false
-    port:    "{{ zookeeper_port }}"
+    port:    "{{ zookeeper.port }}"
 
 - include: cluster.yml
   when:    zk_instances is defined
@@ -39,11 +38,11 @@
   vars:
     title: ZK CLI check (single)
     commands:
-      - { run:    "echo 'ls /' | '{{ zookeeper_home }}/bin/zkCli.sh' -server '{{ common.net.localhost }}:{{ zookeeper_port }}'",
-          expect: '{{ common.net.localhost }}:{{ zookeeper_port }}(CONNECTED)' }
-      - { run:    "echo 'ls /' | zk-shell '{{ common.net.localhost }}:{{ zookeeper_port }}' --run-from-stdin",
+      - { run:    "echo 'ls /' | '{{ zookeeper_home }}/bin/zkCli.sh' -server '{{ common.net.localhost }}:{{ zookeeper.port }}'",
+          expect: '{{ common.net.localhost }}:{{ zookeeper.port }}(CONNECTED)' }
+      - { run:    "zk-shell '{{ common.net.localhost }}:{{ zookeeper.port }}' --run-once 'ls /'",
           expect: zookeeper  }
-      - { run:    "echo 'ls /' | zk-shell '{{ common.net.local_ip }}:{{ zookeeper_port }}' --run-from-stdin",
+      - { run:    "zk-shell '{{ common.net.local_ip }}:{{ zookeeper.port }}' --run-once 'ls /'",
           expect: zookeeper  }
   when: zk_instances is undefined
 

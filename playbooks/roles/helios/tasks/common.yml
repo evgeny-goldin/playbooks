@@ -3,32 +3,53 @@
 #   Common tasks for Helios master and agent
 # --------------------------------------------
 - include: "{{ common.utils.fake }}"
-  vars:      # Java 8 JRE is already installed
-    package: java7-runtime
+  vars:
+    packages:
+      - java7-runtime-headless
+      # For older versions of Helios
+      # - java7-runtime
 
 - include: "{{ common.utils.include }}"
   vars:
     roles: [ zookeeper, etcd ]
-  when: helios_master is defined # When helios_role is "cli" - 'helios_master' is undefined
+  when: helios_masters is defined # When helios_role is "cli" - 'helios_masters' is undefined
 
 - name: Calculating Helios version
   set_fact:
-    helios_version:     "{{ helios.version     | calculate( helios.latest ) }}"
+    helios_version: "{{ helios.version | calculate( helios.latest ) }}"
+
+- name: Calculating Helios master (master)
+  set_fact:
+    helios_master:  "{{ helios_masters[ helios_masters | index( ansible_all_ipv4_addresses + ansible_all_ipv6_addresses ) ] }}"
+  when: helios_role == 'master'
+
+- name: Calculating Helios master (agent)
+  set_fact:
+    helios_master:  "{{ helios_masters | random }}"
+  when: helios_role == 'agent'
 
 - set_fact:
-    helios_master_port: "{{ helios_master_port | default( helios.master.port ) }}"
-    zookeeper_port:     "{{ zookeeper_port     | default( zookeeper.port ) }}"
-    etcd_port:          "{{ etcd_port          | default( etcd.port ) }}"
-  when: helios_master is defined
-
-- set_fact:
-    helios_command:     "helios -z 'http://{{ helios_master }}:{{ helios_master_port }}'"
-  when: helios_master is defined
+    helios_command:    "helios -z http://{{ helios_master }}:{{ helios.master.port }}"
+    #  ZK connect string: "192.168.50.40:2181,192.168.50.41:2181,192.168.50.42:2181, .."
+    helios_zk_connect: "{{ helios_masters | transform2( 'lambda host, port: host + \":\" + str(port)', zookeeper.port ) | join( ',' ) }}"
+  when: helios_masters is defined
 
 - debug: var=ansible_hostname
+- debug: var=helios_version
+- debug: var=helios_masters
 - debug: var=helios_master
 - debug: var=domain
 - debug: var=helios_command
+- debug: var=helios_zk_connect
+
+- name: Removing Helios packages
+  apt:  name="{{ item }}" state=absent purge=yes
+  ignore_errors: yes
+  with_items:
+    - helios
+    - helios-services
+    - helios-master
+    - helios-agent
 
 - include: "{{ common.utils.download }}"
   vars:
@@ -39,7 +60,7 @@
 
 - name: Installing Helios packages
   apt:  deb="{{ helios.home }}/helios-services_{{ helios_version }}_all.deb"
-  when: helios_master is defined
+  when: helios_masters is defined
 
 - apt:  deb="{{ helios.home }}/helios_{{ helios_version }}_all.deb"
 
@@ -51,8 +72,8 @@
 
 - name: Installing Python pip
   apt:  name=python-pip state=latest force=yes
-  when: helios_master is defined
+  when: helios_masters is defined
 
 - name: Installing zk-shell
   pip:  name=zk-shell state=latest
-  when: helios_master is defined
+  when: helios_masters is defined

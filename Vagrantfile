@@ -12,7 +12,7 @@ def add_ip_boxes( name, number, base_ip, ips_property = nil, properties = {} )
     box_properties = properties.merge( static_ip: ips[ j ] )
     box_properties.merge!( ips_property => ips ) if ips_property
     VB_BOXES[ "#{ name }#{ j + 1 }" ] = box_properties
-    # puts "'#{ name }#{ j + 1 }' IP = #{ ips[ j ] }"
+    # puts "'#{ name }#{ j + 1 }' = #{ box_properties }"
   }
 end
 
@@ -28,24 +28,18 @@ MEMORY             = 1024
 VAGRANT_DOMAIN     = 'vm'
 DNS_PORT           = 53
 MYSQL_PORT         = 3306
-ZOOKEEPER_PORT     = 2181
-ETCD_PORT          = 4001
 HELIOS_MASTER_PORT = 5801
 WEB_PORT           = 8080
 VERBOSE            = '' # Ansible verbosity level: '', 'v', 'vv', 'vvv', 'vvvv'
 REPO_IMPORT        = 'https://s3-eu-west-1.amazonaws.com/evgenyg-ansible/repo-import.zip'
-HELIOS_PROPERTIES  = { helios_master: "helios-master.#{ VAGRANT_DOMAIN }",
-                       domain:        VAGRANT_DOMAIN,
-                       use_consul:    false }
-HELIOS_PORTS       = [ DNS_PORT, ZOOKEEPER_PORT, ETCD_PORT, HELIOS_MASTER_PORT ]
+HELIOS_PROPERTIES  = { domain: VAGRANT_DOMAIN, use_consul: false }
+HELIOS_PORTS       = [ DNS_PORT, HELIOS_MASTER_PORT ]
 
 VB_BOXES = {
   jvm:     {},
   packer:  {},
   mysql:   { vagrant_ports: [ MYSQL_PORT ]},
   jenkins: { vagrant_ports: [ WEB_PORT ]},
-  helios:  HELIOS_PROPERTIES.merge( vagrant_ports: HELIOS_PORTS,
-                                    helios_master: "helios.#{ VAGRANT_DOMAIN }" ),
   repo:          { memory:          2048, # For Artifactory MySQL
                    port:            WEB_PORT,
                    import:          REPO_IMPORT,
@@ -63,10 +57,10 @@ VB_BOXES = {
                   #  repo_name:       'Nexus' }
 }
 
-add_ip_boxes( 'zookeeper',  3, '192.168.50.40', 'zk_instances', { zk_cluster_test: false })
-add_boxes( 'helios-master', 2, HELIOS_PROPERTIES.merge( vagrant_ports: HELIOS_PORTS ))
-add_boxes( 'helios-agent',  2, HELIOS_PROPERTIES.merge( vagrant_ports: [ WEB_PORT ] ))
-
+add_ip_boxes( 'zookeeper',     3, '192.168.50.40', 'zk_instances',   { zk_cluster_test: false })
+add_ip_boxes( 'helios-master', 2, '192.168.50.50', 'helios_masters', HELIOS_PROPERTIES.merge( vagrant_ports: HELIOS_PORTS ))
+add_ip_boxes( 'helios-agent',  2, '192.168.50.60', nil, HELIOS_PROPERTIES.merge( vagrant_ports:  [ WEB_PORT ],
+                                                                                 helios_masters: [ '192.168.50.50', '192.168.50.51' ] ))
 Vagrant.require_version '>= 1.7.0'
 Vagrant.configure( VAGRANTFILE_API_VERSION ) do | config |
 

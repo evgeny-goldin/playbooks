@@ -4,14 +4,14 @@
 
 - set_fact:
     # Each instance gets its own id: "1", "2", "3", etc.
-    my_id:      "{{ zk_instances | index( [ ansible_fqdn, ansible_hostname ] + ansible_all_ipv4_addresses + ansible_all_ipv6_addresses ) + 1 }}"
+    my_id:      "{{ ( zk_instances | index( ansible_all_ipv4_addresses + ansible_all_ipv6_addresses )) + 1 }}"
     # A string of all ids, used when testing cluster connectivity: "1 2 3 .."
     all_ids:    "{{ range( 1, zk_instances|length + 1 ) | join(' ') }}"
     #  A string of all instances for ZK client to connect to "192.168.50.40:2181,192.168.50.41:2181,192.168.50.42:2181, .."
-    zk_connect: "{{ zk_instances | transform2( 'lambda host, port: host + \":\" + port', zookeeper_port ) | join( ',' ) }}"
+    zk_connect: "{{ zk_instances | transform2( 'lambda host, port: host + \":\" + str(port)', zookeeper.port ) | join( ',' ) }}"
 
 - debug:
-    msg: "ZK id is '{{ my_id }}' (of '{{ all_ids }}'), configuring cluster of {{ zk_instances|length }} ZK instances: {{ zk_connect }}"
+    msg: "ZK id is '{{ my_id }}' (of '{{ all_ids }}'), configuring ZK cluster {{ zk_connect }}"
 
 - file:       dest="{{ zookeeper.my_id_file }}" state=absent
 - lineinfile: dest="{{ zookeeper.my_id_file }}" line="{{ my_id }}" create=yes

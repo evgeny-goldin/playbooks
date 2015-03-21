@@ -1,7 +1,7 @@
 ---
 - debug: msg="consul_role = '{{ consul_role }}'"
 - debug: msg="domain = '{{ domain }}'"
-- debug: msg="consul_server = {{ consul_server }}"
+- debug: msg="consul_servers = {{ consul_servers }}"
 
 - name: Calculating Consul version
   set_fact:
@@ -52,8 +52,6 @@
     commands:
       - { run:    'dig @{{ common.net.localhost }}',
           expect: ';; SERVER: {{ common.net.local_ip }}#{{ common.net.ports.dns }}({{ common.net.local_ip }})' }
-      - { run:    'dig @{{ consul_server }}',
-          expect: ';; SERVER: {{ consul_server }}#{{ common.net.ports.dns }}({{ consul_server }})' }
   when: is_consul_server|bool
 
 - include: "{{ common.utils.run }}"
@@ -61,11 +59,19 @@
     title: Consul client
     env:   "{{ consul_env }}"
     commands:
-      - { run:    'dig @{{ consul_server }}',
-          expect: ';; SERVER: {{ consul_server }}#{{ common.net.ports.dns }}({{ consul_server }})' }
-      - { run:    "consul join '{{ consul_server }}'",
-          expect: Successfully joined cluster by contacting 1 nodes. }
+      - { run:    'dig @{{ consul_servers|first }}',
+          expect: ';; SERVER: {{ consul_servers|first }}#{{ common.net.ports.dns }}({{ consul_servers|first }})' }
+      - { run:    'dig @{{ consul_servers|last }}',
+          expect: ';; SERVER: {{ consul_servers|last }}#{{ common.net.ports.dns }}({{ consul_servers|last }})' }
+      - { run:    'dig @{{ consul_servers|random }}',
+          expect: ';; SERVER: ' }
+      - { run:    "consul join '{{ consul_servers|first }}'",
+          expect: Successfully joined cluster }
+      - { run:    "consul join '{{ consul_servers|last }}'",
+          expect: Successfully joined cluster }
+      - { run:    "consul join '{{ consul_servers|random }}'",
+          expect: Successfully joined cluster }
       - { run:    "consul members",
           expect: [ '^{{ ansible_hostname }}\s+.+:{{ consul.ports.gossip }}\s+alive\s+client\s+{{ consul_version }}\s+\d+$',
-                    '{{ consul_server }}:{{ consul.ports.gossip }}\s+alive\s+server\s+{{ consul_version }}' ] }
+                    '{{ item }}:{{ consul.ports.gossip }}\s+alive\s+server\s+{{ consul_version }}' ] }
   when: is_consul_client|bool

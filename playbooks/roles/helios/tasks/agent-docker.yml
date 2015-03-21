@@ -29,7 +29,7 @@
   vars:
     title: Docker status checks
     commands:
-      - { run: docker --version, expect: Docker version  }
+      - { run: docker --version, expect: Docker version }
       - { run: docker ps,        expect: [ CONTAINER ID, IMAGE, COMMAND, CREATED, STATUS, PORTS, NAMES ]}
       - { run: docker images,    expect: [ REPOSITORY, TAG, IMAGE ID, CREATED, VIRTUAL SIZE ]}
 

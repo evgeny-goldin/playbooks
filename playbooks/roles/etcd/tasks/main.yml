@@ -1,9 +1,8 @@
 ---
 - set_fact:
-    etcd_dir:  "{{ etcd.dir_name | tokens( etcd ) }}"
+    etcd_dir: "{{ etcd.dir_name | tokens( etcd ) }}"
 - set_fact:
-    etcd_bin:  "{{ etcd.home }}/{{ etcd_dir }}/etcd"
-    etcd_port: "{{ etcd_port | default( etcd.port ) }}"
+    etcd_bin: "{{ etcd.home }}/{{ etcd_dir }}/etcd"
 
 - include: "{{ common.utils.service }}"
   vars:
@@ -14,12 +13,12 @@
     home:    "{{ etcd.home }}"
     env:
       # https://github.com/coreos/etcd/blob/master/Documentation/configuration.md
-      ETCD_ADDR:      "{{ common.net.local_ip }}:{{ etcd_port }}"
-      ETCD_BIND_ADDR: "{{ common.net.any_ip }}:{{ etcd_port }}"
+      ETCD_ADDR:      "{{ common.net.local_ip }}:{{ etcd.port }}"
+      ETCD_BIND_ADDR: "{{ common.net.any_ip }}:{{ etcd.port }}"
     tests:
       - { run: "{{ etcd_bin }} --version", expect: "{{ etcd.version }}" }
     command:   "{{ etcd_bin }} $ETCD_OPTS"
-    port:      "{{ etcd_port }}"
+    port:      "{{ etcd.port }}"
     verify:
       - { path: /version,         content: '"releaseVersion":"{{ etcd.version }}"' }
       - { path: /v2/stats/leader, content: '{"leader":"' }

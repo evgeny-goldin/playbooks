@@ -4,7 +4,7 @@
 - set_fact:
     registrar_plugin_url:      "{{ helios.agent.registrar_plugin.skydns.url     | tokens( helios.agent.registrar_plugin.skydns ) }}"
     registrar_plugin_archive:  "{{ helios.agent.registrar_plugin.skydns.archive | tokens( helios.agent.registrar_plugin.skydns ) }}"
-    registrar_plugin_endpoint: "http://{{ helios_master }}:{{ etcd_port }}"
+    registrar_plugin_endpoint: "http://{{ helios_master }}:{{ etcd.port }}"
   when: not ( use_consul|bool )
 
 - set_fact:

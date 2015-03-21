@@ -10,23 +10,23 @@
     host:  "{{ master }}"
     ports:
       - "{{ common.net.ports.dns }}"
-      - "{{ zookeeper_port }}"
+      - "{{ zookeeper.port }}"
 
 - include: "{{ common.utils.run }}"
   vars:
     title: "'_helios._http.{{ domain }}' SRV test"
     commands:
       - { run:    "dig '@{{ master }}' '{{ helios.srv_prefix }}.{{ domain }}' SRV",
-          expect: '^{{ helios.srv_prefix }}\.{{ domain }}\.\s+\d+\s+IN\s+SRV\s+\d+\s+\d+\s+{{ helios_master_port }}\s+.+\.{{ domain }}\.$' }
+          expect: '^{{ helios.srv_prefix }}\.{{ domain }}\.\s+\d+\s+IN\s+SRV\s+\d+\s+\d+\s+{{ helios.master.port }}\s+.+\.{{ domain }}\.$' }
       - { run:    "host -t SRV '{{ helios.srv_prefix }}.{{ domain }}' '{{ master }}'",
-          expect: '^{{ helios.srv_prefix }}.{{ domain }} has SRV record \d+ \d+ {{ helios_master_port }} .+\.{{ domain }}.$' }
+          expect: '^{{ helios.srv_prefix }}.{{ domain }} has SRV record \d+ \d+ {{ helios.master.port }} .+\.{{ domain }}.$' }
   when: not ( use_consul|bool )
 
 - include: "{{ common.utils.verify }}"
   vars:
     title: Helios master service
     host:  "{{ master }}"
-    port:  "{{ helios_master_port }}"
+    port:  "{{ helios.master.port }}"
     verify:
       - { status: 404 }
 
@@ -34,7 +34,7 @@
   vars:
     title: Helios master Etcd
     host:  "{{ master }}"
-    port:  "{{ etcd_port }}"
+    port:  "{{ etcd.port }}"
     verify:
       - { path: /version,         content: '"releaseVersion":' }
       - { path: /v2/stats/leader, content: '{"leader":"' }
@@ -55,7 +55,7 @@
   vars:
     title: ZooKeeper check
     commands:
-      - { run:    "echo 'ls /' | zk-shell '{{ master }}:{{ zookeeper_port }}' --run-from-stdin",
+      - { run:    "echo 'ls /' | zk-shell '{{ master }}:{{ zookeeper.port }}' --run-from-stdin",
           expect: zookeeper  }
 
 #                         VirtualBox                              AWS

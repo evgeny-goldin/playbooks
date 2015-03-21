@@ -21,7 +21,7 @@
 
 - set_fact:
     # https://github.com/skynetservices/skydns#service-announcements
-    registration_command: "curl -XPUT 'http://{{ host }}:{{ etcd_port }}/v2/keys/skydns/{{ '/'.join( src.split('.')[::-1] ) }}' \
+    registration_command: "curl -XPUT 'http://{{ host }}:{{ etcd.port }}/v2/keys/skydns/{{ '/'.join( src.split('.')[::-1] ) }}' \
                            -d value='{\"host\":\"{{ dest }}\",\"port\":{{ port | default(0) }}}'"
     query: "{{ src }}"
   when: not ( use_consul|bool )
