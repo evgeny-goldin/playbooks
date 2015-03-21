@@ -11,15 +11,15 @@
 - shell:       "{{ item.run }} 2>&1"
   environment: "{{ run_env }}"
   register:    shell_out
-  failed_when: not ( shell_out.stdout_lines | default(['']) | contains( item.expect | default('')))
-  when:        item.retries is undefined
+  until:       shell_out.stdout_lines | default(['']) | contains( item.expect | default(''))
+  retries:     "{{ item.retries }}"
+  delay:       "{{ item.delay | default(5) }}"
+  when:        ( item.run is defined ) and ( item.retries is defined )
   with_items:  commands
 
 - shell:       "{{ item.run }} 2>&1"
   environment: "{{ run_env }}"
   register:    shell_out
-  until:       shell_out.stdout_lines | default(['']) | contains( item.expect | default(''))
-  retries:     "{{ item.retries }}"
-  delay:       "{{ item.delay | default(5) }}"
-  when:        item.retries is defined
+  failed_when: not ( shell_out.stdout_lines | default(['']) | contains( item.expect | default('')))
+  when:        item.run is defined
   with_items:  commands

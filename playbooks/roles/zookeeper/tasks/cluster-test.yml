@@ -1,0 +1,41 @@
+---
+- include: "{{ common.utils.run }}"
+  vars:
+    title: ZK CLI check (cluster check ids)
+    commands:
+      - { run: "zk-shell '{{ zk_all_instances }}' --run-once 'ls /'", expect: zookeeper, retries: 15, delay: 1 }
+
+- include: "{{ common.utils.run }}"
+  vars:
+    title: ZK CLI check (cluster check ids)
+    commands:
+      - { run: "zk-shell '{{ zk_all_instances }}' --run-once 'create /a/{{ my_id }} b false false true'" }
+
+- include: "{{ common.utils.run }}"
+  vars:
+    title: ZK CLI check (cluster check ids)
+    commands:
+      # Make sure all nodes are capable of reading ids of all other nodes
+      - { run: "zk-shell '{{ zk_all_instances }}' --run-once 'ls /a'", expect: "{{ all_ids }}", retries: 15, delay: 1 }
+
+- include: "{{ common.utils.run }}"
+  vars:
+    title: ZK CLI check (cluster check ids)
+    commands:
+      # Signal that node has finished reading all ids
+      - { run: "zk-shell '{{ zk_all_instances }}' --run-once 'create /b/{{ my_id }} b false false true'" }
+
+- include: "{{ common.utils.run }}"
+  vars:
+    title: ZK CLI check (cluster delete)
+    commands:
+      # First node: wait until all nodes have finished reading all ids
+      - { run: "zk-shell '{{ zk_all_instances }}' --run-once 'ls /b'", expect: "{{ all_ids }}", retries: 15, delay: 1 }
+  when: my_id == '1'
+
+- include: "{{ common.utils.run }}"
+  vars:
+    title: ZK CLI check (cluster delete)
+    commands:
+      - { run: "zk-shell '{{ zk_all_instances }}' --run-once 'rmr /a /b'" }
+  when: my_id == '1'

@@ -63,7 +63,7 @@ VB_BOXES = {
                   #  repo_name:       'Nexus' }
 }
 
-add_ip_boxes( 'zookeeper',  3, '192.168.50.40', 'zk_instances', { zk_test_connect: false })
+add_ip_boxes( 'zookeeper',  3, '192.168.50.40', 'zk_instances', { zk_cluster_test: false })
 add_boxes( 'helios-master', 2, HELIOS_PROPERTIES.merge( vagrant_ports: HELIOS_PORTS ))
 add_boxes( 'helios-agent',  2, HELIOS_PROPERTIES.merge( vagrant_ports: [ WEB_PORT ] ))
 
