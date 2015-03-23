@@ -1,7 +1,5 @@
 {
   "masterEndpoints" : [
-  {% for host in helios_masters %}
-    "http://{{ host }}:{{ helios.master.port }}"
-  {% endfor %}
+    "{{ helios_masters | transform2( 'lambda host, port: "http://{}:{}".format( host, port )', helios.master.port ) | join( '", "' ) }}"
   ]
 }
