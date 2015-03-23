@@ -1,0 +1,16 @@
+---
+maven: {
+  version: latest, # 3.3.1, latest - https://maven.apache.org/download.cgi
+  latest: {
+    command: "curl -Ls 'https://maven.apache.org/download.cgi' | grep '</a>Download Apache Maven' | sed -r 's/<[^>]+>//g' | awk '{print $4}'",
+    pattern: '^\d+\.\d+(\.\d+)?$'
+  },
+  url:     'http://apache.mirrors.spacedump.net/maven/maven-3/<version>/binaries/apache-maven-<version>-bin.tar.gz',
+  archive: /opt/maven-<version>.tar.gz,
+  home:    /opt/maven
+}
+
+maven_env: {
+  JAVA_HOME: "{{ java_home }}",
+  PATH:      "$PATH:{{ maven.home }}/apache-maven-{{ maven_version }}/bin"
+}

@@ -1,0 +1,14 @@
+---
+- name: Calculating Maven version
+  set_fact:
+    maven_version: "{{ maven.version | calculate( maven.latest ) }}"
+
+- include: "{{ common.utils.download }}"
+  vars:
+    title:   Maven
+    url:     "{{ maven.url     | tokens({ 'version': maven_version }) }}"
+    archive: "{{ maven.archive | tokens({ 'version': maven_version }) }}"
+    home:    "{{ maven.home }}"
+    env:     "{{ maven_env }}"
+    tests:
+      - { run: mvn -version, expect: "Apache Maven {{ maven_version }}" }
