@@ -1,0 +1,18 @@
+---
+# Jenkins playbook for Ubuntu
+# http://jenkins-ci.org/
+
+- name:  Jenkins
+  hosts: jenkins
+  sudo:  yes
+
+  vars_files:
+    - vars/common.yml
+    - vars/{{ ansible_distribution }}.yml
+
+  roles:
+    - { role: run-before, period: daily }
+    - { role: java,   java_distribution: oracle_jdk }
+    - { role: docker, when: periodic, pull: [ 'nginx:1.7.9', 'ubuntu:14.04.2', 'evgenyg/ansible:1.8.4' ]}
+    - teamcity
+    - run-after

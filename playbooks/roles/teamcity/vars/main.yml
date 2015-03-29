@@ -1,0 +1,51 @@
+---
+jenkins: {
+  home: /var/lib/jenkins,
+  key:  'https://jenkins-ci.org/debian/jenkins-ci.org.key',
+  repo: 'deb http://pkg.jenkins-ci.org/debian binary/',
+  user: jenkins,
+
+  plugins: {
+    # -------------------------------------------------------------------------------------
+    #   Plugin name: plugin version, * (for latest), version number or plugin's *.hpi URL
+    # -------------------------------------------------------------------------------------
+    # https://wiki.jenkins-ci.org/display/JENKINS/EnvInject+Plugin
+    envinject:            '*',
+    ivy:                  '*',
+    # https://wiki.jenkins-ci.org/display/JENKINS/Credentials+Binding+Plugin
+    credentials-binding:  '*',
+    plain-credentials:    '*',
+    workflow-step-api:    '*',
+    credentials:          '*',
+    config-file-provider: '*',
+    token-macro:          '*',
+    # https://wiki.jenkins-ci.org/display/JENKINS/Rebuild+Plugin
+    rebuild:              '*',
+    # https://wiki.jenkins-ci.org/display/JENKINS/S3+Plugin
+    s3:                   '*',
+    copyartifact:         '*',
+    # https://wiki.jenkins-ci.org/display/JENKINS/GitHub+Plugin
+    github:               '*',
+    git:                  '*',
+    github-api:           '*',
+    git-client:           '*',
+    multiple-scms:        '*',
+    scm-api:              '*',
+    ssh-agent:            '*',
+    # https://wiki.jenkins-ci.org/display/JENKINS/Github+OAuth+Plugin
+    github-oauth:         '*',
+    # https://wiki.jenkins-ci.org/display/JENKINS/Notification+Plugin
+    notification:         '*'
+  }
+}
+
+jenkins_auth: {
+  # https://wiki.jenkins-ci.org/display/JENKINS/Github+OAuth+Plugin#GithubOAuthPlugin-Setup
+  # admins:       [ 'GitHub User', 'GitHub User', .. ],
+  # clientID:     'clientID',
+  # clientSecret: 'clientSecret'
+}
+
+jenkins_s3: {
+  # profile_name: [ 'accessKey', 'secretKey' ]
+}

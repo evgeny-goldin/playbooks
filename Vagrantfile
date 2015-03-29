@@ -40,10 +40,11 @@ HELIOS_PROPERTIES  = { helios_master: "helios-master.#{ VAGRANT_DOMAIN }",
 HELIOS_PORTS       = [ DNS_PORT, ZOOKEEPER_PORT, ETCD_PORT, HELIOS_MASTER_PORT ]
 
 VB_BOXES = {
-  jvm:     {},
-  packer:  {},
-  mysql:   { vagrant_ports: [ MYSQL_PORT ]},
-  jenkins: { vagrant_ports: [ WEB_PORT ]},
+  jvm:      {},
+  packer:   {},
+  mysql:    { vagrant_ports: [ MYSQL_PORT ]},
+  jenkins:  { vagrant_ports: [ WEB_PORT ]},
+  teamcity: { vagrant_ports: [ WEB_PORT ]},
   helios:  HELIOS_PROPERTIES.merge( vagrant_ports: HELIOS_PORTS,
                                     helios_master: "helios.#{ VAGRANT_DOMAIN }" ),
   repo:          { memory:          2048, # For Artifactory MySQL

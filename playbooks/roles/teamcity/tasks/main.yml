@@ -1,0 +1,82 @@
+---
+# https://wiki.jenkins-ci.org/display/JENKINS/Installing+Jenkins+on+Ubuntu
+- set_fact: plugins_dir="{{ jenkins.home }}/plugins"
+
+- name:    Adding Jenkins repository key
+  apt_key: url='{{ jenkins.key }}'
+
+- name:           Adding Jenkins repository
+  apt_repository: repo='{{ jenkins.repo }}' update_cache=yes
+
+- name: Installing Jenkins
+  apt:  name=jenkins state=latest force=yes
+
+- name: Creating directories for Jenkins jobs
+  file:
+    path:  "{{ jenkins.home }}/jobs/{{ item.name }}"
+    state: directory
+    owner: "{{ jenkins.user }}"
+    group: "{{ jenkins.user }}"
+  with_items: jobs | default([])
+
+- name: Creating directory for Jenkins plugins
+  file:
+    path: "{{ plugins_dir }}"
+    state: directory
+    owner: "{{ jenkins.user }}"
+    group: "{{ jenkins.user }}"
+
+- name: Generating Jenkins global configs
+  template:
+    src:   "{{ item }}"
+    dest:  "{{ jenkins.home }}/{{ item }}"
+    owner: "{{ jenkins.user }}"
+    group: "{{ jenkins.user }}"
+    mode:  "{{ common.mode.file }}"
+  with_items:
+    - config.xml
+    - hudson.plugins.s3.S3BucketPublisher.xml
+
+- name: Generating Jenkins jobs configs
+  template:
+    src:  job-config.xml
+    dest: "{{ jenkins.home }}/jobs/{{ item.name }}/config.xml"
+  with_items: jobs | default([])
+
+- name: Downloading Jenkins plugins (latest)
+  get_url:
+    # https://updates.jenkins-ci.org/latest/s3.hpi
+    url:   "{{ common.urls.jenkins }}/latest/{{ item.key }}.hpi"
+    dest:  "{{ plugins_dir }}/{{ item.key }}.hpi"
+  with_dict: jenkins.plugins | default({})
+  when: item.value == '*'
+
+- name: Downloading Jenkins plugins (version)
+  get_url:
+    # https://updates.jenkins-ci.org/download/plugins/s3/0.7/s3.hpi
+    url:   "{{ common.urls.jenkins }}/download/plugins/{{ item.key }}/{{ item.value }}/{{ item.key }}.hpi"
+    dest:  "{{ plugins_dir }}/{{ item.key }}.hpi"
+  with_dict: jenkins.plugins | default({})
+  when: ( item.value != '*' ) and ( not item.value.startswith( 'http' ))
+
+- name: Downloading Jenkins plugins (custom)
+  get_url:
+    url:   "{{ item.value }}"
+    dest:  "{{ plugins_dir }}/{{ item.key }}.hpi"
+  with_dict: jenkins.plugins | default({})
+  when: item.value.startswith( 'http' )
+
+- name:    Restarting Jenkins service
+  service: name=jenkins state=restarted
+
+- name: Updating sudoers file (if Docker role was activated)
+  lineinfile:
+    dest:     "{{ ubuntu.sudoers }}"
+    line:     "%{{ jenkins.user }} ALL=(ALL)NOPASSWD:{{ item }}"
+    validate: 'visudo -cf %s'
+    backup:   yes
+    insertbefore: '# See sudoers'
+  with_items:
+    - "{{ docker.bin }}"
+    - /usr/sbin/service
+  when: ( docker is defined ) and ( docker.bin is defined )
