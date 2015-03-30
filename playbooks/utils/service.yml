@@ -15,7 +15,13 @@
 - debug: msg="command = '{{ command }}'"
 - debug: var=port
 - debug: var=ports
-- debug: var=start_service
+- debug: var=stop_service  # Whether service needs to be stopped before we start
+- debug: var=start_service # Whether service needs to be started when we're done
+
+- name:    Stopping {{ title }} service
+  service: name={{ service }} state=stopped
+  ignore_errors: yes
+  when:    stop_service | default(False) | bool
 
 - include: "{{ common.utils.download }}"
 

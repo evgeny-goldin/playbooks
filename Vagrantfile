@@ -44,7 +44,7 @@ VB_BOXES = {
   packer:   {},
   mysql:    { vagrant_ports: [ MYSQL_PORT ]},
   jenkins:  { vagrant_ports: [ WEB_PORT ]},
-  teamcity: { vagrant_ports: [ WEB_PORT ]},
+  teamcity: { vagrant_ports: [ WEB_PORT ], memory: 2048 },
   helios:  HELIOS_PROPERTIES.merge( vagrant_ports: HELIOS_PORTS,
                                     helios_master: "helios.#{ VAGRANT_DOMAIN }" ),
   repo:          { memory:          2048, # For Artifactory MySQL

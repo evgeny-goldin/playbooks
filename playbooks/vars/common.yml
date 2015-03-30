@@ -21,17 +21,18 @@ common: {
   },
 
   urls: {
-    bintray: 'https://dl.bintray.com',
-    docker:  'https://get.docker.com',
-    github:  'https://github.com',
-    golang:  'https://golang.org',
-    gradle:  'https://gradle.org',
-    jcenter: 'https://jcenter.bintray.com',
-    jfrog:   'https://repo.jfrog.org',
-    pypi:    'https://pypi.python.org/pypi',
-    ruby:    'https://www.ruby-lang.org',
-    tomcat:  'https://tomcat.apache.org',
-    jenkins: 'https://updates.jenkins-ci.org'
+    bintray:   'https://dl.bintray.com',
+    docker:    'https://get.docker.com',
+    github:    'https://github.com',
+    golang:    'https://golang.org',
+    gradle:    'https://gradle.org',
+    jcenter:   'https://jcenter.bintray.com',
+    jfrog:     'https://repo.jfrog.org',
+    pypi:      'https://pypi.python.org/pypi',
+    ruby:      'https://www.ruby-lang.org',
+    tomcat:    'https://tomcat.apache.org',
+    jenkins:   'https://updates.jenkins-ci.org',
+    jetbrains: 'https://www.jetbrains.com'
   },
 
   utils: {

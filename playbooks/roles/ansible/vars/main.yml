@@ -1,9 +1,9 @@
 ---
 ansible: {
-  version: latest, # 1.8.2, latest - https://pypi.python.org/pypi/ansible
+  version: latest, # 1.9.0.1, latest - https://pypi.python.org/pypi/ansible
   latest: {
     command: "curl -Ls '{{ common.urls.pypi }}/ansible' | grep '<title>' | sed 's/^.*<title>//' | cut -d' ' -f2",
-    pattern: '^\d+\.\d+(\.\d+)?$'
+    pattern: '^\d+\.\d+(\.\d+)?(\.\d+)?$'
   },
   inventory_file: /etc/ansible/hosts
 }

@@ -45,8 +45,8 @@
     timeout:        "{{ v_timeout }}"
     return_content: yes
   register: http_wait_out
-  until: "{{ ( http_wait_out.content is defined ) and ( http_wait_out.content | contains( item.content | default('')) ) }}"
-  retries: "{{ timeout|default(60)|int // 3 }}"
+  until:   "{{ ( http_wait_out.content is defined ) and ( http_wait_out.content | contains( item.content | default('')) ) }}"
+  retries: "{{ v_timeout|default(60)|int // 3 }}"
   delay:   3
   with_items: wait
   when: wait is defined

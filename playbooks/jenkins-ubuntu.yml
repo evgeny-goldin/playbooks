@@ -12,8 +12,9 @@
 
   roles:
     - { role: run-before, period: daily }
-    - { role: java,       java_distribution: oracle_jdk }
-    - { role: docker,     when: periodic, pull: [ 'nginx:1.7.9', 'ubuntu:14.04.2', 'evgenyg/ansible:1.9.0.1' ]}
-    - { role: helios,     when: periodic, helios_role: cli, use_consul: false }
-    - { role: jenkins,    jobs: [{ name: echo-service, repo: 'https://github.com/evgeny-goldin/echo-service.git' }]}
+    - { role: maven,  when: periodic }
+    - { role: gradle, when: periodic }
+    - { role: docker, when: periodic, pull: [ 'nginx:1.7.9', 'ubuntu:14.04.2', 'evgenyg/ansible:1.9.0.1' ]}
+    # - { role: helios,  when: periodic, helios_role: cli, use_consul: false }
+    - { role: jenkins, jobs: [{ name: echo-service, repo: 'https://github.com/evgeny-goldin/echo-service.git' }]}
     - run-after
