@@ -1,0 +1,27 @@
+---
+- name: Calculating TeamCity version
+  set_fact:
+    teamcity_version: "{{ teamcity.version | calculate( teamcity.latest ) }}"
+    agent:            "{{ teamcity.home }}/TeamCity/buildAgent/bin/agent.sh"
+
+- include: "{{ common.utils.service }}"
+  vars:
+    title:   Teamcity
+    service: teamcity
+    url:     "{{ teamcity.url     | tokens({ 'version': teamcity_version }) }}"
+    archive: "{{ teamcity.archive | tokens({ 'version': teamcity_version }) }}"
+    home:    "{{ teamcity.home }}"
+    configs:
+      - { role: teamcity, from: server.xml, to: "{{ teamcity.home }}/TeamCity/conf/server.xml" }
+    stop_service: true
+    command: "{{ teamcity.home }}/TeamCity/bin/teamcity-server.sh run"
+    port:    "{{ teamcity.port }}"
+
+- include: "{{ common.utils.service }}"
+  vars:
+    title:   Teamcity Agent
+    service: teamcity-agent
+    configs:
+      - { role: teamcity, from: buildAgent.properties, to: "{{ teamcity.home }}/TeamCity/buildAgent/conf/buildAgent.properties" }
+    stop_service: true
+    command: "{{ agent }} stop force; {{ agent }} stop kill; {{ agent }} run"

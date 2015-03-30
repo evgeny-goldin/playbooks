@@ -1,6 +1,6 @@
 ---
 nexus: {
-  version: '2.11.2-03', # http://www.sonatype.org/nexus/thank-you-for-downloading/?dl=tgz
+  version: '2.11.2-06', # http://www.sonatype.org/nexus/thank-you-for-downloading/?dl=tgz
                         # http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22org.sonatype.nexus%22%20AND%20a%3A%22nexus-webapp%22
   port:    8080,
   timeout: 120,         # in seconds
@@ -14,7 +14,7 @@ nexus: {
   war: {
     url:          '{{ common.urls.jcenter }}/org/sonatype/nexus/nexus-webapp/<version>/nexus-webapp-<version>.war',
     archive:      /opt/nexus-<version>.war,
-    java_options: '-Xms256m -Xmx768m -XX:MaxPermSize=192m -Djava.io.tmpdir=./tmp -Djava.net.preferIPv4Stack=true'
+    java_options: '-Xms256m -Xmx768m -Djava.io.tmpdir=./tmp -Djava.net.preferIPv4Stack=true'
   },
   wait: [
     { path: /nexus, content: nexusVersion= }

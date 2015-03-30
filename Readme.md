@@ -16,6 +16,7 @@ This repo contains **Ansible** [Playbooks](https://github.com/evgeny-goldin/play
 * [Helios](https://github.com/spotify/helios) _(master + agent or a single instance)_
 * [Java](http://www.oracle.com/technetwork/java/index.html) _(Oracle JRE, Oracle JDK, DefaultJDK)_
 * [Jenkins](https://jenkins-ci.org/)
+* [Maven](https://maven.apache.org/)
 * [MySQL](https://www.mysql.com/)
 * [Nexus](http://www.sonatype.org/nexus/) _(standalone or Tomcat)_
 * [Node.js](https://nodejs.org/)
@@ -23,6 +24,7 @@ This repo contains **Ansible** [Playbooks](https://github.com/evgeny-goldin/play
 * [Ruby](https://www.ruby-lang.org/en/)
 * [Scala](http://www.scala-lang.org/)
 * [SkyDNS](https://github.com/skynetservices/skydns)
+* [TeamCity](https://www.jetbrains.com/teamcity/)
 * [Tomcat](https://tomcat.apache.org/)
 * [Vagrant](https://www.vagrantup.com/)
 * [VirtualBox](https://www.virtualbox.org/)
