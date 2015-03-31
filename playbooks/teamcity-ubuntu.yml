@@ -1,8 +1,8 @@
 ---
-# Jenkins playbook for Ubuntu
-# http://jenkins-ci.org/
+# TeamCity playbook for Ubuntu
+# https://www.jetbrains.com/teamcity/
 
-- name:  Jenkins
+- name:  TeamCity
   hosts: teamcity
   sudo:  yes
 
