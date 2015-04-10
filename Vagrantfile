@@ -32,6 +32,7 @@ ZOOKEEPER_PORT     = 2181
 ETCD_PORT          = 4001
 HELIOS_MASTER_PORT = 5801
 WEB_PORT           = 8080
+DEBUG_PORT         = 8111
 VERBOSE            = '' # Ansible verbosity level: '', 'v', 'vv', 'vvv', 'vvvv'
 REPO_IMPORT        = 'https://s3-eu-west-1.amazonaws.com/evgenyg-ansible/repo-import.zip'
 HELIOS_PROPERTIES  = { helios_master: "helios-master.#{ VAGRANT_DOMAIN }",
@@ -44,7 +45,7 @@ VB_BOXES = {
   packer:   {},
   mysql:    { vagrant_ports: [ MYSQL_PORT ]},
   jenkins:  { vagrant_ports: [ WEB_PORT ]},
-  teamcity: { vagrant_ports: [ WEB_PORT ], memory: 2048 },
+  teamcity: { vagrant_ports: [ WEB_PORT, DEBUG_PORT ], memory: 4096, cpus: 4 },
   helios:  HELIOS_PROPERTIES.merge( vagrant_ports: HELIOS_PORTS,
                                     helios_master: "helios.#{ VAGRANT_DOMAIN }" ),
   repo:          { memory:          2048, # For Artifactory MySQL
