@@ -1,10 +1,10 @@
 ---
 teamcity: {
-  version: latest, # 9.0.3, latest - https://www.jetbrains.com/teamcity/download/
+  version: latest, # 9.0.3, latest - https://confluence.jetbrains.com/display/TW/Previous+Releases+Downloads
   port:    8080,
   latest: {
     command: "curl -Ls '{{ common.urls.jetbrains }}/teamcity/download/download_thanks.jsp' | grep 'https://download.jetbrains.com/teamcity' | head -1 | cut -d'\"' -f6 | cut -d'-' -f2 | sed 's/.exe//'",
-    pattern: '^\d+\.\d+\.\d+$'
+    pattern: '^\d+\.\d+(\.\d+)?$'
   },
   url:     'https://download.jetbrains.com/teamcity/TeamCity-<version>.tar.gz',
   archive: /opt/teamcity-<version>.tar.gz,

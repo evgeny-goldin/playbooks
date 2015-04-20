@@ -11,9 +11,10 @@
     url:     "{{ teamcity.url     | tokens({ 'version': teamcity_version }) }}"
     archive: "{{ teamcity.archive | tokens({ 'version': teamcity_version }) }}"
     home:    "{{ teamcity.home }}"
-    configs:
-      - { role: teamcity, from: server.xml, to: "{{ teamcity.home }}/TeamCity/conf/server.xml" }
+    cleanup:
+      - sed -i 's/8111/{{ teamcity.port }}/' '{{ teamcity.home }}/TeamCity/conf/server.xml'
     stop_service: true
+    timeout: 300
     command: "{{ teamcity.home }}/TeamCity/bin/teamcity-server.sh run"
     port:    "{{ teamcity.port }}"
 

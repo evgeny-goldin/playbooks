@@ -16,7 +16,8 @@ ubuntu: {
   apt: {
       # Replacing apt repos, based on http://mirrors.ubuntu.com/mirrors.txt results
       # Repo to replace => repo to replace with
-      'http://archive.ubuntu.com/ubuntu':               'http://ubuntu.mirror.su.se/ubuntu',
+      'http://ubuntu.mirror.su.se/ubuntu':              'http://mirrors.us.kernel.org/ubuntu',
+      'http://archive.ubuntu.com/ubuntu':               'http://mirrors.us.kernel.org/ubuntu',
       'http://eu-west-1.ec2.archive.ubuntu.com/ubuntu': 'http://ftp.heanet.ie/pub/ubuntu'
   }
 }
