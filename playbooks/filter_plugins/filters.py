@@ -12,6 +12,10 @@ from   ansible import errors
 from   timeit  import default_timer as timer
 
 
+def regex_replace( s, find, replace ):
+    """Regex-enabled replace filter"""
+    return re.sub(find, replace, s)
+
 def index( array, elements ):
   '''Retrieves an array index of one of the elements specified'''
   for e in elements:
@@ -145,6 +149,7 @@ class FilterModule( object ):
 
   def filters( self ):
     return {
+      'regex_replace' : regex_replace,
       'index'         : index,
       'escape_quotes' : escape_quotes,
       'contains'      : contains,

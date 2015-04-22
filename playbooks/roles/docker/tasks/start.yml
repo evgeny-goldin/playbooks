@@ -1,11 +1,12 @@
 ---
 - set_fact:
-    # evgenyg/echo -> echo, ubuntu -> ubuntu
-    name:    "{{ name    | default( start[ start.find('/') + 1 : ] ) }}"
+    # evgenyg/echo:latest -> docker-evgenyg-echo-latest
+    # ubuntu              -> docker-ubuntu
+    name:    "docker-{{ name | default( start | replace( '/', '-' ) | replace( ':', '-' )) }}"
     # Timeout in seconds for container to be pulled and started
-    timeout: "{{ timeout | default( 1200 ) }}"
+    timeout: "{{ timeout | default( 300 ) }}"
 
-- debug: msg="Setting up auto-start of Docker image '{{ start }}' as '{{ name }}'"
+- debug: msg="Setting up auto-start of Docker image '{{ start }}' as service '{{ name }}'"
 
 # [ port1, port2, port3 ] => "-p port1:port1 -p port2:port1 -p port3:port3"
 - name:     Setting Docker ports
@@ -34,5 +35,5 @@
 - include: "{{ common.utils.service }}"
   vars:
     title:   Docker app '{{ name }}'
-    service: docker-{{ name }}
+    service: "{{ name }}"
     command: "docker kill '{{ name }}'; docker rm '{{ name }}'; docker pull '{{ start }}'; docker run {{ docker_ports | default('') }} {{ docker_env | default ('') }} --name '{{ name }}' '{{ start }}'"
