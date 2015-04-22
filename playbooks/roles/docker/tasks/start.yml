@@ -1,7 +1,7 @@
 ---
 - set_fact:
     # evgenyg/echo:latest -> docker-evgenyg-echo-latest
-    # ubuntu              -> docker-ubuntu
+    # nginx               -> docker-nginx
     name:    "docker-{{ name | default( start | replace( '/', '-' ) | replace( ':', '-' )) }}"
     # Timeout in seconds for container to be pulled and started
     timeout: "{{ timeout | default( 300 ) }}"
