@@ -1,7 +1,9 @@
 ---
 - set_fact:
     # evgenyg/echo -> echo, ubuntu -> ubuntu
-    name: "{{ name | default( start[ start.find('/') + 1 : ] ) }}"
+    name:    "{{ name    | default( start[ start.find('/') + 1 : ] ) }}"
+    # Timeout in seconds for container to respond on its ports after it started
+    timeout: "{{ timeout | default( 300 ) }}"
 
 - debug: msg="Setting up auto-start of Docker image '{{ start }}' as '{{ name }}'"
 
